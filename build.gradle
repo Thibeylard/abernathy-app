@@ -1,0 +1,81 @@
+// common build.gradle
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.3.7.RELEASE")
+    }
+}
+def modules = subprojects.findAll()
+
+def remoteConfig = subprojects.findAll() { project -> project.name != 'config-server'}
+
+def microServices = subprojects.findAll() {  project -> (
+        project.name != 'config-server' && project.name != 'eureka-server' && project.name != 'client')
+}
+
+/** All modules of Mediscreen application **/
+configure(modules) {
+    buildscript {
+        repositories {
+            mavenCentral()
+        }
+        dependencies {
+            classpath("org.springframework.boot:spring-boot-gradle-plugin:2.3.7.RELEASE")
+        }
+    }
+
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+    apply plugin: 'war'
+
+    group = 'com.mediscreen'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '11'
+
+    ext {
+        set('springCloudVersion', "Hoxton.SR9")
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+        testCompile 'org.assertj:assertj-core:3.17.2'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+}
+
+/** All modules with remote configuration on config-server **/
+configure(remoteConfig) {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    }
+}
+
+/** All microservices : zuul-server and application-specific microservices **/
+configure(microServices) {
+    dependencies {
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+        implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+        implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
+    }
+}

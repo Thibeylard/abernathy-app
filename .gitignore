@@ -1,0 +1,10 @@
+/gradle/
+/.gradle/
+/.idea/
+/config-server/build/
+/eureka-server/build/
+/client/build/
+/patient-ms/build/
+/zuul-server/build/
+/gradlew
+/gradlew.bat
