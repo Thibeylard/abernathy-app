@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.3.7.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.6.RELEASE")
     }
 }
 def modules = subprojects.findAll()
@@ -22,7 +22,7 @@ configure(modules) {
             mavenCentral()
         }
         dependencies {
-            classpath("org.springframework.boot:spring-boot-gradle-plugin:2.3.7.RELEASE")
+            classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.6.RELEASE")
         }
     }
 
@@ -33,7 +33,7 @@ configure(modules) {
 
     group = 'com.mediscreen'
     version = '0.0.1-SNAPSHOT'
-    sourceCompatibility = '11'
+    sourceCompatibility = '13'
 
     ext {
         set('springCloudVersion', "Hoxton.SR9")

@@ -1,8 +1,5 @@
 
-ext {
-	set('springCloudVersion', "Hoxton.SR9")
-}
-
 dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+
 }
