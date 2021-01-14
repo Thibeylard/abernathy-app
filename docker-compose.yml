@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  client:
+    build: "./client/"
+    ports:
+      - 8080:8080
+    container_name: "mediscreen-client"
+    depends_on:
+      - config-server
+    command:
+      "--spring.profiles.active=docker"
+  config-server:
+    build: "./config-server/"
+    ports:
+      - 9101:9101
+    container_name: "mediscreen-config-server"
+    command:
+      "--spring.profiles.active=docker"
+  eureka-server:
+    build: "./eureka-server/"
+    ports:
+      - 9111:9111
+    container_name: "mediscreen-eureka-server"
+    depends_on:
+      - config-server
+    command:
+      "--spring.profiles.active=docker"
+  zuul-server:
+    build: "./zuul-server/"
+    ports:
+      - 9121:9121
+    container_name: "mediscreen-zuul-server"
+    depends_on:
+      - config-server
+    command:
+      "--spring.profiles.active=docker"
