@@ -7,14 +7,15 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.6.RELEASE")
     }
 }
-def modules = subprojects.findAll()
 
-def remoteConfig = subprojects.findAll() { project -> project.name != 'config-server'}
+def appModules = subprojects.findAll() {project -> project.name != 'common'}
 
-def microServices = subprojects.findAll() {  project -> project.name.contains("-ms")}
+def remoteConfig = appModules.findAll() { project -> project.name != 'config-server'}
+
+def microServices = appModules.findAll() {  project -> project.name.contains("-ms")}
 
 /** All modules of Mediscreen application **/
-configure(modules) {
+configure(appModules) {
     buildscript {
         repositories {
             mavenCentral()

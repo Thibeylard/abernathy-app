@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'Mediscreen'
-include 'client', 'config-server', 'eureka-server', 'zuul-server', 'patient-ms'
+include 'common', 'client', 'config-server', 'eureka-server', 'zuul-server', 'patient-ms'

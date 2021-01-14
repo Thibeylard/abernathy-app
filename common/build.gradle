@@ -1,0 +1,7 @@
+// common build.gradle
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
