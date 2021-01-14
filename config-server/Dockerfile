@@ -1,6 +1,6 @@
 FROM openjdk:13-oracle
 
-ARG APP_WAR="./build/libs/config-server-0.0.1-SNAPSHOT.war"
+ARG APP_WAR="./build/libs/config-server-*.war"
 
 WORKDIR "/mediscreen-config-server/app/"
 

@@ -1,6 +1,6 @@
 FROM openjdk:13-oracle
 
-ARG APP_WAR="./build/libs/client-0.0.1-SNAPSHOT.war"
+ARG APP_WAR="./build/libs/client-*.war"
 
 WORKDIR "/mediscreen-client/app/"
 
