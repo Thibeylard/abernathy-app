@@ -5,6 +5,8 @@ import com.mediscreen.patientms.repositories.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +21,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class PatientController {
 
     private final PatientRepository restRepository;
+    private final EntityLinks entityLinks;
 
     @Autowired
-    public PatientController(PatientRepository restRepository) {
+    public PatientController(PatientRepository restRepository, EntityLinks entityLinks) {
         this.restRepository = restRepository;
+        this.entityLinks = entityLinks;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/patient/add")
@@ -38,15 +42,19 @@ public class PatientController {
             Patient newPatient = new Patient(
                     family, given, new SimpleDateFormat("yyyy-MM-dd").parse(dob), sex, address, phone);
 
-            restRepository.save(newPatient);
+            newPatient = restRepository.save(newPatient);
 
             EntityModel<Patient> entityModel = new EntityModel<>(newPatient);
-            entityModel.add(linkTo(methodOn(PatientController.class).addPatient(family, given, dob, sex, address, phone)).withSelfRel());
+            entityModel.add(entityLinks.linkToItemResource(Patient.class,newPatient.getId().orElseThrow(InternalError::new)).withSelfRel());
 
             return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
         } catch (ParseException e) {
             // TODO Add error details
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (InternalError e) {
+            // TODO change InternalError for more precise Exception
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
     }
 
