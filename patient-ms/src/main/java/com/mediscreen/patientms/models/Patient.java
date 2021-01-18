@@ -2,10 +2,14 @@ package com.mediscreen.patientms.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.mediscreen.common.dtos.PatientDTO;
+import org.springframework.data.annotation.Id;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class Patient {
+    @Id
+    private UUID uuid;
     private String family;
     private String given;
     private Date dob;

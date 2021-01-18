@@ -85,9 +85,11 @@ configure(microServices) {
         implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
         implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
 
-        // database related
+        // spring boot
         implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
         implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+
+
         testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     }
 }
