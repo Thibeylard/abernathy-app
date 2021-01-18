@@ -5,17 +5,21 @@ import com.mediscreen.common.dtos.PatientDTO;
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 public class Patient {
     @Id
-    private UUID uuid;
+    private String id;
     private String family;
     private String given;
     private Date dob;
     private String sex;
     private String address;
     private String phone;
+
+    public Patient() {
+    }
 
     public Patient(PatientDTO dto) {
         this.family = dto.getFamily();
@@ -33,6 +37,14 @@ public class Patient {
         this.sex = sex;
         this.address = address;
         this.phone = phone;
+    }
+
+    public Optional<String> getId() {
+        return Optional.of(this.id);
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFamily() {
