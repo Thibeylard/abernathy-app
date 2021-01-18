@@ -78,6 +78,8 @@ configure(remoteConfig) {
 /** All microservices : application-specific microservices **/
 configure(microServices) {
     dependencies {
+        implementation project(':common')
+
         // edge microservices related
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'

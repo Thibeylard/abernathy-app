@@ -1,8 +1,10 @@
 package com.mediscreen.common.dtos;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.util.Date;
 
-public class Patient {
+public class PatientDTO {
     private String family;
     private String given;
     private Date dob;
@@ -10,10 +12,11 @@ public class Patient {
     private String address;
     private String phone;
 
-    public Patient() {
+    @JsonCreator
+    public PatientDTO() {
     }
 
-    public Patient(String family, String given, Date dob, String sex, String address, String phone) {
+    public PatientDTO(String family, String given, Date dob, String sex, String address, String phone) {
         this.family = family;
         this.given = given;
         this.dob = dob;
