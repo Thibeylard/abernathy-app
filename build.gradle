@@ -77,6 +77,11 @@ configure(remoteConfig) {
 
 /** All microservices : application-specific microservices **/
 configure(microServices) {
+
+    jar {
+        enabled = true
+    }
+
     dependencies {
         implementation project(':common')
 
