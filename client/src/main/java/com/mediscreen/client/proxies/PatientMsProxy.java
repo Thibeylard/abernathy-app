@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "zuul-server")
+@FeignClient(name = "mediscreen-zuul-server")
 @RibbonClient(name = "mediscreen-patient-ms")
 public interface PatientMsProxy {
 
