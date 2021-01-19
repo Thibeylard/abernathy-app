@@ -1,5 +1,6 @@
 version: "3.8"
 services:
+  #------------------------------------------------- Client App
   client:
     build: "./client/"
     ports:
@@ -9,6 +10,7 @@ services:
       - config-server
     command:
       "--spring.profiles.active=docker"
+  #------------------------------------------------- Config Server
   config-server:
     build: "./config-server/"
     ports:
@@ -16,6 +18,17 @@ services:
     container_name: "mediscreen-config-server"
     command:
       "--spring.profiles.active=docker"
+  #------------------------------------------------- Patient Microservices
+  patient-ms:
+    build: "./patient-ms/"
+    ports:
+      - 8081:8081
+    container_name: "mediscreen-patient-ms"
+    depends_on:
+      - config-server
+    command:
+      "--spring.profiles.active=docker"
+  #------------------------------------------------- Eureka EMS Server
   eureka-server:
     build: "./eureka-server/"
     ports:
@@ -25,6 +38,7 @@ services:
       - config-server
     command:
       "--spring.profiles.active=docker"
+  #------------------------------------------------- Zuul EMS Server
   zuul-server:
     build: "./zuul-server/"
     ports:
