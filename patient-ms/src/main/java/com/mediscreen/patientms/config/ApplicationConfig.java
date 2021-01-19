@@ -8,11 +8,6 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 @Configuration
 public class ApplicationConfig implements RepositoryRestConfigurer {
 
-    /**
-     * Override this method to add additional configuration.
-     *
-     * @param config Main configuration bean.
-     */
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         config.setReturnBodyForPutAndPost(true);
