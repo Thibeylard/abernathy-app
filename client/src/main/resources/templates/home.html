@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
 </head>
 <body>
 <h1>Bienvenue sur Mediscreen !</h1>
-<p>Vous trouverez ci dessous la liste de vos patients. Sélectionnez en un pour visualiser et modifier ses informations.</p>
+<p>Vous trouverez ci-dessous la liste de vos patients. Sélectionnez-en un pour visualiser et modifier ses informations.</p>
 
+<table>
+    <tr th:each="patient : ${allPatients}">
+        <td th:text="${patient.given}"></td>
+        <td th:text="${patient.family}"></td>
+    </tr>
+</table>
 </body>
 </html>

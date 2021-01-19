@@ -15,7 +15,7 @@ public interface PatientMsProxy {
     @ResponseBody List<Patient> getAllPatients();
 
     @GetMapping("/patient/{id}")
-    @ResponseBody List<Patient> getPatient(@PathVariable("id") int id);
+    @ResponseBody List<Patient> getPatient(@PathVariable("id") String id);
 
     @PostMapping("/patient")
     @ResponseBody ResponseEntity<?> addPatient(@RequestBody PatientDTO patientDTO);

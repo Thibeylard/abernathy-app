@@ -2,12 +2,15 @@ package com.mediscreen.client.controllers;
 
 import com.mediscreen.client.proxies.PatientMsProxy;
 import com.mediscreen.common.dtos.PatientDTO;
+import com.mediscreen.patientms.models.Patient;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class PatientMsController {
@@ -41,4 +44,14 @@ public class PatientMsController {
     public String updatePatient(@RequestBody PatientDTO patientDTO) {
         return "patientForm";
     }*/
+    
+    @ModelAttribute("allPatients")
+    private List<Patient> getAllPatients() {
+        return patientMsProxy.getAllPatients();
+    }
+
+    @ModelAttribute("patient")
+    private List<Patient> getSpecificPatient(String id) {
+        return patientMsProxy.getPatient(id);
+    }
 }
