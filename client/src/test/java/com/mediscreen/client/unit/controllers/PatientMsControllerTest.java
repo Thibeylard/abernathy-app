@@ -172,5 +172,26 @@ public class PatientMsControllerTest {
                 .andExpect(model().attributeExists("patientAdded"))
                 .andExpect(model().attribute("patientAdded", true));
 
+        // Inalid PatientDTO
+        patientToAdd = new PatientDTO(
+                "",
+                "TestGiven3",
+                new SimpleDateFormat("yyyy-MM-dd").parse("1894-09-10"),
+                "F",
+                "3st Oakland St",
+                "030-111-224"
+        );
+
+        patientAdded = new Patient(patientToAdd);
+        patientAdded.setId("4");
+
+        when(patientMsProxy.addPatient(patientToAdd)).thenReturn(patientAdded);
+
+        mockMvc.perform(post("/patient")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(patientToAdd)))
+                .andExpect(view().name("patientForm"))
+                .andExpect(model().hasErrors());
     }
+
 }
