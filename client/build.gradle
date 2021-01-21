@@ -11,3 +11,10 @@ dependencies {
 
 	compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
 }
+
+//Exclude transitive dependencies from microservices
+configurations {
+	compile.exclude module: 'spring-boot-starter-data-mongodb'
+	compile.exclude module: 'spring-boot-starter-data-rest'
+	testCompile.exclude module: 'de.flapdoodle.embed.mongo'
+}

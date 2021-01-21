@@ -9,3 +9,5 @@
 /gradlew
 /gradlew.bat
 /common/build/
+/mongo-volume/
+/common/common.iml

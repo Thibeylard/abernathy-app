@@ -22,12 +22,13 @@ services:
   patient-ms:
     build: "./patient-ms/"
     ports:
-      - 8081:8081
+      - 8082:8082
     container_name: "mediscreen-patient-ms"
     depends_on:
       - config-server
+      - mongo
     command:
-      "--spring.profiles.active=docker"
+      "--spring.profiles.active=docker --spring.server.port=8082"
   #------------------------------------------------- Eureka EMS Server
   eureka-server:
     build: "./eureka-server/"
@@ -48,3 +49,25 @@ services:
       - config-server
     command:
       "--spring.profiles.active=docker"
+  #------------------------------------------------- MongoDB database
+  mongo:
+    image: mongo
+    restart: always
+    container_name: "mongo"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "toor"
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./mongo-volume:/data/db
+
+  #------------------------------------------------- MongoDB GUI
+  mongo-express:
+    image: mongo-express
+    restart: always
+    container_name: "mongo-express"
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: "root"
+      ME_CONFIG_MONGODB_ADMINPASSWORD: "toor"
