@@ -9,7 +9,7 @@
 <h1>Bienvenue sur Mediscreen !</h1>
 <p>Vous trouverez ci-dessous la liste de vos patients. Sélectionnez-en un pour visualiser et modifier ses informations.</p>
 
-<table>
+<table th:unless="${#lists.isEmpty(allPatients)}">
     <tr th:each="patient : ${allPatients}">
         <td th:text="${patient.given}"></td>
         <td th:text="${patient.family}"></td>

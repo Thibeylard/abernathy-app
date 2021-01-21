@@ -14,11 +14,11 @@ import java.util.List;
 public interface PatientMsProxy {
 
     @GetMapping("/mediscreen-patient-ms/patient")
-    @ResponseBody List<Patient> getAllPatients();
+    List<Patient> getAllPatients();
 
     @GetMapping("/mediscreen-patient-ms/patient/{id}")
-    @ResponseBody List<Patient> getPatient(@PathVariable("id") String id);
+    Patient getPatient(@PathVariable("id") String id);
 
     @PostMapping("/mediscreen-patient-ms/patient")
-    @ResponseBody ResponseEntity<?> addPatient(@RequestBody PatientDTO patientDTO);
+    Patient addPatient(@RequestBody PatientDTO patientDTO);
 }

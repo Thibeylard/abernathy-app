@@ -1,4 +1,4 @@
-package com.mediscreen.client.controllers;
+package com.mediscreen.client.unit.controllers;
 
 import com.mediscreen.client.proxies.PatientMsProxy;
 import com.mediscreen.common.dtos.PatientDTO;
@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -27,16 +29,30 @@ public class PatientMsController {
 
     @GetMapping("/")
     public String home(Model model) {
+        model.addAttribute(getAllPatients());
         return "home";
     }
 
-    @GetMapping("/getPatient/{id}")
-    public String getPatient(@PathVariable("id") int id, Model model) {
+    @GetMapping("/patient/{id}")
+    public String getPatient(@PathVariable("id") String id, Model model) {
+        Patient patient = getPatient(id);
+        if(patient == null) {
+            model.addAttribute("patientNotFound", true);
+            return "home";
+        }
+        model.addAttribute(getPatient(id));
         return "patientForm";
     }
 
-    @PostMapping(value = "/patientForm")
-    public String addPatient(@RequestBody PatientDTO patientDTO) {
+    @PostMapping(value = "/patient")
+    public String addPatient(@Valid @RequestBody PatientDTO patientDTO, BindingResult result, Model model) {
+        if(result.hasErrors()) {
+            model.addAttribute("patient", patientDTO);
+        } else {
+            patientMsProxy.addPatient(patientDTO);
+            model.addAttribute("patientAdded", true);
+            return "home";
+        }
         return "patientForm";
     }
 
@@ -51,7 +67,7 @@ public class PatientMsController {
     }
 
     @ModelAttribute("patient")
-    private List<Patient> getSpecificPatient(String id) {
+    private Patient getPatient(String id) {
         return patientMsProxy.getPatient(id);
     }
 }
