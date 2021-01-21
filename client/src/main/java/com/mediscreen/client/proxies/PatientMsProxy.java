@@ -1,6 +1,6 @@
 package com.mediscreen.client.proxies;
 
-import com.mediscreen.common.dtos.PatientDTO;
+import com.mediscreen.patientms.dtos.PatientDTO;
 import com.mediscreen.patientms.models.Patient;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
