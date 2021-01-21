@@ -18,7 +18,7 @@ public class Patient {
     private String address;
     private String phone;
 
-    public Patient() {
+    private Patient() {
     }
 
     public Patient(PatientDTO dto) {

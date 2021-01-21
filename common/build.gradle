@@ -11,4 +11,6 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.12.1'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.12.1'
     compile 'com.fasterxml.jackson:jackson-base:2.12.1'
+
+    implementation 'org.hibernate:hibernate-validator:6.2.0.Final'
 }
