@@ -8,7 +8,7 @@ buildscript {
     }
 }
 
-def appModules = subprojects.findAll() {project -> project.name != 'common'}
+def appModules = subprojects.findAll()
 
 def remoteConfig = appModules.findAll() { project -> project.name != 'config-server'}
 
@@ -83,8 +83,6 @@ configure(microServices) {
     }
 
     dependencies {
-        implementation project(':common')
-
         // edge microservices related
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
