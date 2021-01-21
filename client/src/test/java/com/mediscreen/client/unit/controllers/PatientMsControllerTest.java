@@ -2,7 +2,7 @@ package com.mediscreen.client.unit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.client.proxies.PatientMsProxy;
-import com.mediscreen.common.dtos.PatientDTO;
+import com.mediscreen.patientms.dtos.PatientDTO;
 import com.mediscreen.patientms.models.Patient;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -151,7 +151,7 @@ public class PatientMsControllerTest {
         PatientDTO patientToAdd = new PatientDTO(
                 "TestFamily3",
                 "TestGiven3",
-                new SimpleDateFormat("yyyy-MM-dd").parse("1894-09-10"),
+                "1894-09-10",
                 "F",
                 "3st Oakland St",
                 "030-111-224"
@@ -176,7 +176,7 @@ public class PatientMsControllerTest {
         patientToAdd = new PatientDTO(
                 "",
                 "TestGiven3",
-                new SimpleDateFormat("yyyy-MM-dd").parse("1894-09-10"),
+                "1894-09-10",
                 "F",
                 "3st Oakland St",
                 "030-111-224"
