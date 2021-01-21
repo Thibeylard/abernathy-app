@@ -17,6 +17,7 @@ public class DobValidator implements ConstraintValidator<ValidDob, String> {
     @Override
     public boolean isValid(String dob, ConstraintValidatorContext context) {
         try {
+            //TODO develop check by verifying individually day, month and year values
             new SimpleDateFormat("yyyy-MM-dd").parse(dob);
         } catch (ParseException e) {
             return false;

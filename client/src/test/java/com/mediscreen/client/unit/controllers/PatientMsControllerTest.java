@@ -172,20 +172,15 @@ public class PatientMsControllerTest {
                 .andExpect(model().attributeExists("patientAdded"))
                 .andExpect(model().attribute("patientAdded", true));
 
-        // Inalid PatientDTO
+        // Invalid PatientDTO
         patientToAdd = new PatientDTO(
-                "",
+                "TestFamily3",
                 "TestGiven3",
-                "1894-09-10",
+                "10/09/1994", // Date format is wrong, must be yyyy-MM-dd
                 "F",
                 "3st Oakland St",
                 "030-111-224"
         );
-
-        patientAdded = new Patient(patientToAdd);
-        patientAdded.setId("4");
-
-        when(patientMsProxy.addPatient(patientToAdd)).thenReturn(patientAdded);
 
         mockMvc.perform(post("/patient")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -15,7 +15,7 @@ public class PatientDTO {
     @NotBlank
     private String given;
     @ValidDob
-    private Date dob;
+    private String dob;
     @NotBlank
     @Size(min = 1, max = 1)
     private String sex;
@@ -33,7 +33,7 @@ public class PatientDTO {
     public PatientDTO(String family, String given, String dob, String sex, String address, String phone) throws ParseException {
         this.family = family;
         this.given = given;
-        this.dob = new SimpleDateFormat("yyyy-MM-dd").parse(dob);
+        this.dob = dob;
         this.sex = sex;
         this.address = address;
         this.phone = phone;
@@ -47,7 +47,7 @@ public class PatientDTO {
         return given;
     }
 
-    public Date getDob() {
+    public String getDob() {
         return dob;
     }
 

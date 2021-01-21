@@ -21,10 +21,10 @@ public class Patient {
     private Patient() {
     }
 
-    public Patient(PatientDTO dto) {
+    public Patient(PatientDTO dto) throws ParseException {
         this.family = dto.getFamily();
         this.given = dto.getGiven();
-        this.dob = dto.getDob();
+        this.dob = new SimpleDateFormat("yyyy-MM-dd").parse(dto.getDob());
         this.sex = dto.getSex();
         this.address = dto.getAddress();
         this.phone = dto.getPhone();
