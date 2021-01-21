@@ -1,9 +1,12 @@
-package com.mediscreen.common.dtos;
+package com.mediscreen.patientms.dtos;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.mediscreen.patientms.annotations.ValidDob;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PatientDTO {
@@ -11,9 +14,9 @@ public class PatientDTO {
     private String family;
     @NotBlank
     private String given;
-    @NotBlank
+    @ValidDob
     private Date dob;
-    @NotBlank()
+    @NotBlank
     @Size(min = 1, max = 1)
     private String sex;
     @NotBlank
@@ -27,10 +30,10 @@ public class PatientDTO {
     private PatientDTO() {
     }
 
-    public PatientDTO(String family, String given, Date dob, String sex, String address, String phone) {
+    public PatientDTO(String family, String given, String dob, String sex, String address, String phone) throws ParseException {
         this.family = family;
         this.given = given;
-        this.dob = dob;
+        this.dob = new SimpleDateFormat("yyyy-MM-dd").parse(dob);
         this.sex = sex;
         this.address = address;
         this.phone = phone;

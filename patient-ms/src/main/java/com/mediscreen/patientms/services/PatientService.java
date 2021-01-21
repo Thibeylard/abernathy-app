@@ -5,23 +5,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.ParseException;
+import java.util.Date;
 
 public interface PatientService {
 
     Patient addPatient(
             String family,
             String given,
-            String dob,
+            Date dob,
             String sex,
             String address,
-            String phone) throws ParseException;
+            String phone);
 
     Patient updatePatient(
             String id,
             String family,
             String given,
-            String dob,
+            Date dob,
             String sex,
             String address,
-            String phone) throws ParseException;
+            String phone);
 }

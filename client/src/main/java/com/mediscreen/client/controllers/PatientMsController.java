@@ -1,7 +1,7 @@
 package com.mediscreen.client.controllers;
 
 import com.mediscreen.client.proxies.PatientMsProxy;
-import com.mediscreen.common.dtos.PatientDTO;
+import com.mediscreen.patientms.dtos.PatientDTO;
 import com.mediscreen.patientms.models.Patient;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

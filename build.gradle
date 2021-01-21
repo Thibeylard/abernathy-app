@@ -93,7 +93,7 @@ configure(microServices) {
         // spring boot
         implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
         implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-
+        compile 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
 
         testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     }
