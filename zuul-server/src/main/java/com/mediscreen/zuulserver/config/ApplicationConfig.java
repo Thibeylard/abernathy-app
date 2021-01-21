@@ -1,4 +1,4 @@
-package com.mediscreen.patientms.config;
+package com.mediscreen.zuulserver.config;
 
 import brave.sampler.Sampler;
 import org.slf4j.Logger;
@@ -11,7 +11,7 @@ public class ApplicationConfig {
 
     @Bean
     public Logger getClientPatientLogger() {
-        return LoggerFactory.getLogger("patient-ms-logger");
+        return LoggerFactory.getLogger("zuul-server-logger");
     }
 
     // Spring Sleuth tracing configuration

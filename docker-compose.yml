@@ -28,7 +28,7 @@ services:
       - config-server
       - mongo
     command:
-      "--spring.profiles.active=docker --spring.server.port=8082"
+      "--spring.profiles.active=docker --server.port=8082"
   #------------------------------------------------- Eureka EMS Server
   eureka-server:
     build: "./eureka-server/"
@@ -49,6 +49,12 @@ services:
       - config-server
     command:
       "--spring.profiles.active=docker"
+  #------------------------------------------------- Zipkin
+  zipkin:
+    image: openzipkin/zipkin-slim
+    container_name: "zipkin"
+    ports:
+      - 9411:9411
   #------------------------------------------------- MongoDB database
   mongo:
     image: mongo
