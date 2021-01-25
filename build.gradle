@@ -10,9 +10,9 @@ buildscript {
 
 def appModules = subprojects.findAll()
 
-def remoteConfig = appModules.findAll() { project -> project.name != 'config-server'}
+def remoteConfig = appModules.findAll() { project -> project.name != 'configserver'}
 
-def microServices = appModules.findAll() {  project -> project.name.contains("-ms")}
+def microServices = appModules.findAll() {  project -> (project.name == "patient") }
 
 /** All modules of Mediscreen application **/
 configure(appModules) {

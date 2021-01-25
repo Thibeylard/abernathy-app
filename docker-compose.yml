@@ -1,65 +1,55 @@
 version: "3.8"
 services:
-  #------------------------------------------------- Client App
-  client:
-    build: "./client/"
-    ports:
-      - 8080:8080
-    container_name: "mediscreen-client"
-    depends_on:
-      - config-server
-    command:
-      "--spring.profiles.active=docker"
   #------------------------------------------------- Config Server
-  config-server:
-    build: "./config-server/"
+  configserver:
+    build: "./configserver/"
     ports:
       - 9101:9101
-    container_name: "mediscreen-config-server"
+    container_name: "abernathyapp-configserver"
     command:
       "--spring.profiles.active=docker"
-  #------------------------------------------------- Patient Microservices
-  patient-ms:
-    build: "./patient-ms/"
+  #------------------------------------------------- Patient Microservice
+  patient:
+    build: "./patient/"
     ports:
       - 8082:8082
-    container_name: "mediscreen-patient-ms"
+    container_name: "abernathyapp-patient"
     depends_on:
-      - config-server
+      - configserver
       - mongo
     command:
       "--spring.profiles.active=docker --server.port=8082"
   #------------------------------------------------- Eureka EMS Server
-  eureka-server:
-    build: "./eureka-server/"
+  eureka:
+    build: "eureka/"
     ports:
       - 9111:9111
-    container_name: "mediscreen-eureka-server"
+    container_name: "abernathyapp-eureka"
     depends_on:
-      - config-server
+      - configserver
     command:
       "--spring.profiles.active=docker"
-  #------------------------------------------------- Zuul EMS Server
-  zuul-server:
-    build: "./zuul-server/"
+  #------------------------------------------------- Abernathy App
+  app:
+    build: "./app/"
     ports:
       - 9121:9121
-    container_name: "mediscreen-zuul-server"
+    container_name: "abernathyapp-app"
     depends_on:
-      - config-server
+      - configserver
     command:
       "--spring.profiles.active=docker"
   #------------------------------------------------- Zipkin
   zipkin:
     image: openzipkin/zipkin-slim
-    container_name: "zipkin"
+    container_name: "abernathyapp-zipkin"
     ports:
       - 9411:9411
   #------------------------------------------------- MongoDB database
   mongo:
     image: mongo
     restart: always
-    container_name: "mongo"
+    container_name: "abernathyapp-mongo"
     environment:
       MONGO_INITDB_ROOT_USERNAME: "root"
       MONGO_INITDB_ROOT_PASSWORD: "toor"

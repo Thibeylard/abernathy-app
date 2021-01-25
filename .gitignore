@@ -1,13 +1,12 @@
 /gradle/
 /.gradle/
 /.idea/
-/config-server/build/
-/eureka-server/build/
+/configserver/build/
+/eureka/build/
 /client/build/
-/patient-ms/build/
-/zuul-server/build/
+/patient/build/
+/app/build/
 /gradlew
 /gradlew.bat
-/common/build/
 /mongo-volume/
 /common/common.iml
