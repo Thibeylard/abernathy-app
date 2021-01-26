@@ -5,7 +5,7 @@ services:
     build: "./configserver/"
     ports:
       - 9101:9101
-    container_name: "abernathyapp-configserver"
+    container_name: "configserver"
     command:
       "--spring.profiles.active=docker"
   #------------------------------------------------- Patient Microservice
@@ -13,7 +13,7 @@ services:
     build: "./patient/"
     ports:
       - 8082:8082
-    container_name: "abernathyapp-patient"
+    container_name: "patient"
     depends_on:
       - configserver
       - mongo
@@ -24,7 +24,7 @@ services:
     build: "eureka/"
     ports:
       - 9111:9111
-    container_name: "abernathyapp-eureka"
+    container_name: "eureka"
     depends_on:
       - configserver
     command:
@@ -34,7 +34,7 @@ services:
     build: "./app/"
     ports:
       - 9121:9121
-    container_name: "abernathyapp-app"
+    container_name: "app"
     depends_on:
       - configserver
     command:
