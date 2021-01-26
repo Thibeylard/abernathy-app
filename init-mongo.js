@@ -1,6 +1,6 @@
 conn = new Mongo();
 
-db = conn.getDB("mediscreen");
+db = conn.getDB("abernathy");
 
 db.createUser({
     user: 'user',
@@ -8,7 +8,7 @@ db.createUser({
     roles: [ 
     	{
     		role: 'readWrite',
-    		db: 'mediscreen'
+    		db: 'abernathy'
     	}
     ]
 });

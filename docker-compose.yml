@@ -42,14 +42,14 @@ services:
   #------------------------------------------------- Zipkin
   zipkin:
     image: openzipkin/zipkin-slim
-    container_name: "abernathyapp-zipkin"
+    container_name: "zipkin"
     ports:
       - 9411:9411
   #------------------------------------------------- MongoDB database
   mongo:
     image: mongo
     restart: always
-    container_name: "abernathyapp-mongo"
+    container_name: "mongo"
     environment:
       MONGO_INITDB_ROOT_USERNAME: "root"
       MONGO_INITDB_ROOT_PASSWORD: "toor"
