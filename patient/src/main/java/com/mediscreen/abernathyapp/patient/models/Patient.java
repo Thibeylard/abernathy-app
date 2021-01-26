@@ -2,15 +2,16 @@ package com.mediscreen.abernathyapp.patient.models;
 
 import org.springframework.data.annotation.Id;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Optional;
 
+//@JsonDeserialize(using = PatientDeserializer.class)
 public class Patient {
     @Id
     private String id;
     private String family;
     private String given;
-    private Instant dob;
+    private LocalDate dob;
     private String sex;
     private String address;
     private String phone;
@@ -18,7 +19,7 @@ public class Patient {
     private Patient() {
     }
 
-    public Patient(String family, String given, Instant dob, String sex, String address, String phone) {
+    public Patient(String family, String given, LocalDate dob, String sex, String address, String phone) {
         this.family = family;
         this.given = given;
         this.dob = dob;
@@ -51,11 +52,11 @@ public class Patient {
         this.given = given;
     }
 
-    public Instant getDob() {
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(Instant dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 
