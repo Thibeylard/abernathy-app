@@ -11,7 +11,7 @@ public class ApplicationConfig {
 
     @Bean
     public Logger getClientPatientLogger() {
-        return LoggerFactory.getLogger("patient-ms-logger");
+        return LoggerFactory.getLogger("patient-logger");
     }
 
     // Spring Sleuth tracing configuration

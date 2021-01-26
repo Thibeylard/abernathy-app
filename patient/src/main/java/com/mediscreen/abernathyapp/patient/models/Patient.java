@@ -1,19 +1,17 @@
 package com.mediscreen.abernathyapp.patient.models;
 
-import com.mediscreen.abernathyapp.patient.dtos.PatientDTO;
 import org.springframework.data.annotation.Id;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
+//@JsonDeserialize(using = PatientDeserializer.class)
 public class Patient {
     @Id
     private String id;
     private String family;
     private String given;
-    private Date dob;
+    private LocalDate dob;
     private String sex;
     private String address;
     private String phone;
@@ -21,16 +19,7 @@ public class Patient {
     private Patient() {
     }
 
-    public Patient(PatientDTO dto) throws ParseException {
-        this.family = dto.getFamily();
-        this.given = dto.getGiven();
-        this.dob = new SimpleDateFormat("yyyy-MM-dd").parse(dto.getDob());
-        this.sex = dto.getSex();
-        this.address = dto.getAddress();
-        this.phone = dto.getPhone();
-    }
-
-    public Patient(String family, String given, Date dob, String sex, String address, String phone) {
+    public Patient(String family, String given, LocalDate dob, String sex, String address, String phone) {
         this.family = family;
         this.given = given;
         this.dob = dob;
@@ -63,11 +52,11 @@ public class Patient {
         this.given = given;
     }
 
-    public Date getDob() {
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 
