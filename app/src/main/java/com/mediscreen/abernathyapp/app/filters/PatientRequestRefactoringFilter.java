@@ -11,11 +11,13 @@ import com.netflix.zuul.http.ServletInputStreamWrapper;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -82,24 +84,25 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
     @Override
     public Object run() throws ZuulException {
         RequestContext context = RequestContext.getCurrentContext();
+        HttpServletRequest request = context.getRequest();
 
-        switch (context.getRequest().getRequestURI()) {
-            case "/patient/add":
-                additionRequestRefactoring();
-                break;
-            case "/patient/update":
-                updateRequestRefactoring();
-                break;
-            case "/patient/get":
-                getRequestRefactoring();
-                break;
-            case "/patient/list":
-                listRequestRefactoring();
-            default:
-                logger.debug("Unexpected endpoint call under /patient");
-                context.setResponseStatusCode(HttpStatus.NOT_FOUND.value());
-                context.setResponseBody(context.getRequest().getRequestURI() + " is not a valid endpoint.");
-                context.setSendZuulResponse(false);
+        if (request.getRequestURI().equals("/patient/add")
+                && request.getMethod().equals(HttpMethod.POST.toString())) {
+            additionRequestRefactoring();
+        } else if (request.getRequestURI().equals("/patient/update")
+                && request.getMethod().equals(HttpMethod.PUT.toString())) {
+            updateRequestRefactoring();
+        } else if (request.getRequestURI().equals("/patient/get")
+                && request.getMethod().equals(HttpMethod.GET.toString())) {
+            getRequestRefactoring();
+        } else if (request.getRequestURI().equals("/patient/list")
+                && request.getMethod().equals(HttpMethod.GET.toString())) {
+            listRequestRefactoring();
+        } else {
+            logger.debug("Unexpected endpoint call under /patient");
+            context.setResponseStatusCode(HttpStatus.NOT_FOUND.value());
+            context.setResponseBody(context.getRequest().getRequestURI() + " is not a valid endpoint.");
+            context.setSendZuulResponse(false);
         }
 
         return null;
