@@ -16,6 +16,11 @@ public class ApplicationConfig {
     }
 
     @Bean
+    public PatientValidator beforeSavePatientValidator() {
+        return new PatientValidator();
+    }
+
+    @Bean
     public Logger getClientPatientLogger() {
         return LoggerFactory.getLogger("patient-logger");
     }

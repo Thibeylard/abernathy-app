@@ -30,7 +30,7 @@ public class PatientValidator implements Validator {
 
         }
 
-        if (!patient.getSex().equals("M") && !patient.getSex().equals("F")) {
+        if (patient.getSex() == null || !patient.getSex().equals("M") && !patient.getSex().equals("F")) {
             errors.rejectValue(
                     "sex",
                     "sex.wrongValue",
@@ -57,9 +57,8 @@ public class PatientValidator implements Validator {
                     "phone",
                     "phone.empty",
                     "phone field is mandatory");
-        }
 
-        if (!patient.getPhone().matches("((\\d{3}-){2}\\d{3})")) {
+        } else if (!patient.getPhone().matches("((\\d{3}-){2}\\d{3})")) {
             errors.rejectValue(
                     "phone",
                     "phone.wrongFormat",

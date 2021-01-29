@@ -62,6 +62,28 @@ public class PatientRestEntityTests {
     }
 
     @Test
+    public void nullPatient() throws Exception {
+        Writer writer = new StringWriter();
+        JsonGenerator generator = new JsonFactory().createGenerator(writer);
+
+        // Valid patient
+        generator.writeStartObject();
+        generator.writeStringField("family", null);
+        generator.writeStringField("given", null);
+        generator.writeStringField("dob", null);
+        generator.writeStringField("sex", null);
+        generator.writeStringField("address", null);
+        generator.writeStringField("phone", null);
+        generator.writeEndObject();
+        generator.close();
+
+        mockMvc.perform(post("/patient")
+                .contentType(ContentType.APPLICATION_JSON.toString())
+                .content(writer.toString()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void invalidFamilyPatient() throws Exception {
         Writer writer = new StringWriter();
         JsonGenerator generator = new JsonFactory().createGenerator(writer);
