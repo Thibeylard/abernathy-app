@@ -11,6 +11,7 @@ import com.netflix.zuul.http.ServletInputStreamWrapper;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletInputStream;
@@ -80,8 +81,9 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
      */
     @Override
     public Object run() throws ZuulException {
+        RequestContext context = RequestContext.getCurrentContext();
 
-        switch (RequestContext.getCurrentContext().getRequest().getRequestURI()) {
+        switch (context.getRequest().getRequestURI()) {
             case "/patient/add":
                 additionRequestRefactoring();
                 break;
@@ -95,16 +97,60 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
                 listRequestRefactoring();
             default:
                 logger.debug("Unexpected endpoint call under /patient");
+                context.setResponseStatusCode(HttpStatus.NOT_FOUND.value());
+                context.setResponseBody(context.getRequest().getRequestURI() + " is not a valid endpoint.");
+                context.setSendZuulResponse(false);
         }
 
         return null;
     }
 
-    public void additionRequestRefactoring() {
+    private void additionRequestRefactoring() {
         logger.debug("POST request to /patient/add is about to be refactored");
+        RequestContext.getCurrentContext().set(REQUEST_URI_KEY, "/patient");
+
+        refactoringParametersAsJsonBody();
+    }
+
+    private void updateRequestRefactoring() {
+        logger.debug("PUT request to /patient/update is about to be refactored");
+
+        RequestContext context = RequestContext.getCurrentContext();
+
+        String id = context.getRequest().getParameter("id");
+        if (id == null || id.isBlank()) {
+            context.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
+            context.setResponseBody("Missing id property to identify and update Patient");
+            context.setSendZuulResponse(false);
+        } else {
+            context.set(REQUEST_URI_KEY, "/patient");
+
+            refactoringParametersAsJsonBody();
+        }
+
+    }
+
+    private void getRequestRefactoring() {
+        logger.debug("GET request to /patient/get is about to be refactored");
+        RequestContext context = RequestContext.getCurrentContext();
+        String id = context.getRequest().getParameter("id");
+        if (id == null || id.isBlank()) {
+            context.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
+            context.setResponseBody("Missing id parameter to get any Patient");
+            context.setSendZuulResponse(false);
+        } else {
+            context.set(REQUEST_URI_KEY, "/patient/" + id);
+        }
+    }
+
+    private void listRequestRefactoring() {
+        logger.debug("GET request to /patient/list is about to be refactored");
         RequestContext context = RequestContext.getCurrentContext();
         context.set(REQUEST_URI_KEY, "/patient");
+    }
 
+    private void refactoringParametersAsJsonBody() {
+        RequestContext context = RequestContext.getCurrentContext();
         try {
             Writer bodyWriter = new StringWriter();
             JsonGenerator generator = new JsonFactory().createGenerator(bodyWriter);
@@ -235,18 +281,5 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-
-    public void updateRequestRefactoring() {
-
-    }
-
-    public void getRequestRefactoring() {
-
-    }
-
-    public void listRequestRefactoring() {
-
     }
 }
