@@ -101,7 +101,7 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
         } else {
             logger.debug("Unexpected endpoint call under /patient");
             context.setResponseStatusCode(HttpStatus.NOT_FOUND.value());
-            context.setResponseBody(context.getRequest().getRequestURI() + " is not a valid endpoint.");
+            context.setResponseBody(context.getRequest().getMethod() + " request on " + context.getRequest().getRequestURI() + " is not a valid endpoint.");
             context.setSendZuulResponse(false);
         }
 
@@ -120,13 +120,16 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
 
         RequestContext context = RequestContext.getCurrentContext();
 
+
+        //TODO add pretty error object model
+
         String id = context.getRequest().getParameter("id");
         if (id == null || id.isBlank()) {
             context.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
             context.setResponseBody("Missing id property to identify and update Patient");
             context.setSendZuulResponse(false);
         } else {
-            context.set(REQUEST_URI_KEY, "/patient");
+            context.set(REQUEST_URI_KEY, "/patient/" + id);
 
             refactoringParametersAsJsonBody();
         }
@@ -137,6 +140,9 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
         logger.debug("GET request to /patient/get is about to be refactored");
         RequestContext context = RequestContext.getCurrentContext();
         String id = context.getRequest().getParameter("id");
+
+        //TODO add pretty error object model
+
         if (id == null || id.isBlank()) {
             context.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
             context.setResponseBody("Missing id parameter to get any Patient");
