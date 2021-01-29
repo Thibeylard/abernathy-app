@@ -7,11 +7,13 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.netflix.zuul.http.HttpServletRequestWrapper;
+import com.netflix.zuul.http.ServletInputStreamWrapper;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -100,19 +102,10 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
 
     public void additionRequestRefactoring() {
         logger.debug("POST request to /patient/add is about to be refactored");
-        logger.debug("Request URL : " + RequestContext.getCurrentContext().getRequest().getRequestURL());
         RequestContext context = RequestContext.getCurrentContext();
         context.set(REQUEST_URI_KEY, "/patient");
 
         try {
-            // Don't need to get body, as it is supposed to be inexistant
-
-            /*InputStream in = (InputStream) context.get("requestEntity");
-            if(in == null) {
-                in = context.getRequest().getInputStream();
-            }
-            String body = StreamUtils.copyToString(in, StandardCharsets.UTF_8);*/
-
             Writer bodyWriter = new StringWriter();
             JsonGenerator generator = new JsonFactory().createGenerator(bodyWriter);
 
@@ -120,7 +113,6 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
             context.getRequest().getParameterMap().forEach((k, v) ->
             {
                 try {
-                    logger.debug("key = {} and value = {}", k, Arrays.stream(v).findFirst().get());
                     generator.writeStringField(k, Arrays.stream(v).findFirst().get());
                 } catch (IOException e) {
                     //TODO Handle error
@@ -128,16 +120,15 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
             });
             generator.writeEndObject();
             generator.close();
-            String bodyString = bodyWriter.toString();
 
-            logger.debug("New body is {}", bodyString);
-
-            byte[] body = bodyString.getBytes(StandardCharsets.UTF_8);
-            String contentType = context.getRequest().getContentType();
-
+            byte[] body = bodyWriter.toString().getBytes(StandardCharsets.UTF_8);
 
             context.setRequest(new HttpServletRequestWrapper(context.getRequest()) {
 
+                @Override
+                public ServletInputStream getInputStream() {
+                    return new ServletInputStreamWrapper(body);
+                }
 
                 /**
                  * The default behavior of this method is to return getRequestURI() on the
