@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.io.CharStreams;
+import com.mediscreen.abernathyapp.app.services.MicroserviceURIDispatcher;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
@@ -27,11 +28,13 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
 
     private final Logger logger;
     private final ObjectMapper objectMapper;
+    private final MicroserviceURIDispatcher uriDispatcher;
 
     @Autowired
-    public HalLinksRefactoringFilter(Logger logger, ObjectMapper objectMapper) {
+    public HalLinksRefactoringFilter(Logger logger, ObjectMapper objectMapper, MicroserviceURIDispatcher uriDispatcher) {
         this.logger = logger;
         this.objectMapper = objectMapper;
+        this.uriDispatcher = uriDispatcher;
     }
 
     /**
@@ -86,11 +89,14 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
                 return null;
             }
             String responseData = CharStreams.toString(new InputStreamReader(in, StandardCharsets.UTF_8));
+            JsonNode tree = objectMapper.readTree(responseData);
 
-            if (requestURI.contains("/patient/list")) {
+            if (isCollectionResource(tree)) {
                 responseData = collectionResourceParsing(responseData);
-            } else if (requestURI.equals("/patient/get") || requestURI.equals("/patient/add") || requestURI.equals("/patient/update")) {
-                responseData = itemResourceParsing(responseData, requestURI);
+            } else if (isItemResource(tree)) {
+                responseData = itemResourceParsing(responseData);
+            } else {
+                //TODO throw exception
             }
 
             context.setResponseBody(responseData);
@@ -101,11 +107,22 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
         return null;
     }
 
+    private boolean isCollectionResource(JsonNode tree) {
+        return tree.has("_embedded") && tree.has("_links") && tree.has("page");
+    }
+
+    private boolean isItemResource(JsonNode tree) {
+        return !tree.has("_embedded") && !tree.has("page") && tree.has("_links");
+    }
+
     private String collectionResourceParsing(String responseData) throws JsonProcessingException {
         ObjectNode jsonLinks = objectMapper.createObjectNode();
         JsonNode tree = objectMapper.readTree(responseData);
         // TODO Check if JsonNode is null or check if error
-        String embeddedPatients = itemResourceParsing(tree.get("_embedded").toString(), "/patient/get");
+
+        //TODO replace itemResourceParsing by batch String replacements
+        String embeddedPatients = itemResourceParsing(tree.get("_embedded").toString());
+
         String links = tree.get("_links").toString().replace("/patient/patient", "/patient/list");
 
         Iterator<Map.Entry<String, JsonNode>> it = objectMapper.readTree(links).fields();
@@ -122,7 +139,8 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
         return refactoredResponse.toPrettyString();
     }
 
-    private String itemResourceParsing(String responseData, String newRequestUri) {
-        return responseData.replace("/patient/patient", newRequestUri);
+    private String itemResourceParsing(String responseData) {
+        // TODO match with regex protocol, host, port and uri to replace them with API gateway values
+        return null;
     }
 }

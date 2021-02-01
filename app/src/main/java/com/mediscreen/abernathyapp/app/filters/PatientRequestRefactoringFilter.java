@@ -29,6 +29,8 @@ import java.util.Map;
 
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.*;
 
+//TODO generify this class to work with any microservice
+
 @Component
 public class PatientRequestRefactoringFilter extends ZuulFilter {
 
@@ -177,6 +179,8 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
             generator.close();
 
             byte[] body = bodyWriter.toString().getBytes(StandardCharsets.UTF_8);
+
+            //TODO remplacer HttpServletRequestWrapper avec un builder personnalisé
 
             context.setRequest(new HttpServletRequestWrapper(context.getRequest()) {
 
