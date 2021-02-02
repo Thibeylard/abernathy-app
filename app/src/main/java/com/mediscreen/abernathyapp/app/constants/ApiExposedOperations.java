@@ -6,7 +6,7 @@ public enum ApiExposedOperations {
     GET_ALL("/list"),
     GET_SINGLE("/get");
 
-    private String uri;
+    private final String uri;
 
     ApiExposedOperations(String uri) {
         this.uri = uri;
