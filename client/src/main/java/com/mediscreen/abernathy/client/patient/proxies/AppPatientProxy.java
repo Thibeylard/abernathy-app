@@ -1,9 +1,10 @@
 package com.mediscreen.abernathy.client.patient.proxies;
 
-import com.mediscreen.abernathy.client.patient.dtos.PatientCollectionDTO;
-import com.mediscreen.abernathy.client.patient.dtos.PatientItemDTO;
+import com.mediscreen.abernathy.client.patient.dtos.PatientCollectionResourceDTO;
+import com.mediscreen.abernathy.client.patient.dtos.PatientItemResourceDTO;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,17 +15,17 @@ public interface AppPatientProxy {
 
     // TODO handle sort parameter
     @GetMapping("/patient/list")
-    PatientCollectionDTO getAllPatients(
-            @RequestParam(name = "page", required = false) int page,
-            @RequestParam(name = "size", required = false) int size
+    PatientCollectionResourceDTO getAllPatients(
+            @RequestParam(name = "page", required = false) @Nullable Integer page,
+            @RequestParam(name = "size", required = false) @Nullable Integer size
 //            @RequestParam(name="sort", required = false) String sort
     );
 
     @GetMapping("/patient/")
-    PatientItemDTO getPatient(@RequestParam("id") String id);
+    PatientItemResourceDTO getPatient(@RequestParam("id") String id);
 
     @PostMapping("/patient/add")
-    PatientItemDTO addPatient(
+    PatientItemResourceDTO addPatient(
             @RequestParam("family") String family,
             @RequestParam("given") String given,
             @RequestParam("dob") String dob,
@@ -33,7 +34,7 @@ public interface AppPatientProxy {
             @RequestParam("phone") String phone);
 
     @PostMapping("/patient/update")
-    PatientItemDTO updatePatient(
+    PatientItemResourceDTO updatePatient(
             @RequestParam("id") String id,
             @RequestParam("family") String family,
             @RequestParam("given") String given,

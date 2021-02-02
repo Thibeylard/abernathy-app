@@ -1,16 +1,16 @@
 package com.mediscreen.abernathy.client.patient.dtos;
 
-public class PageDTO {
+public class ResourcePageDTO {
 
     private int size;
     private int totalElements;
     private int totalPages;
     private int current;
 
-    private PageDTO() {
+    private ResourcePageDTO() {
     }
 
-    public PageDTO(int size, int totalElements, int totalPages, int current) {
+    public ResourcePageDTO(int size, int totalElements, int totalPages, int current) {
         this.size = size;
         this.totalElements = totalElements;
         this.totalPages = totalPages;

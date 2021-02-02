@@ -1,8 +1,8 @@
 package com.mediscreen.abernathy.client.patient.controllers;
 
-import com.mediscreen.abernathy.client.patient.dtos.PatientCollectionDTO;
+import com.mediscreen.abernathy.client.patient.dtos.PatientCollectionResourceDTO;
 import com.mediscreen.abernathy.client.patient.dtos.PatientDTO;
-import com.mediscreen.abernathy.client.patient.dtos.PatientItemDTO;
+import com.mediscreen.abernathy.client.patient.dtos.PatientItemResourceDTO;
 import com.mediscreen.abernathy.client.patient.proxies.AppPatientProxy;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,18 +33,19 @@ public class PatientController {
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "size", required = false) Integer size,
             Model model) {
-        model.addAttribute(getAllPatients(page, size));
-        return "home";
+        PatientCollectionResourceDTO collectionResource = getPatientCollectionResource(page, size);
+        model.addAttribute("allPatients", collectionResource.getPatientItems());
+        return "patientList";
     }
 
     @GetMapping("/patient/get")
-    public String getPatient(@PathVariable("id") String id, Model model) {
-        PatientItemDTO patient = getPatient(id);
+    public String getPatientItemResource(@PathVariable("id") String id, Model model) {
+        PatientItemResourceDTO patient = getPatientItemResource(id);
         if (patient == null) {
             model.addAttribute("patientNotFound", true);
-            return "home";
+            return "patientList";
         }
-        model.addAttribute(getPatient(id));
+        model.addAttribute(getPatientItemResource(id));
         return "patientForm";
     }
 
@@ -62,7 +63,7 @@ public class PatientController {
                     patientDTO.getPhone()
             );
             model.addAttribute("patientAdded", true);
-            return "home";
+            return "patientList";
         }
         return "patientForm";
     }
@@ -72,14 +73,12 @@ public class PatientController {
         return "patientForm";
     }*/
 
-    @ModelAttribute("allPatients")
-    private PatientCollectionDTO getAllPatients(@Nullable Integer page,
-                                                @Nullable Integer size) {
+    private PatientCollectionResourceDTO getPatientCollectionResource(@Nullable Integer page,
+                                                                      @Nullable Integer size) {
         return appPatientProxy.getAllPatients(page, size);
     }
 
-    @ModelAttribute("patient")
-    private PatientItemDTO getPatient(String id) {
+    private PatientItemResourceDTO getPatientItemResource(String id) {
         return appPatientProxy.getPatient(id);
     }
 }

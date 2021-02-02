@@ -12,8 +12,8 @@
 
 <table th:unless="${#lists.isEmpty(allPatients)}">
     <tr th:each="patient : ${allPatients}">
-        <td th:text="${patient.given}"></td>
-        <td th:text="${patient.family}"></td>
+        <td th:text="${patient.item.given}"></td>
+        <td th:text="${patient.item.family}"></td>
     </tr>
 </table>
 </body>

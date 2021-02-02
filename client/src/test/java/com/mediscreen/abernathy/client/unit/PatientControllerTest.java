@@ -1,7 +1,9 @@
 package com.mediscreen.abernathy.client.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mediscreen.abernathy.client.patient.dtos.*;
 import com.mediscreen.abernathy.client.patient.proxies.AppPatientProxy;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -26,43 +36,58 @@ public class PatientControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void gettingHomeIsOk() throws Exception {
-/*
+    public void gettingPatientListIsOk() throws Exception {
+
         // No patient available in database
-        List<Patient> noPatients = Lists.emptyList();
+        PatientCollectionResourceDTO collectionResource = new PatientCollectionResourceDTO(
+                Lists.emptyList(),
+                new ResourceLinksDTO(objectMapper.createObjectNode()),
+                new ResourcePageDTO(0, 0, 0, 0)
+        );
 
-        when(appPatientProxy.getAllPatients()).thenReturn(noPatients);
+        when(appPatientProxy.getAllPatients(null, null)).thenReturn(collectionResource);
 
-        mockMvc.perform(get("/"))
-                .andExpect(view().name("home"))
+        mockMvc.perform(get("/patient/list"))
+                .andExpect(view().name("patientList"))
                 .andExpect(model().attributeExists("allPatients"))
-                .andExpect(model().attribute("allPatients", is(noPatients)));
+                .andExpect(model().attribute("allPatients", collectionResource.getPatientItems()));
 
         // Two patients available in database
-        List<Patient> patients = new ArrayList<>();
-        patients.add(new Patient(
-                "TestFamily",
-                "TestGiven",
-                new SimpleDateFormat("yyyy-MM-dd").parse("1854-02-27"),
-                "M",
-                "1st Oakland St",
-                "000-111-222"
-        ));
-        patients.add(new Patient(
-                "TestFamily2",
-                "TestGiven2",
-                new SimpleDateFormat("yyyy-MM-dd").parse("1854-03-30"),
-                "F",
-                "2st Oakland St",
-                "000-111-223"
-        ));
+        List<PatientItemResourceDTO> patients = new ArrayList<>();
+        ResourceLinksDTO patientLinks = new ResourceLinksDTO(objectMapper.createObjectNode());
+        patientLinks.getLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/1/uri\"}"));
+        patients.add(new PatientItemResourceDTO(
+                new PatientDTO(
+                        "TestFamily",
+                        "TestGiven",
+                        "1854-02-27",
+                        "M",
+                        "1st Oakland St",
+                        "000-111-222"),
+                patientLinks));
+        patientLinks.getLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/2/uri\"}"));
+        patients.add(new PatientItemResourceDTO(
+                new PatientDTO(
+                        "TestFamily2",
+                        "TestGiven2",
+                        "1854-03-30",
+                        "F",
+                        "2st Oakland St",
+                        "000-111-223"),
+                patientLinks));
 
-        when(appPatientProxy.getAllPatients()).thenReturn(patients);
+        collectionResource = new PatientCollectionResourceDTO(
+                patients,
+                new ResourceLinksDTO(objectMapper.createObjectNode()),
+                new ResourcePageDTO(2, 2, 1, 0)
+        );
 
-        mockMvc.perform(get("/"))
-                .andExpect(view().name("home"))
+        when(appPatientProxy.getAllPatients(null, null)).thenReturn(collectionResource);
+
+        mockMvc.perform(get("/patient/list"))
+                .andExpect(view().name("patientList"))
                 .andExpect(model().attributeExists("allPatients"))
-                .andExpect(model().attribute("allPatients", is(patients)));*/
+                .andExpect(model().attribute("allPatients", patients));
     }
 /*
     @Test
