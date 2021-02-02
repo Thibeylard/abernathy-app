@@ -11,7 +11,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
@@ -29,7 +32,7 @@ public class PatientController {
     }
 
     @GetMapping("/patient/list")
-    public String home(
+    public String getPatientList(
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "size", required = false) Integer size,
             Model model) {
@@ -39,13 +42,14 @@ public class PatientController {
     }
 
     @GetMapping("/patient/get")
-    public String getPatientItemResource(@PathVariable("id") String id, Model model) {
+    public String getPatient(@RequestParam("id") String id, Model model) {
         PatientItemResourceDTO patient = getPatientItemResource(id);
         if (patient == null) {
             model.addAttribute("patientNotFound", true);
             return "patientList";
         }
-        model.addAttribute(getPatientItemResource(id));
+        model.addAttribute("item", patient.getItem());
+        model.addAttribute("links", patient.getLinks());
         return "patientForm";
     }
 

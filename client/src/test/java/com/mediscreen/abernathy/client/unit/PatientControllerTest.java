@@ -89,48 +89,53 @@ public class PatientControllerTest {
                 .andExpect(model().attributeExists("allPatients"))
                 .andExpect(model().attribute("allPatients", patients));
     }
-/*
+
     @Test
     public void gettingPatientIsOk() throws Exception {
 
         // Two patients available in database
-        List<Patient> patients = new ArrayList<>();
-        patients.add(new Patient(
-                "TestFamily",
-                "TestGiven",
-                new SimpleDateFormat("yyyy-MM-dd").parse("1854-02-27"),
-                "M",
-                "1st Oakland St",
-                "000-111-222"
-        ));
-
-        patients.add(new Patient(
-                "TestFamily2",
-                "TestGiven2",
-                new SimpleDateFormat("yyyy-MM-dd").parse("1854-03-30"),
-                "F",
-                "2st Oakland St",
-                "000-111-223"
-        ));
-
-        patients.get(0).setId("1");
-        patients.get(1).setId("2");
+        List<PatientItemResourceDTO> patients = new ArrayList<>();
+        ResourceLinksDTO patientLinks = new ResourceLinksDTO(objectMapper.createObjectNode());
+        patientLinks.getLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/1/uri\"}"));
+        patients.add(new PatientItemResourceDTO(
+                new PatientDTO(
+                        "TestFamily",
+                        "TestGiven",
+                        "1854-02-27",
+                        "M",
+                        "1st Oakland St",
+                        "000-111-222"),
+                patientLinks));
+        patientLinks.getLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/2/uri\"}"));
+        patients.add(new PatientItemResourceDTO(
+                new PatientDTO(
+                        "TestFamily2",
+                        "TestGiven2",
+                        "1854-03-30",
+                        "F",
+                        "2st Oakland St",
+                        "000-111-223"),
+                patientLinks));
 
         when(appPatientProxy.getPatient("1")).thenReturn(patients.get(0));
 
-        mockMvc.perform(get("/patient/1"))
+        mockMvc.perform(get("/patient/get")
+                .param("id", "1"))
                 .andExpect(view().name("patientForm"))
-                .andExpect(model().attributeExists("patient"))
-                .andExpect(model().attribute("patient", is(patients.get(0))));
+                .andExpect(model().attributeExists("item"))
+                .andExpect(model().attributeExists("links"))
+                .andExpect(model().attribute("item", patients.get(0).getItem()))
+                .andExpect(model().attribute("links", patients.get(0).getLinks()));
 
         when(appPatientProxy.getPatient("3")).thenReturn(null);
 
-        mockMvc.perform(get("/patient/3"))
-                .andExpect(view().name("home"))
+        mockMvc.perform(get("/patient/get")
+                .param("id", "3"))
+                .andExpect(view().name("patientList"))
                 .andExpect(model().attributeExists("patientNotFound"))
-                .andExpect(model().attribute("patientNotFound", is(true)));
+                .andExpect(model().attribute("patientNotFound", true));
     }
-
+/*
     @Test
     public void addingPatientIsOk() throws Exception {
 
