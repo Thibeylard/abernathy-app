@@ -8,6 +8,27 @@ services:
     container_name: "configserver"
     command:
       "--spring.profiles.active=docker"
+  #------------------------------------------------- Abernathy Client
+  client:
+    build: "./client/"
+    ports:
+      - 9131:9131
+    container_name: "client"
+    depends_on:
+      - configserver
+      - app
+    command:
+      "--spring.profiles.active=docker"
+  #------------------------------------------------- Abernathy App
+  app:
+    build: "./app/"
+    ports:
+      - 9121:9121
+    container_name: "app"
+    depends_on:
+      - configserver
+    command:
+      "--spring.profiles.active=docker"
   #------------------------------------------------- Patient Microservice
   patient:
     build: "./patient/"
@@ -25,16 +46,6 @@ services:
     ports:
       - 9111:9111
     container_name: "eureka"
-    depends_on:
-      - configserver
-    command:
-      "--spring.profiles.active=docker"
-  #------------------------------------------------- Abernathy App
-  app:
-    build: "./app/"
-    ports:
-      - 9121:9121
-    container_name: "app"
     depends_on:
       - configserver
     command:

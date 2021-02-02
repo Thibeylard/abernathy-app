@@ -4,6 +4,9 @@
 /configserver/build/
 /eureka/build/
 /client/build/
+/client/gradlew.bat
+/client/gradlew
+/client/gradle/
 /patient/build/
 /app/build/
 /gradlew
