@@ -12,7 +12,7 @@ public enum ApiExposedOperations {
         this.uri = uri;
     }
 
-    public String getUri() {
+    public String getBaseUri() {
         return uri;
     }
 }

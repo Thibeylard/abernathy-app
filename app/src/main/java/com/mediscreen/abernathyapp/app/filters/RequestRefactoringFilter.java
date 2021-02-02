@@ -95,16 +95,16 @@ public class RequestRefactoringFilter extends ZuulFilter {
         HttpServletRequest request = context.getRequest();
         String method = request.getMethod();
 
-        if (this.requestURI.contains(ADD.getUri())
+        if (this.requestURI.contains(ADD.getBaseUri())
                 && method.equals(HttpMethod.POST.toString())) {
             additionRequestRefactoring();
-        } else if (this.requestURI.contains(UPDATE.getUri())
+        } else if (this.requestURI.contains(UPDATE.getBaseUri())
                 && method.equals(HttpMethod.PUT.toString())) {
             updateRequestRefactoring();
-        } else if (this.requestURI.contains(GET_SINGLE.getUri())
+        } else if (this.requestURI.contains(GET_SINGLE.getBaseUri())
                 && method.equals(HttpMethod.GET.toString())) {
             getRequestRefactoring();
-        } else if (this.requestURI.contains(GET_ALL.getUri())
+        } else if (this.requestURI.contains(GET_ALL.getBaseUri())
                 && method.equals(HttpMethod.GET.toString())) {
             listRequestRefactoring();
         } else {
@@ -188,7 +188,7 @@ public class RequestRefactoringFilter extends ZuulFilter {
 
             byte[] body = bodyWriter.toString().getBytes(StandardCharsets.UTF_8);
 
-            //TODO remplacer HttpServletRequestWrapper avec un builder personnalisé
+            //TODO replace HttpServletRequestWrapper with custom builder
 
             context.setRequest(new HttpServletRequestWrapper(context.getRequest()) {
 

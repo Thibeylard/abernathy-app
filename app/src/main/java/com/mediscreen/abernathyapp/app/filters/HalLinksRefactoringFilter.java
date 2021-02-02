@@ -114,48 +114,47 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
     }
 
     private boolean isCollectionResource(JsonNode tree) {
-        return !tree.get("_embedded").isNull()
-                && !tree.get("page").isNull()
-                && !tree.get("_links").isNull();
+        return tree.get("_embedded") != null
+                && tree.get("page") != null
+                && tree.get("_links") != null;
     }
 
     private boolean isItemResource(JsonNode tree) {
-        return tree.get("_embedded").isNull()
-                && tree.get("page").isNull()
-                && !tree.get("_links").isNull();
+        return tree.get("_embedded") == null
+                && tree.get("page") == null
+                && tree.get("_links") != null;
     }
 
     private String collectionResourceParsing(String responseData) throws JsonProcessingException {
-        // TODO Check if JsonNode is null or check if error
-        //TODO replace itemResourceParsing by batch String replacements
 
         JsonNode embeddedJson = objectMapper.readTree(responseData).get("_embedded");
-        JsonNode linksJson = objectMapper.readTree(responseData).get("_links");
-        JsonNode pageJson = objectMapper.readTree(responseData).get("page");
-
         String embeddedRefactored = itemResourceParsing(embeddedJson.toString());
         embeddedJson = objectMapper.readTree(embeddedRefactored);
 
+        JsonNode linksJson = objectMapper.readTree(responseData).get("_links");
         String links = linksJson.toString().replace(serviceRequestedURI, collectionURI);
-        links.replaceAll("\"profile\" : \\{(.*)\\}", "");
-        linksJson = objectMapper.readTree(links);
+        ObjectNode linksJsonObject = objectMapper.convertValue(objectMapper.readTree(links), ObjectNode.class);
+        linksJsonObject.remove("profile");
 
         ObjectNode refactoredResponse = this.objectMapper.createObjectNode();
         refactoredResponse.set("_embedded", embeddedJson);
-        refactoredResponse.set("_links", linksJson);
-        refactoredResponse.set("page", pageJson);
+        refactoredResponse.set("_links", linksJsonObject);
+        refactoredResponse.set("page", objectMapper.readTree(responseData).get("page"));
 
         return refactoredResponse.toPrettyString();
     }
 
     private String itemResourceParsing(String responseData) {
-        // TODO match with regex protocol, host, port and uri to replace them with API gateway values
-        return responseData.replace(this.itemURI, this.serviceRequestedURI);
+        // An additional modification is needed here to transform path parameter as URL parameter
+        return responseData.replace(this.serviceRequestedURI + "/", this.itemURI + "?id=");
     }
 
     private void setServiceRequestedURI() {
         RibbonApacheHttpResponse ribbonResponse = (RibbonApacheHttpResponse) RequestContext.getCurrentContext().get("ribbonResponse");
-        this.serviceRequestedURI = ribbonResponse.getRequestedURI().toString();
+
+        // Remove all service URI then add back service name to have clean URI, avoiding complex parsing of path or URL parameters
+        this.serviceRequestedURI = ribbonResponse.getRequestedURI().toString().replaceAll("/" + serviceID + ".*$", "");
+        this.serviceRequestedURI = this.serviceRequestedURI + "/" + serviceID;
     }
 
     private void buildResourceURIs() {
@@ -166,7 +165,7 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
         stringBuilder.append(zuulHeaders.get("x-forwarded-host")); // ex: localhost:8080
         stringBuilder.append("/").append(serviceID); // ex: /patient
 
-        this.collectionURI = stringBuilder.toString() + GET_ALL.getUri();
-        this.itemURI = stringBuilder.toString() + GET_SINGLE.getUri();
+        this.collectionURI = stringBuilder.toString() + GET_ALL.getBaseUri();
+        this.itemURI = stringBuilder.toString() + GET_SINGLE.getBaseUri();
     }
 }
