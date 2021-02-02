@@ -27,18 +27,21 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.mediscreen.abernathyapp.app.constants.ApiExposedOperations.*;
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.*;
 
 //TODO generify this class to work with any microservice
 
 @Component
-public class PatientRequestRefactoringFilter extends ZuulFilter {
+public class RequestRefactoringFilter extends ZuulFilter {
 
     private final Logger logger;
     ObjectMapper objectMapper;
+    private String serviceId;
+    private String requestURI;
 
     @Autowired
-    public PatientRequestRefactoringFilter(Logger logger, ObjectMapper objectMapper) {
+    public RequestRefactoringFilter(Logger logger, ObjectMapper objectMapper) {
         this.logger = logger;
         this.objectMapper = objectMapper;
     }
@@ -74,7 +77,10 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
      */
     @Override
     public boolean shouldFilter() {
-        return RequestContext.getCurrentContext().get(SERVICE_ID_KEY).toString().equals("patient");
+        RequestContext context = RequestContext.getCurrentContext();
+        this.requestURI = context.getRequest().getRequestURI();
+        this.serviceId = context.get(SERVICE_ID_KEY).toString();
+        return serviceId != null && requestURI != null;
     }
 
     /**
@@ -87,23 +93,24 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
     public Object run() throws ZuulException {
         RequestContext context = RequestContext.getCurrentContext();
         HttpServletRequest request = context.getRequest();
+        String method = request.getMethod();
 
-        if (request.getRequestURI().equals("/patient/add")
-                && request.getMethod().equals(HttpMethod.POST.toString())) {
+        if (this.requestURI.contains(ADD.getUri())
+                && method.equals(HttpMethod.POST.toString())) {
             additionRequestRefactoring();
-        } else if (request.getRequestURI().equals("/patient/update")
-                && request.getMethod().equals(HttpMethod.PUT.toString())) {
+        } else if (this.requestURI.contains(UPDATE.getUri())
+                && method.equals(HttpMethod.PUT.toString())) {
             updateRequestRefactoring();
-        } else if (request.getRequestURI().equals("/patient/get")
-                && request.getMethod().equals(HttpMethod.GET.toString())) {
+        } else if (this.requestURI.contains(GET_SINGLE.getUri())
+                && method.equals(HttpMethod.GET.toString())) {
             getRequestRefactoring();
-        } else if (request.getRequestURI().equals("/patient/list")
-                && request.getMethod().equals(HttpMethod.GET.toString())) {
+        } else if (this.requestURI.contains(GET_ALL.getUri())
+                && method.equals(HttpMethod.GET.toString())) {
             listRequestRefactoring();
         } else {
-            logger.debug("Unexpected endpoint call under /patient");
+            logger.debug("Unexpected endpoint call under /{}", requestURI);
             context.setResponseStatusCode(HttpStatus.NOT_FOUND.value());
-            context.setResponseBody(context.getRequest().getMethod() + " request on " + context.getRequest().getRequestURI() + " is not a valid endpoint.");
+            context.setResponseBody(context.getRequest().getMethod() + " request on " + requestURI + " is not a valid endpoint.");
             context.setSendZuulResponse(false);
         }
 
@@ -111,14 +118,15 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
     }
 
     private void additionRequestRefactoring() {
-        logger.debug("POST request to /patient/add is about to be refactored");
-        RequestContext.getCurrentContext().set(REQUEST_URI_KEY, "/patient");
+        RequestContext context = RequestContext.getCurrentContext();
+        logger.debug("POST request to /{}/add is about to be refactored", serviceId);
+        RequestContext.getCurrentContext().set(REQUEST_URI_KEY, "/" + serviceId);
 
         refactoringParametersAsJsonBody();
     }
 
     private void updateRequestRefactoring() {
-        logger.debug("PUT request to /patient/update is about to be refactored");
+        logger.debug("PUT request to /{}/update is about to be refactored", serviceId);
 
         RequestContext context = RequestContext.getCurrentContext();
 
@@ -128,10 +136,10 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
         String id = context.getRequest().getParameter("id");
         if (id == null || id.isBlank()) {
             context.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
-            context.setResponseBody("Missing id property to identify and update Patient");
+            context.setResponseBody("Missing id property to identify and update " + serviceId.substring(0, 1).toUpperCase() + serviceId.substring(1));
             context.setSendZuulResponse(false);
         } else {
-            context.set(REQUEST_URI_KEY, "/patient/" + id);
+            context.set(REQUEST_URI_KEY, "/" + serviceId + "/" + id);
 
             refactoringParametersAsJsonBody();
         }
@@ -139,7 +147,7 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
     }
 
     private void getRequestRefactoring() {
-        logger.debug("GET request to /patient/get is about to be refactored");
+        logger.debug("GET request to /{}/get is about to be refactored", serviceId);
         RequestContext context = RequestContext.getCurrentContext();
         String id = context.getRequest().getParameter("id");
 
@@ -147,17 +155,17 @@ public class PatientRequestRefactoringFilter extends ZuulFilter {
 
         if (id == null || id.isBlank()) {
             context.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
-            context.setResponseBody("Missing id parameter to get any Patient");
+            context.setResponseBody("Missing id parameter to get any " + serviceId.substring(0, 1).toUpperCase() + serviceId.substring(1));
             context.setSendZuulResponse(false);
         } else {
-            context.set(REQUEST_URI_KEY, "/patient/" + id);
+            context.set(REQUEST_URI_KEY, "/" + serviceId + "/" + id);
         }
     }
 
     private void listRequestRefactoring() {
-        logger.debug("GET request to /patient/list is about to be refactored");
+        logger.debug("GET request to /{}/list is about to be refactored", serviceId);
         RequestContext context = RequestContext.getCurrentContext();
-        context.set(REQUEST_URI_KEY, "/patient");
+        context.set(REQUEST_URI_KEY, "/" + serviceId);
     }
 
     private void refactoringParametersAsJsonBody() {

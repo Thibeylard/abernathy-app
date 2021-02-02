@@ -5,36 +5,38 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.io.CharStreams;
-import com.mediscreen.abernathyapp.app.services.MicroserviceURIDispatcher;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.netflix.ribbon.apache.RibbonApacheHttpResponse;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.HashMap;
 
-import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.POST_TYPE;
-import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.SEND_RESPONSE_FILTER_ORDER;
+import static com.mediscreen.abernathyapp.app.constants.ApiExposedOperations.GET_ALL;
+import static com.mediscreen.abernathyapp.app.constants.ApiExposedOperations.GET_SINGLE;
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.*;
 
 @Component
 public class HalLinksRefactoringFilter extends ZuulFilter {
 
     private final Logger logger;
     private final ObjectMapper objectMapper;
-    private final MicroserviceURIDispatcher uriDispatcher;
+    private String serviceID;
+    private String itemURI;
+    private String collectionURI;
+    private String serviceRequestedURI;
 
     @Autowired
-    public HalLinksRefactoringFilter(Logger logger, ObjectMapper objectMapper, MicroserviceURIDispatcher uriDispatcher) {
+    public HalLinksRefactoringFilter(Logger logger, ObjectMapper objectMapper) {
         this.logger = logger;
         this.objectMapper = objectMapper;
-        this.uriDispatcher = uriDispatcher;
     }
 
     /**
@@ -68,8 +70,11 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
      */
     @Override
     public boolean shouldFilter() {
-        int statusCode = RequestContext.getCurrentContext().getResponseStatusCode();
-        return statusCode == 200 || statusCode == 201;
+        RequestContext context = RequestContext.getCurrentContext();
+        this.serviceID = context.get(SERVICE_ID_KEY).toString();
+        int statusCode = context.getResponseStatusCode();
+        return serviceID != null
+                && (statusCode == 200 || statusCode == 201);
     }
 
     /**
@@ -81,7 +86,8 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
     @Override
     public Object run() throws ZuulException {
         RequestContext context = RequestContext.getCurrentContext();
-        String requestURI = context.getRequest().getRequestURI();
+        this.setServiceRequestedURI();
+        this.buildResourceURIs();
 
         try (final InputStream in = context.getResponseDataStream()) {
             if (in == null) {
@@ -108,39 +114,59 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
     }
 
     private boolean isCollectionResource(JsonNode tree) {
-        return tree.has("_embedded") && tree.has("_links") && tree.has("page");
+        return !tree.get("_embedded").isNull()
+                && !tree.get("page").isNull()
+                && !tree.get("_links").isNull();
     }
 
     private boolean isItemResource(JsonNode tree) {
-        return !tree.has("_embedded") && !tree.has("page") && tree.has("_links");
+        return tree.get("_embedded").isNull()
+                && tree.get("page").isNull()
+                && !tree.get("_links").isNull();
     }
 
     private String collectionResourceParsing(String responseData) throws JsonProcessingException {
-        ObjectNode jsonLinks = objectMapper.createObjectNode();
-        JsonNode tree = objectMapper.readTree(responseData);
         // TODO Check if JsonNode is null or check if error
-
         //TODO replace itemResourceParsing by batch String replacements
-        String embeddedPatients = itemResourceParsing(tree.get("_embedded").toString());
 
-        String links = tree.get("_links").toString().replace("/patient/patient", "/patient/list");
+        JsonNode embeddedJson = objectMapper.readTree(responseData).get("_embedded");
+        JsonNode linksJson = objectMapper.readTree(responseData).get("_links");
+        JsonNode pageJson = objectMapper.readTree(responseData).get("page");
 
-        Iterator<Map.Entry<String, JsonNode>> it = objectMapper.readTree(links).fields();
-        while (it.hasNext()) {
-            Map.Entry<String, JsonNode> field = it.next();
-            jsonLinks.set(field.getKey(), field.getValue());
-        }
+        String embeddedRefactored = itemResourceParsing(embeddedJson.toString());
+        embeddedJson = objectMapper.readTree(embeddedRefactored);
+
+        String links = linksJson.toString().replace(serviceRequestedURI, collectionURI);
+        links.replaceAll("\"profile\" : \\{(.*)\\}", "");
+        linksJson = objectMapper.readTree(links);
 
         ObjectNode refactoredResponse = this.objectMapper.createObjectNode();
-        refactoredResponse.set("_embedded", objectMapper.readTree(embeddedPatients));
-        refactoredResponse.set("_links", jsonLinks.at("/_links"));
-        refactoredResponse.set("page", tree.get("page"));
+        refactoredResponse.set("_embedded", embeddedJson);
+        refactoredResponse.set("_links", linksJson);
+        refactoredResponse.set("page", pageJson);
 
         return refactoredResponse.toPrettyString();
     }
 
     private String itemResourceParsing(String responseData) {
         // TODO match with regex protocol, host, port and uri to replace them with API gateway values
-        return null;
+        return responseData.replace(this.itemURI, this.serviceRequestedURI);
+    }
+
+    private void setServiceRequestedURI() {
+        RibbonApacheHttpResponse ribbonResponse = (RibbonApacheHttpResponse) RequestContext.getCurrentContext().get("ribbonResponse");
+        this.serviceRequestedURI = ribbonResponse.getRequestedURI().toString();
+    }
+
+    private void buildResourceURIs() {
+        HashMap<String, String> zuulHeaders = (HashMap<String, String>) RequestContext.getCurrentContext().get("zuulRequestHeaders");
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(zuulHeaders.get("x-forwarded-proto")).append("://"); // ex: http://
+        stringBuilder.append(zuulHeaders.get("x-forwarded-host")); // ex: localhost:8080
+        stringBuilder.append("/").append(serviceID); // ex: /patient
+
+        this.collectionURI = stringBuilder.toString() + GET_ALL.getUri();
+        this.itemURI = stringBuilder.toString() + GET_SINGLE.getUri();
     }
 }
