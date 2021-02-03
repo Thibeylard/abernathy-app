@@ -42,7 +42,6 @@ public class PatientValidator implements Validator {
                     "dob",
                     "dob.empty",
                     "dob field is mandatory");
-
         }
 
         if (patient.getAddress() == null || patient.getAddress().isBlank()) {

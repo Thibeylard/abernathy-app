@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -135,29 +137,9 @@ public class PatientControllerTest {
                 .andExpect(model().attributeExists("patientNotFound"))
                 .andExpect(model().attribute("patientNotFound", true));
     }
-/*
+
     @Test
     public void addingPatientIsOk() throws Exception {
-
-        // Two patients available in database
-        List<Patient> patients = new ArrayList<>();
-        patients.add(new Patient(
-                "TestFamily",
-                "TestGiven",
-                new SimpleDateFormat("yyyy-MM-dd").parse("1854-02-27"),
-                "M",
-                "1st Oakland St",
-                "000-111-222"
-        ));
-
-        patients.add(new Patient(
-                "TestFamily2",
-                "TestGiven2",
-                new SimpleDateFormat("yyyy-MM-dd").parse("1854-03-30"),
-                "F",
-                "2st Oakland St",
-                "000-111-223"
-        ));
 
         // Valid PatientDTO
         PatientDTO patientToAdd = new PatientDTO(
@@ -169,18 +151,27 @@ public class PatientControllerTest {
                 "030-111-224"
         );
 
-        Patient patientAdded = new Patient(patientToAdd);
-        patientAdded.setId("3");
+        ResourceLinksDTO patientLinks = new ResourceLinksDTO(objectMapper.createObjectNode());
+        patientLinks.getLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/3/uri\"}"));
 
-        patients.get(0).setId("1");
-        patients.get(1).setId("2");
+        PatientItemResourceDTO patientAdded = new PatientItemResourceDTO(
+                patientToAdd,
+                patientLinks);
 
-        when(appPatientProxy.addPatient(patientToAdd)).thenReturn(patientAdded);
 
-        mockMvc.perform(post("/patient")
+        when(appPatientProxy.addPatient(
+                patientToAdd.getFamily(),
+                patientToAdd.getGiven(),
+                patientToAdd.getDob(),
+                patientToAdd.getSex(),
+                patientToAdd.getAddress(),
+                patientToAdd.getPhone()
+        )).thenReturn(patientAdded);
+
+        mockMvc.perform(post("/patient/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patientToAdd)))
-                .andExpect(view().name("home"))
+                .andExpect(view().name("patientList"))
                 .andExpect(model().attributeExists("patientAdded"))
                 .andExpect(model().attribute("patientAdded", true));
 
@@ -194,11 +185,43 @@ public class PatientControllerTest {
                 "030-111-224"
         );
 
-        mockMvc.perform(post("/patient")
+        mockMvc.perform(post("/patient/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patientToAdd)))
                 .andExpect(view().name("patientForm"))
                 .andExpect(model().hasErrors());
-    }*/
+
+        // Invalid PatientDTO
+        patientToAdd = new PatientDTO(
+                "", // Blank family
+                "TestGiven3",
+                "1994-09-10",
+                "F",
+                "3st Oakland St",
+                "030-111-224"
+        );
+
+        mockMvc.perform(post("/patient/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(patientToAdd)))
+                .andExpect(view().name("patientForm"))
+                .andExpect(model().hasErrors());
+
+        // Invalid PatientDTO
+        patientToAdd = new PatientDTO(
+                "TestFamily3",
+                "TestGiven3",
+                "1994-09-10",
+                "F",
+                "3st Oakland St",
+                "06 74 58 47 45" // Invalid phone format
+        );
+
+        mockMvc.perform(post("/patient/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(patientToAdd)))
+                .andExpect(view().name("patientForm"))
+                .andExpect(model().hasErrors());
+    }
 
 }

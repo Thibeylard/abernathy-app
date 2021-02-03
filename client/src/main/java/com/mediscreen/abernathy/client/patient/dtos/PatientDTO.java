@@ -1,12 +1,32 @@
 package com.mediscreen.abernathy.client.patient.dtos;
 
+import com.mediscreen.abernathy.client.patient.annotations.ValidDobFormat;
+import com.mediscreen.abernathy.client.patient.annotations.ValidPhoneFormat;
+import com.mediscreen.abernathy.client.patient.annotations.ValidSexValue;
+
+import javax.validation.constraints.NotBlank;
+
 public class PatientDTO {
 
+    @NotBlank
     private String family;
+
+    @NotBlank
     private String given;
+
+    @NotBlank
+    @ValidDobFormat
     private String dob;
+
+    @NotBlank
+    @ValidSexValue
     private String sex;
+
+    @NotBlank
     private String address;
+
+    @NotBlank
+    @ValidPhoneFormat
     private String phone;
 
     private PatientDTO() {
