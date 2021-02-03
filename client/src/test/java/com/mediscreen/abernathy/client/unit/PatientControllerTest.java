@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -168,9 +167,11 @@ public class PatientControllerTest {
                 patientToAdd.getPhone()
         )).thenReturn(patientAdded);
 
+        String json = objectMapper.writeValueAsString(patientToAdd);
+
         mockMvc.perform(post("/patient/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(patientToAdd)))
+                .content(json))
                 .andExpect(view().name("patientList"))
                 .andExpect(model().attributeExists("patientAdded"))
                 .andExpect(model().attribute("patientAdded", true));
@@ -220,6 +221,115 @@ public class PatientControllerTest {
         mockMvc.perform(post("/patient/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patientToAdd)))
+                .andExpect(view().name("patientForm"))
+                .andExpect(model().hasErrors());
+    }
+
+    @Test
+    public void updatingPatientIsOk() throws Exception {
+
+        // Valid PatientDTO
+        PatientDTO patientToUpdate = new PatientDTO(
+                "3",
+                "TestFamily3",
+                "TestGiven3",
+                "1894-09-10",
+                "F",
+                "3st Oakland St",
+                "030-111-224"
+        );
+
+        ResourceLinksDTO patientLinks = new ResourceLinksDTO(objectMapper.createObjectNode());
+        patientLinks.getLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/3/uri\"}"));
+
+        PatientItemResourceDTO patientUpdated = new PatientItemResourceDTO(
+                patientToUpdate,
+                patientLinks);
+
+
+        when(appPatientProxy.updatePatient(
+                patientToUpdate.getId().get(),
+                patientToUpdate.getFamily(),
+                patientToUpdate.getGiven(),
+                patientToUpdate.getDob(),
+                patientToUpdate.getSex(),
+                patientToUpdate.getAddress(),
+                patientToUpdate.getPhone()
+        )).thenReturn(patientUpdated);
+
+        mockMvc.perform(put("/patient/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(patientToUpdate)))
+                .andExpect(view().name("patientList"))
+                .andExpect(model().attributeExists("patientUpdated"))
+                .andExpect(model().attribute("patientUpdated", true));
+
+        // Invalid PatientDTO
+        patientToUpdate = new PatientDTO(
+                "3",
+                "TestFamily3",
+                "TestGiven3",
+                "10/09/1994", // Date format is wrong, must be yyyy-MM-dd
+                "F",
+                "3st Oakland St",
+                "030-111-224"
+        );
+
+        mockMvc.perform(put("/patient/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(patientToUpdate)))
+                .andExpect(view().name("patientForm"))
+                .andExpect(model().hasErrors());
+
+        // Invalid PatientDTO
+        patientToUpdate = new PatientDTO(
+                "3",
+                "", // Blank family
+                "TestGiven3",
+                "1994-09-10",
+                "F",
+                "3st Oakland St",
+                "030-111-224"
+        );
+
+        mockMvc.perform(put("/patient/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(patientToUpdate)))
+                .andExpect(view().name("patientForm"))
+                .andExpect(model().hasErrors());
+        ;
+
+        // Invalid PatientDTO
+        patientToUpdate = new PatientDTO(
+                "3",
+                "TestFamily3",
+                "TestGiven3",
+                "1994-09-10",
+                "F",
+                "3st Oakland St",
+                "06 74 58 47 45" // Invalid phone format
+        );
+
+        mockMvc.perform(put("/patient/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(patientToUpdate)))
+                .andExpect(view().name("patientForm"))
+                .andExpect(model().hasErrors());
+
+        // Invalid PatientDTO
+        patientToUpdate = new PatientDTO(
+                // No ID
+                "TestFamily3",
+                "TestGiven3",
+                "1994-09-10",
+                "F",
+                "3st Oakland St",
+                "06 74 58 47 45"
+        );
+
+        mockMvc.perform(put("/patient/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(patientToUpdate)))
                 .andExpect(view().name("patientForm"))
                 .andExpect(model().hasErrors());
     }

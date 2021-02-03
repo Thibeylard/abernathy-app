@@ -11,12 +11,11 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 @Controller
 public class PatientController {
@@ -72,10 +71,31 @@ public class PatientController {
         return "patientForm";
     }
 
-   /* @PutMapping(value = "/patientForm")
-    public String updatePatient(@RequestBody PatientDTO patientDTO) {
+    @PutMapping(value = "/patient/update")
+    public String updatePatient(@Valid @RequestBody PatientDTO patientDTO, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("patient", patientDTO);
+        } else {
+            try {
+                appPatientProxy.updatePatient(
+                        patientDTO.getId().orElseThrow(ValidationException::new),
+                        patientDTO.getFamily(),
+                        patientDTO.getGiven(),
+                        patientDTO.getDob(),
+                        patientDTO.getSex(),
+                        patientDTO.getAddress(),
+                        patientDTO.getPhone()
+                );
+                model.addAttribute("patientUpdated", true);
+                return "patientList";
+            } catch (ValidationException e) {
+                result.addError(new FieldError("patient", "id", "ID is mandatory."));
+                model.addAttribute("patient", patientDTO);
+            }
+        }
         return "patientForm";
-    }*/
+    }
+
 
     private PatientCollectionResourceDTO getPatientCollectionResource(@Nullable Integer page,
                                                                       @Nullable Integer size) {
@@ -85,4 +105,5 @@ public class PatientController {
     private PatientItemResourceDTO getPatientItemResource(String id) {
         return appPatientProxy.getPatient(id);
     }
+
 }
