@@ -49,14 +49,14 @@ public class PatientControllerTest {
         when(appPatientProxy.getAllPatients(null, null)).thenReturn(collectionResource);
 
         mockMvc.perform(get("/patient/list"))
-                .andExpect(view().name("patientList"))
+                .andExpect(view().name("/patient/list"))
                 .andExpect(model().attributeExists("allPatients"))
                 .andExpect(model().attribute("allPatients", collectionResource.getPatientItems()));
 
         // Two patients available in database
         List<PatientItemResourceDTO> patients = new ArrayList<>();
         ResourceLinksDTO patientLinks = new ResourceLinksDTO(objectMapper.createObjectNode());
-        patientLinks.getLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/1/uri\"}"));
+        patientLinks.getJsonLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/1/uri\"}"));
         patients.add(new PatientItemResourceDTO(
                 new PatientDTO(
                         "TestFamily",
@@ -66,7 +66,7 @@ public class PatientControllerTest {
                         "1st Oakland St",
                         "000-111-222"),
                 patientLinks));
-        patientLinks.getLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/2/uri\"}"));
+        patientLinks.getJsonLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/2/uri\"}"));
         patients.add(new PatientItemResourceDTO(
                 new PatientDTO(
                         "TestFamily2",
@@ -86,7 +86,7 @@ public class PatientControllerTest {
         when(appPatientProxy.getAllPatients(null, null)).thenReturn(collectionResource);
 
         mockMvc.perform(get("/patient/list"))
-                .andExpect(view().name("patientList"))
+                .andExpect(view().name("/patient/list"))
                 .andExpect(model().attributeExists("allPatients"))
                 .andExpect(model().attribute("allPatients", patients));
     }
@@ -97,7 +97,7 @@ public class PatientControllerTest {
         // Two patients available in database
         List<PatientItemResourceDTO> patients = new ArrayList<>();
         ResourceLinksDTO patientLinks = new ResourceLinksDTO(objectMapper.createObjectNode());
-        patientLinks.getLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/1/uri\"}"));
+        patientLinks.getJsonLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/1/uri\"}"));
         patients.add(new PatientItemResourceDTO(
                 new PatientDTO(
                         "TestFamily",
@@ -107,7 +107,7 @@ public class PatientControllerTest {
                         "1st Oakland St",
                         "000-111-222"),
                 patientLinks));
-        patientLinks.getLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/2/uri\"}"));
+        patientLinks.getJsonLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/2/uri\"}"));
         patients.add(new PatientItemResourceDTO(
                 new PatientDTO(
                         "TestFamily2",
@@ -122,7 +122,7 @@ public class PatientControllerTest {
 
         mockMvc.perform(get("/patient/get")
                 .param("id", "1"))
-                .andExpect(view().name("patientForm"))
+                .andExpect(view().name("/patient/form"))
                 .andExpect(model().attributeExists("item"))
                 .andExpect(model().attributeExists("links"))
                 .andExpect(model().attribute("item", patients.get(0).getItem()))
@@ -132,7 +132,7 @@ public class PatientControllerTest {
 
         mockMvc.perform(get("/patient/get")
                 .param("id", "3"))
-                .andExpect(view().name("patientList"))
+                .andExpect(view().name("/patient/list"))
                 .andExpect(model().attributeExists("patientNotFound"))
                 .andExpect(model().attribute("patientNotFound", true));
     }
@@ -151,7 +151,7 @@ public class PatientControllerTest {
         );
 
         ResourceLinksDTO patientLinks = new ResourceLinksDTO(objectMapper.createObjectNode());
-        patientLinks.getLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/3/uri\"}"));
+        patientLinks.getJsonLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/3/uri\"}"));
 
         PatientItemResourceDTO patientAdded = new PatientItemResourceDTO(
                 patientToAdd,
@@ -172,7 +172,7 @@ public class PatientControllerTest {
         mockMvc.perform(post("/patient/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
-                .andExpect(view().name("patientList"))
+                .andExpect(view().name("/patient/list"))
                 .andExpect(model().attributeExists("patientAdded"))
                 .andExpect(model().attribute("patientAdded", true));
 
@@ -189,7 +189,7 @@ public class PatientControllerTest {
         mockMvc.perform(post("/patient/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patientToAdd)))
-                .andExpect(view().name("patientForm"))
+                .andExpect(view().name("/patient/form"))
                 .andExpect(model().hasErrors());
 
         // Invalid PatientDTO
@@ -205,7 +205,7 @@ public class PatientControllerTest {
         mockMvc.perform(post("/patient/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patientToAdd)))
-                .andExpect(view().name("patientForm"))
+                .andExpect(view().name("/patient/form"))
                 .andExpect(model().hasErrors());
 
         // Invalid PatientDTO
@@ -221,7 +221,7 @@ public class PatientControllerTest {
         mockMvc.perform(post("/patient/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patientToAdd)))
-                .andExpect(view().name("patientForm"))
+                .andExpect(view().name("/patient/form"))
                 .andExpect(model().hasErrors());
     }
 
@@ -240,7 +240,7 @@ public class PatientControllerTest {
         );
 
         ResourceLinksDTO patientLinks = new ResourceLinksDTO(objectMapper.createObjectNode());
-        patientLinks.getLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/3/uri\"}"));
+        patientLinks.getJsonLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/3/uri\"}"));
 
         PatientItemResourceDTO patientUpdated = new PatientItemResourceDTO(
                 patientToUpdate,
@@ -260,7 +260,7 @@ public class PatientControllerTest {
         mockMvc.perform(put("/patient/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patientToUpdate)))
-                .andExpect(view().name("patientList"))
+                .andExpect(view().name("/patient/list"))
                 .andExpect(model().attributeExists("patientUpdated"))
                 .andExpect(model().attribute("patientUpdated", true));
 
@@ -278,7 +278,7 @@ public class PatientControllerTest {
         mockMvc.perform(put("/patient/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patientToUpdate)))
-                .andExpect(view().name("patientForm"))
+                .andExpect(view().name("/patient/form"))
                 .andExpect(model().hasErrors());
 
         // Invalid PatientDTO
@@ -295,7 +295,7 @@ public class PatientControllerTest {
         mockMvc.perform(put("/patient/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patientToUpdate)))
-                .andExpect(view().name("patientForm"))
+                .andExpect(view().name("/patient/form"))
                 .andExpect(model().hasErrors());
         ;
 
@@ -313,7 +313,7 @@ public class PatientControllerTest {
         mockMvc.perform(put("/patient/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patientToUpdate)))
-                .andExpect(view().name("patientForm"))
+                .andExpect(view().name("/patient/form"))
                 .andExpect(model().hasErrors());
 
         // Invalid PatientDTO
@@ -330,7 +330,7 @@ public class PatientControllerTest {
         mockMvc.perform(put("/patient/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patientToUpdate)))
-                .andExpect(view().name("patientForm"))
+                .andExpect(view().name("/patient/form"))
                 .andExpect(model().hasErrors());
     }
 

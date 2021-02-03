@@ -37,7 +37,7 @@ public class PatientController {
             Model model) {
         PatientCollectionResourceDTO collectionResource = getPatientCollectionResource(page, size);
         model.addAttribute("allPatients", collectionResource.getPatientItems());
-        return "patientList";
+        return "/patient/list";
     }
 
     @GetMapping("/patient/get")
@@ -45,11 +45,11 @@ public class PatientController {
         PatientItemResourceDTO patient = getPatientItemResource(id);
         if (patient == null) {
             model.addAttribute("patientNotFound", true);
-            return "patientList";
+            return "/patient/list";
         }
         model.addAttribute("item", patient.getItem());
         model.addAttribute("links", patient.getLinks());
-        return "patientForm";
+        return "/patient/form";
     }
 
     @PostMapping(value = "/patient/add")
@@ -66,9 +66,9 @@ public class PatientController {
                     patientDTO.getPhone()
             );
             model.addAttribute("patientAdded", true);
-            return "patientList";
+            return "/patient/list";
         }
-        return "patientForm";
+        return "/patient/form";
     }
 
     @PutMapping(value = "/patient/update")
@@ -87,13 +87,13 @@ public class PatientController {
                         patientDTO.getPhone()
                 );
                 model.addAttribute("patientUpdated", true);
-                return "patientList";
+                return "/patient/list";
             } catch (ValidationException e) {
                 result.addError(new FieldError("patient", "id", "ID is mandatory."));
                 model.addAttribute("patient", patientDTO);
             }
         }
-        return "patientForm";
+        return "/patient/form";
     }
 
 

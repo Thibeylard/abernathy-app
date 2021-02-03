@@ -13,7 +13,12 @@ public class ResourceLinksDTO {
         this.links = links;
     }
 
-    public ObjectNode getLinks() {
+    public ObjectNode getJsonLinks() {
         return links;
     }
+
+    public String getSelfUrl() {
+        return links.get("self").get("href").asText();
+    }
+
 }
