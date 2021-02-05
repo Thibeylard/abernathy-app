@@ -37,6 +37,6 @@ public class DobConstraintValidator implements ConstraintValidator<ValidDobForma
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         //TODO improve validation to prevent unvalid date entry such as 3050-45-85
-        return value.matches("\\d{4}-\\d{2}-\\d{2}");
+        return value != null && value.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "app")
@@ -34,7 +35,7 @@ public interface AppPatientProxy {
             @RequestParam("address") String address,
             @RequestParam("phone") String phone);
 
-    @PostMapping("/patient/update")
+    @PutMapping("/patient/update")
     EntityModel<PatientDTO> updatePatient(
             @RequestParam("id") String id,
             @RequestParam("family") String family,

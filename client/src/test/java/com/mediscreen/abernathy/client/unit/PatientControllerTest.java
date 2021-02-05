@@ -3,6 +3,9 @@ package com.mediscreen.abernathy.client.unit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.abernathy.client.patient.dtos.PatientDTO;
 import com.mediscreen.abernathy.client.patient.proxies.AppPatientProxy;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,18 +16,21 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -63,6 +69,7 @@ public class PatientControllerTest {
 
         patients.add(EntityModel.of(
                 new PatientDTO(
+                        "1",
                         "TestFamily",
                         "TestGiven",
                         "1854-02-27",
@@ -73,6 +80,7 @@ public class PatientControllerTest {
 
         patients.add(EntityModel.of(
                 new PatientDTO(
+                        "2",
                         "TestFamily2",
                         "TestGiven2",
                         "1854-03-30",
@@ -88,21 +96,20 @@ public class PatientControllerTest {
 
         when(appPatientProxy.getAllPatients(any(Integer.class), any(Integer.class))).thenReturn(collectionResource);
 
-        ResultActions result = mockMvc.perform(get("/patient/list"))
+        mockMvc.perform(get("/patient/list"))
                 .andExpect(view().name("patient/list"))
                 .andExpect(model().attributeExists("allPatients"))
                 .andExpect(model().attribute("allPatients", hasSize(2)))
                 .andExpect(model().attribute("allPatients", hasItems(is(patients.get(0)), is(patients.get(1)))));
     }
-/*
+
     @Test
     public void gettingPatientIsOk() throws Exception {
 
         // Two patients available in database
-        List<PatientItemResourceDTO> patients = new ArrayList<>();
-        ResourceLinksDTO patientLinks = new ResourceLinksDTO(objectMapper.createObjectNode());
-        patientLinks.getJsonLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/1/uri\"}"));
-        patients.add(new PatientItemResourceDTO(
+        List<EntityModel<PatientDTO>> patients = new ArrayList<>();
+        Link patientLinks = Link.of("{\"href\":\"/patient/1/uri\"}");
+        patients.add(EntityModel.of(
                 new PatientDTO(
                         "TestFamily",
                         "TestGiven",
@@ -111,8 +118,8 @@ public class PatientControllerTest {
                         "1st Oakland St",
                         "000-111-222"),
                 patientLinks));
-        patientLinks.getJsonLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/2/uri\"}"));
-        patients.add(new PatientItemResourceDTO(
+        patientLinks = Link.of("{\"href\":\"/patient/2/uri\"}");
+        patients.add(EntityModel.of(
                 new PatientDTO(
                         "TestFamily2",
                         "TestGiven2",
@@ -122,27 +129,30 @@ public class PatientControllerTest {
                         "000-111-223"),
                 patientLinks));
 
-        when(appPatientProxy.getPatient("1")).thenReturn(patients.get(0));
+        when(appPatientProxy.getPatient(any(String.class))).thenReturn(patients.get(0));
 
         mockMvc.perform(get("/patient/get")
                 .param("id", "1"))
-                .andExpect(view().name("/patient/form"))
-                .andExpect(model().attributeExists("item"))
-                .andExpect(model().attributeExists("links"))
-                .andExpect(model().attribute("item", patients.get(0).getItem()))
-                .andExpect(model().attribute("links", patients.get(0).getLinks()));
+                .andExpect(view().name("patient/details"))
+                .andExpect(model().attributeExists("patientResource"))
+                .andExpect(model().attribute("patientResource", is(patients.get(0))))
+                .andExpect(model().attribute("patientResource", hasProperty("content", is(patients.get(0).getContent()))))
+                .andExpect(model().attribute("patientResource", hasProperty("links", is(patients.get(0).getLinks()))));
 
-        when(appPatientProxy.getPatient("3")).thenReturn(null);
+        when(appPatientProxy.getPatient(any(String.class))).thenReturn(null);
 
         mockMvc.perform(get("/patient/get")
                 .param("id", "3"))
-                .andExpect(view().name("/patient/list"))
+                .andExpect(view().name("patient/list"))
                 .andExpect(model().attributeExists("patientNotFound"))
                 .andExpect(model().attribute("patientNotFound", true));
     }
 
     @Test
     public void addingPatientIsOk() throws Exception {
+
+        mockMvc.perform(get("/patient/add"))
+                .andExpect(view().name("patient/add"));
 
         // Valid PatientDTO
         PatientDTO patientToAdd = new PatientDTO(
@@ -154,13 +164,12 @@ public class PatientControllerTest {
                 "030-111-224"
         );
 
-        ResourceLinksDTO patientLinks = new ResourceLinksDTO(objectMapper.createObjectNode());
-        patientLinks.getJsonLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/3/uri\"}"));
 
-        PatientItemResourceDTO patientAdded = new PatientItemResourceDTO(
+        Link patientLinks = Link.of("{\"href\":\"/patient/3/uri\"}");
+
+        EntityModel<PatientDTO> patientAdded = EntityModel.of(
                 patientToAdd,
                 patientLinks);
-
 
         when(appPatientProxy.addPatient(
                 patientToAdd.getFamily(),
@@ -171,12 +180,18 @@ public class PatientControllerTest {
                 patientToAdd.getPhone()
         )).thenReturn(patientAdded);
 
-        String json = objectMapper.writeValueAsString(patientToAdd);
 
         mockMvc.perform(post("/patient/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-                .andExpect(view().name("/patient/list"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
+                        new BasicNameValuePair("family", patientToAdd.getFamily()),
+                        new BasicNameValuePair("given", patientToAdd.getGiven()),
+                        new BasicNameValuePair("dob", patientToAdd.getDob()),
+                        new BasicNameValuePair("sex", patientToAdd.getSex()),
+                        new BasicNameValuePair("address", patientToAdd.getAddress()),
+                        new BasicNameValuePair("phone", patientToAdd.getPhone())
+                )))))
+                .andExpect(view().name("patient/list"))
                 .andExpect(model().attributeExists("patientAdded"))
                 .andExpect(model().attribute("patientAdded", true));
 
@@ -191,9 +206,16 @@ public class PatientControllerTest {
         );
 
         mockMvc.perform(post("/patient/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(patientToAdd)))
-                .andExpect(view().name("/patient/form"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
+                        new BasicNameValuePair("family", patientToAdd.getFamily()),
+                        new BasicNameValuePair("given", patientToAdd.getGiven()),
+                        new BasicNameValuePair("dob", patientToAdd.getDob()),
+                        new BasicNameValuePair("sex", patientToAdd.getSex()),
+                        new BasicNameValuePair("address", patientToAdd.getAddress()),
+                        new BasicNameValuePair("phone", patientToAdd.getPhone())
+                )))))
+                .andExpect(view().name("patient/add"))
                 .andExpect(model().hasErrors());
 
         // Invalid PatientDTO
@@ -207,9 +229,16 @@ public class PatientControllerTest {
         );
 
         mockMvc.perform(post("/patient/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(patientToAdd)))
-                .andExpect(view().name("/patient/form"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
+                        new BasicNameValuePair("family", patientToAdd.getFamily()),
+                        new BasicNameValuePair("given", patientToAdd.getGiven()),
+                        new BasicNameValuePair("dob", patientToAdd.getDob()),
+                        new BasicNameValuePair("sex", patientToAdd.getSex()),
+                        new BasicNameValuePair("address", patientToAdd.getAddress()),
+                        new BasicNameValuePair("phone", patientToAdd.getPhone())
+                )))))
+                .andExpect(view().name("patient/add"))
                 .andExpect(model().hasErrors());
 
         // Invalid PatientDTO
@@ -223,9 +252,16 @@ public class PatientControllerTest {
         );
 
         mockMvc.perform(post("/patient/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(patientToAdd)))
-                .andExpect(view().name("/patient/form"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
+                        new BasicNameValuePair("family", patientToAdd.getFamily()),
+                        new BasicNameValuePair("given", patientToAdd.getGiven()),
+                        new BasicNameValuePair("dob", patientToAdd.getDob()),
+                        new BasicNameValuePair("sex", patientToAdd.getSex()),
+                        new BasicNameValuePair("address", patientToAdd.getAddress()),
+                        new BasicNameValuePair("phone", patientToAdd.getPhone())
+                )))))
+                .andExpect(view().name("patient/add"))
                 .andExpect(model().hasErrors());
     }
 
@@ -233,7 +269,7 @@ public class PatientControllerTest {
     public void updatingPatientIsOk() throws Exception {
 
         // Valid PatientDTO
-        PatientDTO patientToUpdate = new PatientDTO(
+        PatientDTO patientDtoToUpdate = new PatientDTO(
                 "3",
                 "TestFamily3",
                 "TestGiven3",
@@ -243,33 +279,47 @@ public class PatientControllerTest {
                 "030-111-224"
         );
 
-        ResourceLinksDTO patientLinks = new ResourceLinksDTO(objectMapper.createObjectNode());
-        patientLinks.getJsonLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/3/uri\"}"));
+        Link patientLinks = Link.of("{\"href\":\"/patient/3/uri\"}");
 
-        PatientItemResourceDTO patientUpdated = new PatientItemResourceDTO(
-                patientToUpdate,
+        EntityModel<PatientDTO> patientItemToUpdate = EntityModel.of(
+                patientDtoToUpdate,
                 patientLinks);
 
+        doReturn(patientItemToUpdate).when(appPatientProxy).getPatient(any(String.class));
+
+        mockMvc.perform(get("/patient/update")
+                .param("id", "3"))
+                .andExpect(view().name("patient/update"))
+                .andExpect(model().attributeExists("patientToUpdate"))
+                .andExpect(model().attribute("patientToUpdate", is(patientDtoToUpdate)));
 
         when(appPatientProxy.updatePatient(
-                patientToUpdate.getId().get(),
-                patientToUpdate.getFamily(),
-                patientToUpdate.getGiven(),
-                patientToUpdate.getDob(),
-                patientToUpdate.getSex(),
-                patientToUpdate.getAddress(),
-                patientToUpdate.getPhone()
-        )).thenReturn(patientUpdated);
+                patientDtoToUpdate.getId(),
+                patientDtoToUpdate.getFamily(),
+                patientDtoToUpdate.getGiven(),
+                patientDtoToUpdate.getDob(),
+                patientDtoToUpdate.getSex(),
+                patientDtoToUpdate.getAddress(),
+                patientDtoToUpdate.getPhone()
+        )).thenReturn(patientItemToUpdate);
 
-        mockMvc.perform(put("/patient/update")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(patientToUpdate)))
-                .andExpect(view().name("/patient/list"))
+        mockMvc.perform(post("/patient/update")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
+                        new BasicNameValuePair("id", patientDtoToUpdate.getId()),
+                        new BasicNameValuePair("family", patientDtoToUpdate.getFamily()),
+                        new BasicNameValuePair("given", patientDtoToUpdate.getGiven()),
+                        new BasicNameValuePair("dob", patientDtoToUpdate.getDob()),
+                        new BasicNameValuePair("sex", patientDtoToUpdate.getSex()),
+                        new BasicNameValuePair("address", patientDtoToUpdate.getAddress()),
+                        new BasicNameValuePair("phone", patientDtoToUpdate.getPhone())
+                )))))
+                .andExpect(view().name("patient/list"))
                 .andExpect(model().attributeExists("patientUpdated"))
                 .andExpect(model().attribute("patientUpdated", true));
 
         // Invalid PatientDTO
-        patientToUpdate = new PatientDTO(
+        patientDtoToUpdate = new PatientDTO(
                 "3",
                 "TestFamily3",
                 "TestGiven3",
@@ -279,14 +329,22 @@ public class PatientControllerTest {
                 "030-111-224"
         );
 
-        mockMvc.perform(put("/patient/update")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(patientToUpdate)))
-                .andExpect(view().name("/patient/form"))
+        mockMvc.perform(post("/patient/update")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
+                        new BasicNameValuePair("id", patientDtoToUpdate.getId()),
+                        new BasicNameValuePair("family", patientDtoToUpdate.getFamily()),
+                        new BasicNameValuePair("given", patientDtoToUpdate.getGiven()),
+                        new BasicNameValuePair("dob", patientDtoToUpdate.getDob()),
+                        new BasicNameValuePair("sex", patientDtoToUpdate.getSex()),
+                        new BasicNameValuePair("address", patientDtoToUpdate.getAddress()),
+                        new BasicNameValuePair("phone", patientDtoToUpdate.getPhone())
+                )))))
+                .andExpect(view().name("patient/update"))
                 .andExpect(model().hasErrors());
 
         // Invalid PatientDTO
-        patientToUpdate = new PatientDTO(
+        patientDtoToUpdate = new PatientDTO(
                 "3",
                 "", // Blank family
                 "TestGiven3",
@@ -296,15 +354,22 @@ public class PatientControllerTest {
                 "030-111-224"
         );
 
-        mockMvc.perform(put("/patient/update")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(patientToUpdate)))
-                .andExpect(view().name("/patient/form"))
+        mockMvc.perform(post("/patient/update")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
+                        new BasicNameValuePair("id", patientDtoToUpdate.getId()),
+                        new BasicNameValuePair("family", patientDtoToUpdate.getFamily()),
+                        new BasicNameValuePair("given", patientDtoToUpdate.getGiven()),
+                        new BasicNameValuePair("dob", patientDtoToUpdate.getDob()),
+                        new BasicNameValuePair("sex", patientDtoToUpdate.getSex()),
+                        new BasicNameValuePair("address", patientDtoToUpdate.getAddress()),
+                        new BasicNameValuePair("phone", patientDtoToUpdate.getPhone())
+                )))))
+                .andExpect(view().name("patient/update"))
                 .andExpect(model().hasErrors());
-        ;
 
         // Invalid PatientDTO
-        patientToUpdate = new PatientDTO(
+        patientDtoToUpdate = new PatientDTO(
                 "3",
                 "TestFamily3",
                 "TestGiven3",
@@ -314,14 +379,22 @@ public class PatientControllerTest {
                 "06 74 58 47 45" // Invalid phone format
         );
 
-        mockMvc.perform(put("/patient/update")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(patientToUpdate)))
-                .andExpect(view().name("/patient/form"))
+        mockMvc.perform(post("/patient/update")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
+                        new BasicNameValuePair("id", patientDtoToUpdate.getId()),
+                        new BasicNameValuePair("family", patientDtoToUpdate.getFamily()),
+                        new BasicNameValuePair("given", patientDtoToUpdate.getGiven()),
+                        new BasicNameValuePair("dob", patientDtoToUpdate.getDob()),
+                        new BasicNameValuePair("sex", patientDtoToUpdate.getSex()),
+                        new BasicNameValuePair("address", patientDtoToUpdate.getAddress()),
+                        new BasicNameValuePair("phone", patientDtoToUpdate.getPhone())
+                )))))
+                .andExpect(view().name("patient/update"))
                 .andExpect(model().hasErrors());
 
         // Invalid PatientDTO
-        patientToUpdate = new PatientDTO(
+        patientDtoToUpdate = new PatientDTO(
                 // No ID
                 "TestFamily3",
                 "TestGiven3",
@@ -331,10 +404,18 @@ public class PatientControllerTest {
                 "06 74 58 47 45"
         );
 
-        mockMvc.perform(put("/patient/update")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(patientToUpdate)))
-                .andExpect(view().name("/patient/form"))
+        mockMvc.perform(post("/patient/update")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
+                        new BasicNameValuePair("id", patientDtoToUpdate.getId()),
+                        new BasicNameValuePair("family", patientDtoToUpdate.getFamily()),
+                        new BasicNameValuePair("given", patientDtoToUpdate.getGiven()),
+                        new BasicNameValuePair("dob", patientDtoToUpdate.getDob()),
+                        new BasicNameValuePair("sex", patientDtoToUpdate.getSex()),
+                        new BasicNameValuePair("address", patientDtoToUpdate.getAddress()),
+                        new BasicNameValuePair("phone", patientDtoToUpdate.getPhone())
+                )))))
+                .andExpect(view().name("patient/update"))
                 .andExpect(model().hasErrors());
-    }*/
+    }
 }

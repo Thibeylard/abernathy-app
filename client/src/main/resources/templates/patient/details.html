@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Form</title>
+</head>
+<body>
+
+<table>
+    <thead>
+    </thead>
+    <tr>
+        <td>Family</td>
+        <td th:text="${patientResource.getContent().getFamily()}"></td>
+    </tr>
+    <tr>
+        <td>Given</td>
+        <td th:text="${patientResource.getContent().getGiven()}"></td>
+    </tr>
+    <tr>
+        <td>Date of Birth</td>
+        <td th:text="${patientResource.getContent().getDob()}"></td>
+    </tr>
+    <tr>
+        <td>Sex</td>
+        <td th:text="${patientResource.getContent().getSex()}"></td>
+    </tr>
+    <tr>
+        <td>Address</td>
+        <td th:text="${patientResource.getContent().getAddress()}"></td>
+    </tr>
+    <tr>
+        <td>Phone</td>
+        <td th:text="${patientResource.getContent().getPhone()}"></td>
+    </tr>
+</table>
+
+</body>
+</html>

@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface ValidSexValue {
 
-    String message() default "Invalid value for sex";
+    String message() default "doit être soit M soit F.";
 
     Class<?>[] groups() default {};
 

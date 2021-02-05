@@ -6,7 +6,7 @@ import com.mediscreen.abernathy.client.patient.annotations.ValidPhoneFormat;
 import com.mediscreen.abernathy.client.patient.annotations.ValidSexValue;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Optional;
+
 
 public class PatientDTO {
 
@@ -19,18 +19,15 @@ public class PatientDTO {
     @NotBlank
     private String given;
 
-    @NotBlank
     @ValidDobFormat
     private String dob;
 
-    @NotBlank
     @ValidSexValue
     private String sex;
 
     @NotBlank
     private String address;
 
-    @NotBlank
     @ValidPhoneFormat
     private String phone;
 
@@ -56,9 +53,10 @@ public class PatientDTO {
         this.phone = phone;
     }
 
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    public Optional<String> getId() {
-        return Optional.ofNullable(id);
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    // Made it Optional<String> in the first place but had to cancel due to Thymeleaf issues
+    public String getId() {
+        return id;
     }
 
     public String getFamily() {
@@ -83,5 +81,33 @@ public class PatientDTO {
 
     public String getPhone() {
         return phone;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setFamily(String family) {
+        this.family = family;
+    }
+
+    public void setGiven(String given) {
+        this.given = given;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface ValidPhoneFormat {
 
-    String message() default "Invalid phone format";
+    String message() default "doit respecter le format XXX-XXX-XXX où X est un chiffre entre 0 et 9";
 
     Class<?>[] groups() default {};
 

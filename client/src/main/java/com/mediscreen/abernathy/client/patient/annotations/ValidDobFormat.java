@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface ValidDobFormat {
 
-    String message() default "Invalid date of birth format";
+    String message() default "doit respecter le format yyyy-MM-dd.";
 
     Class<?>[] groups() default {};
 

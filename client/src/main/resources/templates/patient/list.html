@@ -9,40 +9,43 @@
 <h1>Liste des patients</h1>
 
 
-<p th:unless="${#lists.isEmpty(allPatients)}">
-    Vous trouverez ci-dessous la liste de vos patients.
-    Cliquez sur le bouton "Editer" pour modifier ses informations.
-    Vous pouvez également en créer de nouveaux.
+<thead th:if="${#lists.isEmpty(allPatients)}">
+Aucun patient dans la base de données. Cliquez sur Ajouter pour créer un nouveau patient.
+</thead>
+
+<div th:unless="${#lists.isEmpty(allPatients)}">
+    <p>
+        Vous trouverez ci-dessous la liste de vos patients.
+        Cliquez sur le bouton "Editer" pour modifier ses informations.
+        Vous pouvez également en créer de nouveaux.
+    </p>
+
+    <table>
+        <thead>
+        <th>Family</th>
+        <th>Given</th>
+        <th>Date of Birth</th>
+        <th>Sex</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>ACTIONS</th>
+        </thead>
+        <tr th:each="patient : ${allPatients}">
+            <td th:text="${patient.getContent().getFamily()}"></td>
+            <td th:text="${patient.getContent().getGiven()}"></td>
+            <td th:text="${patient.getContent().getDob()}"></td>
+            <td th:text="${patient.getContent().getSex()}"></td>
+            <td th:text="${patient.getContent().getAddress()}"></td>
+            <td th:text="${patient.getContent().getPhone()}"></td>
+            <td>
+                <a th:href="@{/patient/get(id=${patient.getContent().getId()})}">DETAILS</a>
+                <a th:href="@{/patient/update(id=${patient.getContent().getId()})}">EDIT</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<p>
+    <a th:href="add"> ----- Ajouter un nouveau patient ----- </a>
 </p>
-
-<p th:if="${#lists.isEmpty(allPatients)}">
-    Aucun patient dans la base de données. Cliquez sur Ajouter pour créer un nouveau patient.
-</p>
-
-<table>
-    <thead>
-    <th>Family</th>
-    <th>Given</th>
-    <th>Date of Birth</th>
-    <th>Sex</th>
-    <th>Address</th>
-    <th>Phone</th>
-    <th>EDIT</th>
-    </thead>
-    <tr th:each="patient : ${allPatients}">
-        <td th:text="${patient.getContent().getFamily()}"></td>
-        <td th:text="${patient.getContent().getGiven()}"></td>
-        <td th:text="${patient.getContent().getDob()}"></td>
-        <td th:text="${patient.getContent().getSex()}"></td>
-        <td th:text="${patient.getContent().getAddress()}"></td>
-        <td th:text="${patient.getContent().getPhone()}"></td>
-        <td><a th:href="@{/patient/get(id=${patient.getContent().getId().get()})}">EDIT</a></td>
-
-    </tr>
-    <tr>
-        <td colspan="6">
-            <a th:href="form"> -Ajouter un nouveau patient -</a></td>
-    </tr>
-</table>
 </body>
 </html>

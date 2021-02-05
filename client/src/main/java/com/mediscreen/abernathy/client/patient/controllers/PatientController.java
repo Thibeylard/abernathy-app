@@ -11,10 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 
 @Controller
 public class PatientController {
@@ -60,14 +62,63 @@ public class PatientController {
             model.addAttribute("patientNotFound", true);
             return "patient/list";
         }
-        model.addAttribute("patient", patient);
-        return "patient/form";
+        model.addAttribute("patientResource", patient);
+        return "patient/details";
+    }
+
+    @GetMapping(value = "/patient/update")
+    public String updatePatientForm(@RequestParam("id") String id, Model model) {
+        EntityModel<PatientDTO> patient = appPatientProxy.getPatient(id);
+        if (patient == null) {
+            model.addAttribute("patientNotFound", true);
+            return "patient/list";
+        }
+        model.addAttribute("patientToUpdateID", patient.getContent().getId());
+        model.addAttribute("patientToUpdate", patient.getContent());
+        return "patient/update";
+    }
+
+    @PostMapping(value = "/patient/update")
+    public String updatePatientAction(@Valid @ModelAttribute("patientToUpdate") PatientDTO patientDTO,
+                                      BindingResult result,
+                                      Model model) {
+        if (patientDTO.getId() == null) {
+            result.addError(new FieldError("patientToUpdate", "id", "ID is mandatory."));
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("patientToUpdate", patientDTO);
+            return "patient/update";
+        } else {
+            appPatientProxy.updatePatient(
+                    patientDTO.getId(),
+                    patientDTO.getFamily(),
+                    patientDTO.getGiven(),
+                    patientDTO.getDob(),
+                    patientDTO.getSex(),
+                    patientDTO.getAddress(),
+                    patientDTO.getPhone()
+            );
+            //TODO change return view with return redirect:
+            model.addAttribute("patientUpdated", true);
+        }
+
+        return "patient/list";
+    }
+
+    @GetMapping(value = "/patient/add")
+    public String addPatientForm(Model model) {
+        model.addAttribute("patientToAdd", new PatientDTO(null, null, null, null, null, null));
+        return "patient/add";
     }
 
     @PostMapping(value = "/patient/add")
-    public String addPatient(@Valid @RequestBody PatientDTO patientDTO, BindingResult result, Model model) {
+    public String addPatientAction(@Valid @ModelAttribute("patientToAdd") PatientDTO patientDTO,
+                                   BindingResult result,
+                                   Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("patient", patientDTO);
+            model.addAttribute("patientToAdd", patientDTO);
+            return "patient/add";
         } else {
             appPatientProxy.addPatient(
                     patientDTO.getFamily(),
@@ -77,35 +128,10 @@ public class PatientController {
                     patientDTO.getAddress(),
                     patientDTO.getPhone()
             );
+            //TODO change return view with return redirect:
             model.addAttribute("patientAdded", true);
             return "patient/list";
         }
-        return "patient/form";
-    }
-
-    @PutMapping(value = "/patient/update")
-    public String updatePatient(@Valid @RequestBody PatientDTO patientDTO, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("patient", patientDTO);
-        } else {
-            try {
-                appPatientProxy.updatePatient(
-                        patientDTO.getId().orElseThrow(ValidationException::new),
-                        patientDTO.getFamily(),
-                        patientDTO.getGiven(),
-                        patientDTO.getDob(),
-                        patientDTO.getSex(),
-                        patientDTO.getAddress(),
-                        patientDTO.getPhone()
-                );
-                model.addAttribute("patientUpdated", true);
-                return "patient/list";
-            } catch (ValidationException e) {
-                result.addError(new FieldError("patient", "id", "ID is mandatory."));
-                model.addAttribute("patient", patientDTO);
-            }
-        }
-        return "patient/form";
     }
 
 }

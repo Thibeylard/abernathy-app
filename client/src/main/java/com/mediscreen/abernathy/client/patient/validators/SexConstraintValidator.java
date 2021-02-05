@@ -37,6 +37,6 @@ public class SexConstraintValidator implements ConstraintValidator<ValidSexValue
      */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return value.equals("M") || value.equals("F");
+        return value != null && (value.equals("M") || value.equals("F"));
     }
 }

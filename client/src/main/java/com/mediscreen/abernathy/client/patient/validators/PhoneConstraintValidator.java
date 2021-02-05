@@ -37,6 +37,6 @@ public class PhoneConstraintValidator implements ConstraintValidator<ValidPhoneF
      */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return value.matches("((\\d{3}-){2}\\d{3})");
+        return value != null && value.matches("((\\d{3}-){2}\\d{3})");
     }
 }
