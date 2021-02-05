@@ -18,19 +18,26 @@
     Aucun patient dans la base de données. Cliquez sur Ajouter pour créer un nouveau patient.
 </p>
 
-<a th:href="patientForm"> -Ajouter un nouveau patient -</a>
-<table th:unless="${#lists.isEmpty(allPatients)}">
+<a th:href="form"> -Ajouter un nouveau patient -</a>
+<table>
     <thead>
-        <th>Family</th>
-        <th>Given</th>
-        <th>Date of Birth</th>
-        <th>Sex</th>
-        <th>Address</th>
-        <th>Phone</th>
-        <th>EDIT</th>
+    <th>Family</th>
+    <th>Given</th>
+    <th>Date of Birth</th>
+    <th>Sex</th>
+    <th>Address</th>
+    <th>Phone</th>
+    <th>EDIT</th>
     </thead>
     <tr th:each="patient : ${allPatients}">
-<!--        <td><a th:href="patient.links.self" th:text="${patient.item.given} ${patient.item.family}"></a></td>-->
+        <td th:text="${patient.item.family}"></td>
+        <td th:text="${patient.item.given}"></td>
+        <td th:text="${patient.item.dob}"></td>
+        <td th:text="${patient.item.sex}"></td>
+        <td th:text="${patient.item.address}"></td>
+        <td th:text="${patient.item.phone}"></td>
+        <td></td>
+        <!--        <td><a th:href="patient.links.self" th:text="${patient.item.given} ${patient.item.family}"></a></td>-->
 
     </tr>
 </table>

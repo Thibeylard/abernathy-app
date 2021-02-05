@@ -1,5 +1,6 @@
 package com.mediscreen.abernathy.client.patient.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.abernathy.client.patient.dtos.PatientCollectionResourceDTO;
 import com.mediscreen.abernathy.client.patient.dtos.PatientDTO;
 import com.mediscreen.abernathy.client.patient.dtos.PatientItemResourceDTO;
@@ -7,7 +8,6 @@ import com.mediscreen.abernathy.client.patient.proxies.AppPatientProxy;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,33 +23,36 @@ public class PatientController {
 
     private final Logger logger;
     private final AppPatientProxy appPatientProxy;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public PatientController(@Qualifier("getClientPatientLogger") Logger logger, AppPatientProxy appPatientProxy) {
+    public PatientController(@Qualifier("getPatientLogger") Logger logger, AppPatientProxy appPatientProxy, ObjectMapper mapper) {
         this.logger = logger;
         this.appPatientProxy = appPatientProxy;
+        this.objectMapper = mapper;
     }
 
     @GetMapping("/patient/list")
     public String getPatientList(
-            @RequestParam(value = "page", required = false) Integer page,
-            @RequestParam(value = "size", required = false) Integer size,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "20") Integer size,
             Model model) {
-        PatientCollectionResourceDTO collectionResource = getPatientCollectionResource(page, size);
+
+        PatientCollectionResourceDTO collectionResource = getAllPatients(page, size);
         model.addAttribute("allPatients", collectionResource.getPatientItems());
-        return "/patient/list";
+        return "patient/list";
     }
 
     @GetMapping("/patient/get")
     public String getPatient(@RequestParam("id") String id, Model model) {
-        PatientItemResourceDTO patient = getPatientItemResource(id);
+        PatientItemResourceDTO patient = getPatient(id);
         if (patient == null) {
             model.addAttribute("patientNotFound", true);
-            return "/patient/list";
+            return "patient/list";
         }
         model.addAttribute("item", patient.getItem());
         model.addAttribute("links", patient.getLinks());
-        return "/patient/form";
+        return "patient/form";
     }
 
     @PostMapping(value = "/patient/add")
@@ -66,9 +69,9 @@ public class PatientController {
                     patientDTO.getPhone()
             );
             model.addAttribute("patientAdded", true);
-            return "/patient/list";
+            return "patient/list";
         }
-        return "/patient/form";
+        return "patient/form";
     }
 
     @PutMapping(value = "/patient/update")
@@ -87,23 +90,20 @@ public class PatientController {
                         patientDTO.getPhone()
                 );
                 model.addAttribute("patientUpdated", true);
-                return "/patient/list";
+                return "patient/list";
             } catch (ValidationException e) {
                 result.addError(new FieldError("patient", "id", "ID is mandatory."));
                 model.addAttribute("patient", patientDTO);
             }
         }
-        return "/patient/form";
+        return "patient/form";
     }
 
-
-    private PatientCollectionResourceDTO getPatientCollectionResource(@Nullable Integer page,
-                                                                      @Nullable Integer size) {
-        return appPatientProxy.getAllPatients(page, size);
+    private PatientCollectionResourceDTO getAllPatients(Integer page, Integer size) {
+        return objectMapper.convertValue(appPatientProxy.getAllPatients(page, size), PatientCollectionResourceDTO.class);
     }
 
-    private PatientItemResourceDTO getPatientItemResource(String id) {
-        return appPatientProxy.getPatient(id);
+    private PatientItemResourceDTO getPatient(String id) {
+        return objectMapper.convertValue(appPatientProxy.getPatient(id), PatientItemResourceDTO.class);
     }
-
 }
