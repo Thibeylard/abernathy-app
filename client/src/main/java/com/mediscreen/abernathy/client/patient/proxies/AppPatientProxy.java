@@ -16,7 +16,7 @@ public interface AppPatientProxy {
     // TODO handle sort parameter
     // Because hal+json, return string which is converted in controller
     @GetMapping("/patient/list")
-    PagedModel<PatientDTO> getAllPatients(
+    PagedModel<EntityModel<PatientDTO>> getAllPatients(
             @RequestParam(name = "page") Integer page,
             @RequestParam(name = "size") Integer size
 //            @RequestParam(name="sort", required = false) String sort

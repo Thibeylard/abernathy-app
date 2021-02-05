@@ -1,15 +1,32 @@
 package com.mediscreen.abernathy.client.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mediscreen.abernathy.client.patient.dtos.PatientDTO;
 import com.mediscreen.abernathy.client.patient.proxies.AppPatientProxy;
+import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -23,30 +40,28 @@ public class PatientControllerTest {
     AppPatientProxy appPatientProxy;
     @Autowired
     private MockMvc mockMvc;
-/*
 
     @Test
     public void gettingPatientListIsOk() throws Exception {
 
         // No patient available in database
-        PatientCollectionResourceDTO collectionResource = new PatientCollectionResourceDTO(
+        PagedModel<EntityModel<PatientDTO>> collectionResource = PagedModel.of(
                 Lists.emptyList(),
-                new ResourceLinksDTO(objectMapper.createObjectNode()),
-                new ResourcePageDTO(0, 0, 0, 0)
-        );
+                new PagedModel.PageMetadata(20, 0, 0, 1),
+                Link.of("/patient/list/link", "self"));
 
-        when(appPatientProxy.getAllPatients(null, null)).thenReturn(collectionResource);
+        when(appPatientProxy.getAllPatients(any(Integer.class), any(Integer.class))).thenReturn(collectionResource);
 
+        // TODO improve test by checking links and page model attributes
         mockMvc.perform(get("/patient/list"))
-                .andExpect(view().name("/patient/list"))
-                .andExpect(model().attributeExists("allPatients"))
-                .andExpect(model().attribute("allPatients", collectionResource.getPatientItems()));
+                .andExpect(view().name("patient/list"))
+                .andExpect(model().attributeExists("allPatients"));
+//                .andExpect(model().attribute("allPatients", collectionResource.getContent()));
 
         // Two patients available in database
-        List<PatientItemResourceDTO> patients = new ArrayList<>();
-        ResourceLinksDTO patientLinks = new ResourceLinksDTO(objectMapper.createObjectNode());
-        patientLinks.getJsonLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/1/uri\"}"));
-        patients.add(new PatientItemResourceDTO(
+        List<EntityModel<PatientDTO>> patients = new ArrayList<>();
+
+        patients.add(EntityModel.of(
                 new PatientDTO(
                         "TestFamily",
                         "TestGiven",
@@ -54,9 +69,9 @@ public class PatientControllerTest {
                         "M",
                         "1st Oakland St",
                         "000-111-222"),
-                patientLinks));
-        patientLinks.getJsonLinks().set("self", objectMapper.readTree("{\"href\":\"/patient/2/uri\"}"));
-        patients.add(new PatientItemResourceDTO(
+                Link.of("{\"href\":\"/patient/1/uri\"}", "self")));
+
+        patients.add(EntityModel.of(
                 new PatientDTO(
                         "TestFamily2",
                         "TestGiven2",
@@ -64,22 +79,22 @@ public class PatientControllerTest {
                         "F",
                         "2st Oakland St",
                         "000-111-223"),
-                patientLinks));
+                Link.of("{\"href\":\"/patient/2/uri\"}", "self")));
 
-        collectionResource = new PatientCollectionResourceDTO(
+        collectionResource = PagedModel.of(
                 patients,
-                new ResourceLinksDTO(objectMapper.createObjectNode()),
-                new ResourcePageDTO(2, 2, 1, 0)
-        );
+                new PagedModel.PageMetadata(20, 0, 2, 1),
+                Link.of("/patient/list/link", "self"));
 
-        when(appPatientProxy.getAllPatients(null, null)).thenReturn(collectionResource);
+        when(appPatientProxy.getAllPatients(any(Integer.class), any(Integer.class))).thenReturn(collectionResource);
 
-        mockMvc.perform(get("/patient/list"))
-                .andExpect(view().name("/patient/list"))
+        ResultActions result = mockMvc.perform(get("/patient/list"))
+                .andExpect(view().name("patient/list"))
                 .andExpect(model().attributeExists("allPatients"))
-                .andExpect(model().attribute("allPatients", patients));
+                .andExpect(model().attribute("allPatients", hasSize(2)))
+                .andExpect(model().attribute("allPatients", hasItems(is(patients.get(0)), is(patients.get(1)))));
     }
-
+/*
     @Test
     public void gettingPatientIsOk() throws Exception {
 
@@ -321,6 +336,5 @@ public class PatientControllerTest {
                 .content(objectMapper.writeValueAsString(patientToUpdate)))
                 .andExpect(view().name("/patient/form"))
                 .andExpect(model().hasErrors());
-    }
-*/
+    }*/
 }

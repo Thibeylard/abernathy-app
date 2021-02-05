@@ -35,7 +35,10 @@ public class PatientController {
             @RequestParam(value = "size", required = false, defaultValue = "20") Integer size,
             Model model) {
 
-        PagedModel<PatientDTO> patientCollection = appPatientProxy.getAllPatients(page, size);
+        PagedModel<EntityModel<PatientDTO>> patientCollection = appPatientProxy.getAllPatients(page, size);
+        /*List<PatientDTO> patients = patientCollection.getContent().stream()
+                .map(EntityModel::getContent)
+                .collect(Collectors.toList());*/
         model.addAttribute("allPatients", patientCollection.getContent());
         PagedModel.PageMetadata metadata = patientCollection.getMetadata();
         if (metadata != null) {
@@ -57,8 +60,7 @@ public class PatientController {
             model.addAttribute("patientNotFound", true);
             return "patient/list";
         }
-        model.addAttribute("item", patient.getContent());
-        model.addAttribute("links", patient.getLinks());
+        model.addAttribute("patient", patient);
         return "patient/form";
     }
 
