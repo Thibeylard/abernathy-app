@@ -31,8 +31,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -191,9 +190,10 @@ public class PatientControllerTest {
                         new BasicNameValuePair("address", patientToAdd.getAddress()),
                         new BasicNameValuePair("phone", patientToAdd.getPhone())
                 )))))
-                .andExpect(view().name("patient/list"))
-                .andExpect(model().attributeExists("patientAdded"))
-                .andExpect(model().attribute("patientAdded", true));
+//                .andExpect(view().name("patient/list"))
+                .andExpect(redirectedUrl("/patient/list"))
+                .andExpect(flash().attributeExists("patientAdded"))
+                .andExpect(flash().attribute("patientAdded", true));
 
         // Invalid PatientDTO
         patientToAdd = new PatientDTO(
@@ -314,9 +314,9 @@ public class PatientControllerTest {
                         new BasicNameValuePair("address", patientDtoToUpdate.getAddress()),
                         new BasicNameValuePair("phone", patientDtoToUpdate.getPhone())
                 )))))
-                .andExpect(view().name("patient/list"))
-                .andExpect(model().attributeExists("patientUpdated"))
-                .andExpect(model().attribute("patientUpdated", true));
+                .andExpect(redirectedUrl("/patient/list"))
+                .andExpect(flash().attributeExists("patientUpdated"))
+                .andExpect(flash().attribute("patientUpdated", true));
 
         // Invalid PatientDTO
         patientDtoToUpdate = new PatientDTO(

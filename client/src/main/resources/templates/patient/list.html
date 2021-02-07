@@ -9,9 +9,13 @@
 <h1>Liste des patients</h1>
 
 
-<thead th:if="${#lists.isEmpty(allPatients)}">
-Aucun patient dans la base de données. Cliquez sur Ajouter pour créer un nouveau patient.
-</thead>
+<p th:if="${#lists.isEmpty(allPatients)}">
+    Aucun patient dans la base de données. Cliquez sur Ajouter pour créer un nouveau patient.
+</p>
+
+<p style="color: red;font-style: italic" th:if="${patientAdded}">Le patient a bien été ajouté à la base de données</p>
+<p style="color: red;font-style: italic" th:if="${patientUpdated}">Le patient a bien été mis à jour dans la base de
+    données</p>
 
 <div th:unless="${#lists.isEmpty(allPatients)}">
     <p>

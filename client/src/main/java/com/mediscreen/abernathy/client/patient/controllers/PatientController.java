@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -38,10 +39,16 @@ public class PatientController {
             Model model) {
 
         PagedModel<EntityModel<PatientDTO>> patientCollection = appPatientProxy.getAllPatients(page, size);
-        /*List<PatientDTO> patients = patientCollection.getContent().stream()
-                .map(EntityModel::getContent)
-                .collect(Collectors.toList());*/
+
         model.addAttribute("allPatients", patientCollection.getContent());
+
+        if (model.asMap().get("patientAdded") != null) {
+            model.addAttribute("patientAdded", model.asMap().get("patientAdded"));
+        }
+        if (model.asMap().get("patientUpdated") != null) {
+            model.addAttribute("patientUpdated", model.asMap().get("patientUpdated"));
+        }
+
         PagedModel.PageMetadata metadata = patientCollection.getMetadata();
         if (metadata != null) {
             model.addAttribute("pageNb", metadata.getNumber());
@@ -81,7 +88,8 @@ public class PatientController {
     @PostMapping(value = "/patient/update")
     public String updatePatientAction(@Valid @ModelAttribute("patientToUpdate") PatientDTO patientDTO,
                                       BindingResult result,
-                                      Model model) {
+                                      Model model,
+                                      RedirectAttributes redirectAttributes) {
         if (patientDTO.getId() == null) {
             result.addError(new FieldError("patientToUpdate", "id", "ID is mandatory."));
         }
@@ -99,11 +107,10 @@ public class PatientController {
                     patientDTO.getAddress(),
                     patientDTO.getPhone()
             );
-            //TODO change return view with return redirect:
-            model.addAttribute("patientUpdated", true);
+            redirectAttributes.addFlashAttribute("patientUpdated", true);
         }
 
-        return "patient/list";
+        return "redirect:/patient/list";
     }
 
     @GetMapping(value = "/patient/add")
@@ -115,7 +122,8 @@ public class PatientController {
     @PostMapping(value = "/patient/add")
     public String addPatientAction(@Valid @ModelAttribute("patientToAdd") PatientDTO patientDTO,
                                    BindingResult result,
-                                   Model model) {
+                                   Model model,
+                                   RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("patientToAdd", patientDTO);
             return "patient/add";
@@ -128,9 +136,8 @@ public class PatientController {
                     patientDTO.getAddress(),
                     patientDTO.getPhone()
             );
-            //TODO change return view with return redirect:
-            model.addAttribute("patientAdded", true);
-            return "patient/list";
+            redirectAttributes.addFlashAttribute("patientAdded", true);
+            return "redirect:/patient/list";
         }
     }
 
