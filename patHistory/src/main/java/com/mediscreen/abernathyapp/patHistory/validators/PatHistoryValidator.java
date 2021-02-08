@@ -1,14 +1,14 @@
-package com.mediscreen.abernathyapp.note.validators;
+package com.mediscreen.abernathyapp.patHistory.validators;
 
-import com.mediscreen.abernathyapp.note.models.Note;
+import com.mediscreen.abernathyapp.patHistory.models.PatHistory;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-public class NoteValidator implements Validator {
+public class PatHistoryValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return Note.class.equals(clazz);
+        return PatHistory.class.equals(clazz);
     }
 
     @Override

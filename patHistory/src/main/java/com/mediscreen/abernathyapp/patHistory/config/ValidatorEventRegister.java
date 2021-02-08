@@ -1,4 +1,4 @@
-package com.mediscreen.abernathyapp.note.config;
+package com.mediscreen.abernathyapp.patHistory.config;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

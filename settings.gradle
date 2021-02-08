@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'AbernathyApp'
-include 'configserver', 'eureka', 'app', 'patient', 'client', 'note'
+include 'configserver', 'eureka', 'app', 'patient', 'client', 'patHistory'

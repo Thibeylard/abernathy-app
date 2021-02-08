@@ -40,12 +40,12 @@ services:
       - mysqldb
     command:
       "--spring.profiles.active=docker --server.port=8082"
-  #------------------------------------------------- Note Microservice
-  note:
-    build: "./note/"
+  #------------------------------------------------- PatHistory Microservice
+  patHistory:
+    build: "./patHistory/"
     ports:
       - 8083:8083
-    container_name: "note"
+    container_name: "patHistory"
     depends_on:
       - configserver
       - mongo

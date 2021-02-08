@@ -1,7 +1,7 @@
-package com.mediscreen.abernathyapp.note.config;
+package com.mediscreen.abernathyapp.patHistory.config;
 
 import brave.sampler.Sampler;
-import com.mediscreen.abernathyapp.note.validators.NoteValidator;
+import com.mediscreen.abernathyapp.patHistory.validators.PatHistoryValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -11,13 +11,13 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfig {
 
     @Bean
-    public NoteValidator beforeCreatePatientValidator() {
-        return new NoteValidator();
+    public PatHistoryValidator beforeCreatePatientValidator() {
+        return new PatHistoryValidator();
     }
 
     @Bean
-    public NoteValidator beforeSavePatientValidator() {
-        return new NoteValidator();
+    public PatHistoryValidator beforeSavePatientValidator() {
+        return new PatHistoryValidator();
     }
 
     @Bean

@@ -1,18 +1,18 @@
-package com.mediscreen.abernathyapp.note.models;
+package com.mediscreen.abernathyapp.patHistory.models;
 
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-public class Note {
+public class PatHistory {
 
     @MongoId
     private String id;
     private String patientId;
     private String content;
 
-    public Note() {
+    public PatHistory() {
     }
 
-    public Note(String patientId, String content) {
+    public PatHistory(String patientId, String content) {
         this.patientId = patientId;
         this.content = content;
     }

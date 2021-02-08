@@ -14,7 +14,7 @@ def remoteConfig = appModules.findAll() { project -> project.name != 'configserv
 
 def microServices = appModules.findAll() {  project -> (
         project.name == "patient"
-        || project.name == "note") }
+        || project.name == "patHistory") }
 
 /** All modules of Mediscreen application **/
 configure(appModules) {
