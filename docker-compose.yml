@@ -37,10 +37,10 @@ services:
     container_name: "patient"
     depends_on:
       - configserver
-      - mongo
+      - mysqldb
     command:
       "--spring.profiles.active=docker --server.port=8082"
-  #------------------------------------------------- Patient Microservice
+  #------------------------------------------------- Note Microservice
   note:
     build: "./note/"
     ports:
@@ -48,7 +48,7 @@ services:
     container_name: "note"
     depends_on:
       - configserver
-      - mysqldb
+      - mongo
     command:
       "--spring.profiles.active=docker --server.port=8083"
   #------------------------------------------------- Eureka EMS Server

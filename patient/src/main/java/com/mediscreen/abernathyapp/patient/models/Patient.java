@@ -1,13 +1,20 @@
 package com.mediscreen.abernathyapp.patient.models;
 
-import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.LocalDate;
 import java.util.Optional;
 
 //@JsonDeserialize(using = PatientDeserializer.class)
+@Entity
 public class Patient {
     @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String family;
     private String given;
@@ -16,7 +23,7 @@ public class Patient {
     private String address;
     private String phone;
 
-    private Patient() {
+    public Patient() {
     }
 
     public Patient(String family, String given, LocalDate dob, String sex, String address, String phone) {
@@ -28,8 +35,9 @@ public class Patient {
         this.phone = phone;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public Optional<String> getId() {
-        return Optional.of(this.id);
+        return Optional.ofNullable(this.id);
     }
 
     public void setId(String id) {

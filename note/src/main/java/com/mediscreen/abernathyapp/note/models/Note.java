@@ -1,17 +1,10 @@
 package com.mediscreen.abernathyapp.note.models;
 
-import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-@Entity
 public class Note {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @MongoId
     private String id;
     private String patientId;
     private String content;
