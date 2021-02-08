@@ -2,8 +2,7 @@ package com.mediscreen.abernathy.client.controllers;
 
 import com.mediscreen.abernathy.client.dtos.PatHistoryDTO;
 import com.mediscreen.abernathy.client.dtos.PatientDTO;
-import com.mediscreen.abernathy.client.proxies.AppPatHistoryProxy;
-import com.mediscreen.abernathy.client.proxies.AppPatientProxy;
+import com.mediscreen.abernathy.client.proxies.AppProxy;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,16 +25,15 @@ public class PatientController {
 
 
     private final Logger logger;
-    private final AppPatientProxy appPatientProxy;
-    private final AppPatHistoryProxy appPatHistoryProxy;
+    private final AppProxy appProxy;
+    // private final AppPatHistoryProxy appPatHistoryProxy;
 
     @Autowired
     public PatientController(@Qualifier("getPatientLogger") Logger logger,
-                             AppPatientProxy appPatientProxy,
-                             AppPatHistoryProxy appPatHistoryProxy) {
+                             AppProxy appProxy
+    ) {
         this.logger = logger;
-        this.appPatientProxy = appPatientProxy;
-        this.appPatHistoryProxy = appPatHistoryProxy;
+        this.appProxy = appProxy;
     }
 
     @GetMapping("/patient/list")
@@ -44,7 +42,7 @@ public class PatientController {
             @RequestParam(value = "size", required = false, defaultValue = "20") Integer size,
             Model model) {
 
-        PagedModel<EntityModel<PatientDTO>> patientCollection = appPatientProxy.getAllPatients(page, size);
+        PagedModel<EntityModel<PatientDTO>> patientCollection = appProxy.getAllPatients(page, size);
 
         model.addAttribute("allPatients", patientCollection.getContent());
 
@@ -81,7 +79,7 @@ public class PatientController {
     public String getPatient(@RequestParam("id") String id,
                              Model model,
                              RedirectAttributes redirectAttributes) {
-        EntityModel<PatientDTO> patient = appPatientProxy.getPatient(id);
+        EntityModel<PatientDTO> patient = appProxy.getPatient(id);
         if (patient == null) {
             redirectAttributes.addFlashAttribute("patientNotFound", true);
             return "redirect:/patient/list";
@@ -100,7 +98,7 @@ public class PatientController {
 
         //TODO handle paging notes
         PagedModel<EntityModel<PatHistoryDTO>> patHistoryCollection =
-                appPatHistoryProxy.getAllPatHistory(0, 50);
+                appProxy.getAllPatHistory(0, 50, id);
         model.addAttribute("patHistoryItem", patHistoryCollection.getContent());
         model.addAttribute("patHistoryLink", patHistoryCollection.getLinks());
         return "patient/details";
@@ -108,7 +106,7 @@ public class PatientController {
 
     @GetMapping(value = "/patient/update")
     public String updatePatientForm(@RequestParam("id") String id, Model model) {
-        EntityModel<PatientDTO> patient = appPatientProxy.getPatient(id);
+        EntityModel<PatientDTO> patient = appProxy.getPatient(id);
         if (patient == null) {
             model.addAttribute("patientNotFound", true);
             return "patient/list";
@@ -131,7 +129,7 @@ public class PatientController {
             model.addAttribute("patientToUpdate", patientDTO);
             return "patient/update";
         } else {
-            appPatientProxy.updatePatient(
+            appProxy.updatePatient(
                     patientDTO.getId(),
                     patientDTO.getFamily(),
                     patientDTO.getGiven(),
@@ -161,7 +159,7 @@ public class PatientController {
             model.addAttribute("patientToAdd", patientDTO);
             return "patient/add";
         } else {
-            appPatientProxy.addPatient(
+            appProxy.addPatient(
                     patientDTO.getFamily(),
                     patientDTO.getGiven(),
                     patientDTO.getDob(),

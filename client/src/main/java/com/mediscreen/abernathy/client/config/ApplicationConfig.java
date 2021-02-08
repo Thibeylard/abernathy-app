@@ -13,10 +13,6 @@ public class ApplicationConfig {
         return LoggerFactory.getLogger("patient");
     }
 
-    @Bean
-    public Logger getPatHistoryLogger() {
-        return LoggerFactory.getLogger("patHistory");
-    }
 
     // Spring Sleuth tracing configuration
     @Bean

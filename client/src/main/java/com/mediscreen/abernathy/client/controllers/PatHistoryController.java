@@ -1,7 +1,7 @@
 package com.mediscreen.abernathy.client.controllers;
 
 import com.mediscreen.abernathy.client.dtos.PatHistoryDTO;
-import com.mediscreen.abernathy.client.proxies.AppPatHistoryProxy;
+import com.mediscreen.abernathy.client.proxies.AppProxy;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,12 +21,14 @@ public class PatHistoryController {
 
 
     private final Logger logger;
-    private final AppPatHistoryProxy appPatHistoryProxy;
+    private final AppProxy appProxy;
 
     @Autowired
-    public PatHistoryController(@Qualifier("getPatHistoryLogger") Logger logger, AppPatHistoryProxy appPatHistoryProxy) {
+    public PatHistoryController(
+            @Qualifier("getPatHistoryLogger") Logger logger,
+            AppProxy appProxy) {
         this.logger = logger;
-        this.appPatHistoryProxy = appPatHistoryProxy;
+        this.appProxy = appProxy;
     }
 
 
@@ -34,7 +36,7 @@ public class PatHistoryController {
     public String updatePatHistoryForm(@RequestParam("id") String id,
                                        Model model,
                                        RedirectAttributes redirectAttributes) {
-        EntityModel<PatHistoryDTO> patHistory = appPatHistoryProxy.getPatHistory(id);
+        EntityModel<PatHistoryDTO> patHistory = appProxy.getPatHistory(id);
         if (patHistory == null) {
             redirectAttributes.addFlashAttribute("patHistoryNotFound", true);
             return "redirect:patient/list";
@@ -56,7 +58,7 @@ public class PatHistoryController {
             model.addAttribute("patHistoryToUpdate", patHistoryDTO);
             return "patient/update";
         } else {
-            appPatHistoryProxy.updatePatHistory(
+            appProxy.updatePatHistory(
                     patHistoryDTO.getId(),
                     patHistoryDTO.getPatientId(),
                     patHistoryDTO.getContent()
@@ -83,7 +85,7 @@ public class PatHistoryController {
             model.addAttribute("patHistoryToAdd", patHistoryDTO);
             return "patient/add";
         } else {
-            appPatHistoryProxy.addPatHistory(
+            appProxy.addPatHistory(
                     patHistoryDTO.getPatientId(),
                     patHistoryDTO.getContent()
             );

@@ -2,7 +2,7 @@ package com.mediscreen.abernathy.client.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.abernathy.client.dtos.PatientDTO;
-import com.mediscreen.abernathy.client.proxies.AppPatientProxy;
+import com.mediscreen.abernathy.client.proxies.AppProxy;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -42,7 +42,7 @@ public class PatientControllerTest {
     @Autowired
     ObjectMapper objectMapper;
     @MockBean
-    AppPatientProxy appPatientProxy;
+    AppProxy appProxy;
     @Autowired
     private MockMvc mockMvc;
 
@@ -55,7 +55,7 @@ public class PatientControllerTest {
                 new PagedModel.PageMetadata(20, 0, 0, 1),
                 Link.of("/patient/list/link", "self"));
 
-        when(appPatientProxy.getAllPatients(any(Integer.class), any(Integer.class))).thenReturn(collectionResource);
+        when(appProxy.getAllPatients(any(Integer.class), any(Integer.class))).thenReturn(collectionResource);
 
         // TODO improve test by checking links and page model attributes
         mockMvc.perform(get("/patient/list"))
@@ -93,7 +93,7 @@ public class PatientControllerTest {
                 new PagedModel.PageMetadata(20, 0, 2, 1),
                 Link.of("/patient/list/link", "self"));
 
-        when(appPatientProxy.getAllPatients(any(Integer.class), any(Integer.class))).thenReturn(collectionResource);
+        when(appProxy.getAllPatients(any(Integer.class), any(Integer.class))).thenReturn(collectionResource);
 
         mockMvc.perform(get("/patient/list"))
                 .andExpect(view().name("patient/list"))
@@ -128,7 +128,7 @@ public class PatientControllerTest {
                         "000-111-223"),
                 patientLinks));
 
-        when(appPatientProxy.getPatient(any(String.class))).thenReturn(patients.get(0));
+        when(appProxy.getPatient(any(String.class))).thenReturn(patients.get(0));
 
         mockMvc.perform(get("/patient/get")
                 .param("id", "1"))
@@ -138,7 +138,7 @@ public class PatientControllerTest {
                 .andExpect(model().attribute("patientResource", hasProperty("content", is(patients.get(0).getContent()))))
                 .andExpect(model().attribute("patientResource", hasProperty("links", is(patients.get(0).getLinks()))));
 
-        when(appPatientProxy.getPatient(any(String.class))).thenReturn(null);
+        when(appProxy.getPatient(any(String.class))).thenReturn(null);
 
         mockMvc.perform(get("/patient/get")
                 .param("id", "3"))
@@ -170,7 +170,7 @@ public class PatientControllerTest {
                 patientToAdd,
                 patientLinks);
 
-        when(appPatientProxy.addPatient(
+        when(appProxy.addPatient(
                 patientToAdd.getFamily(),
                 patientToAdd.getGiven(),
                 patientToAdd.getDob(),
@@ -285,7 +285,7 @@ public class PatientControllerTest {
                 patientDtoToUpdate,
                 patientLinks);
 
-        doReturn(patientItemToUpdate).when(appPatientProxy).getPatient(any(String.class));
+        doReturn(patientItemToUpdate).when(appProxy).getPatient(any(String.class));
 
         mockMvc.perform(get("/patient/update")
                 .param("id", "3"))
@@ -293,7 +293,7 @@ public class PatientControllerTest {
                 .andExpect(model().attributeExists("patientToUpdate"))
                 .andExpect(model().attribute("patientToUpdate", is(patientDtoToUpdate)));
 
-        when(appPatientProxy.updatePatient(
+        when(appProxy.updatePatient(
                 patientDtoToUpdate.getId(),
                 patientDtoToUpdate.getFamily(),
                 patientDtoToUpdate.getGiven(),
