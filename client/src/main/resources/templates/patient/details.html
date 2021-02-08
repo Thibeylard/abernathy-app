@@ -36,5 +36,31 @@
     </tr>
 </table>
 
+<div th:unless="${#lists.isEmpty(patHistoryItem)}">
+    <p>
+        Vous trouverez ci-dessous toutes les notes liées au patient
+        Cliquez sur le bouton "Editer" pour modifier ses informations.
+        Vous pouvez également en créer une nouvelle
+    </p>
+
+    <table>
+        <thead>
+        <th>Content</th>
+        <th>ACTIONS</th>
+        </thead>
+        <tr th:each="patHistory : ${patHistoryItem}">
+            <td th:text="${patHistory.getContent()}"></td>
+            <td>
+                <a th:href="@{/patHistory/update(id=${patHistory.getId()})}">EDIT</a>
+            </td>
+        </tr>
+    </table>
+
+
+    <p>
+        <a th:href="../patHistory/add"> ----- Ajouter une nouvelle note ----- </a>
+    </p>
+</div>
+
 </body>
 </html>

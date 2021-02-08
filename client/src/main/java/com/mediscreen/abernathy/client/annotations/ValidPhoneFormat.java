@@ -1,6 +1,6 @@
-package com.mediscreen.abernathy.client.patient.annotations;
+package com.mediscreen.abernathy.client.annotations;
 
-import com.mediscreen.abernathy.client.patient.validators.DobConstraintValidator;
+import com.mediscreen.abernathy.client.validators.PhoneConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -12,12 +12,12 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
-@Constraint(validatedBy = DobConstraintValidator.class)
+@Constraint(validatedBy = PhoneConstraintValidator.class)
 @Target({TYPE, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-public @interface ValidDobFormat {
+public @interface ValidPhoneFormat {
 
-    String message() default "doit respecter le format yyyy-MM-dd.";
+    String message() default "doit respecter le format XXX-XXX-XXX où X est un chiffre entre 0 et 9";
 
     Class<?>[] groups() default {};
 

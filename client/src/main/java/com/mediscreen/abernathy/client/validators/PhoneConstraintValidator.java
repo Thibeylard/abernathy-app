@@ -1,6 +1,6 @@
-package com.mediscreen.abernathy.client.patient.validators;
+package com.mediscreen.abernathy.client.validators;
 
-import com.mediscreen.abernathy.client.patient.annotations.ValidPhoneFormat;
+import com.mediscreen.abernathy.client.annotations.ValidPhoneFormat;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

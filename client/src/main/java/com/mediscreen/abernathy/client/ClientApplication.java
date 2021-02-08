@@ -9,7 +9,7 @@ import org.springframework.hateoas.config.EnableHypermediaSupport;
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients("com.mediscreen.abernathy.client.*.proxies")
+@EnableFeignClients("com.mediscreen.abernathy.client.proxies")
 public class ClientApplication {
 
     public static void main(String[] args) {

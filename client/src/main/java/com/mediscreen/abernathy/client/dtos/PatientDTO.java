@@ -1,9 +1,9 @@
-package com.mediscreen.abernathy.client.patient.dtos;
+package com.mediscreen.abernathy.client.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mediscreen.abernathy.client.patient.annotations.ValidDobFormat;
-import com.mediscreen.abernathy.client.patient.annotations.ValidPhoneFormat;
-import com.mediscreen.abernathy.client.patient.annotations.ValidSexValue;
+import com.mediscreen.abernathy.client.annotations.ValidDobFormat;
+import com.mediscreen.abernathy.client.annotations.ValidPhoneFormat;
+import com.mediscreen.abernathy.client.annotations.ValidSexValue;
 
 import javax.validation.constraints.NotBlank;
 

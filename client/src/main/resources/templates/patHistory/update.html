@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Form</title>
+</head>
+<body>
+
+<div class="row">
+    <form style="width: 100%" th:action="@{/patHistory/update}"
+          th:method="post"
+          th:object="${patHistoryToUpdate}">
+        <label>
+            Patient Id
+            <input readonly th:field="*{patientId}" type="text"/>
+        </label><br/>
+
+        <label>Content
+            <textarea th:field="*{content}"></textarea><br/>
+        </label><br/>
+        <div style="color:red" th:if="${#fields.hasErrors('content')}">
+            <p th:each="error : ${#fields.errors('content')}" th:text="${error.toString()}"></p>
+        </div>
+
+        <input th:field="*{id}" type="hidden">
+        <a th:href="@{/patient/get(id=*{patientId})}"><input type="button" value="Cancel"/></a>
+        <input type="submit" value="Update Note"/></input>
+    </form>
+</div>
+
+</body>
+</html>

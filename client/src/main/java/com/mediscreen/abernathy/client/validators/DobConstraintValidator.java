@@ -1,12 +1,11 @@
-package com.mediscreen.abernathy.client.patient.validators;
+package com.mediscreen.abernathy.client.validators;
 
-import com.mediscreen.abernathy.client.patient.annotations.ValidSexValue;
+import com.mediscreen.abernathy.client.annotations.ValidDobFormat;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class SexConstraintValidator implements ConstraintValidator<ValidSexValue, String> {
-
+public class DobConstraintValidator implements ConstraintValidator<ValidDobFormat, String> {
     /**
      * Initializes the validator in preparation for
      * {@link #isValid(String, ConstraintValidatorContext)} calls.
@@ -21,7 +20,7 @@ public class SexConstraintValidator implements ConstraintValidator<ValidSexValue
      * @param constraintAnnotation annotation instance for a given constraint declaration
      */
     @Override
-    public void initialize(ValidSexValue constraintAnnotation) {
+    public void initialize(ValidDobFormat constraintAnnotation) {
     }
 
     /**
@@ -37,6 +36,7 @@ public class SexConstraintValidator implements ConstraintValidator<ValidSexValue
      */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return value != null && (value.equals("M") || value.equals("F"));
+        //TODO improve validation to prevent unvalid date entry such as 3050-45-85
+        return value != null && value.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 }

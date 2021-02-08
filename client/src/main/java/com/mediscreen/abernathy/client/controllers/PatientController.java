@@ -1,7 +1,9 @@
-package com.mediscreen.abernathy.client.patient.controllers;
+package com.mediscreen.abernathy.client.controllers;
 
-import com.mediscreen.abernathy.client.patient.dtos.PatientDTO;
-import com.mediscreen.abernathy.client.patient.proxies.AppPatientProxy;
+import com.mediscreen.abernathy.client.dtos.PatHistoryDTO;
+import com.mediscreen.abernathy.client.dtos.PatientDTO;
+import com.mediscreen.abernathy.client.proxies.AppPatHistoryProxy;
+import com.mediscreen.abernathy.client.proxies.AppPatientProxy;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,11 +27,15 @@ public class PatientController {
 
     private final Logger logger;
     private final AppPatientProxy appPatientProxy;
+    private final AppPatHistoryProxy appPatHistoryProxy;
 
     @Autowired
-    public PatientController(@Qualifier("getPatientLogger") Logger logger, AppPatientProxy appPatientProxy) {
+    public PatientController(@Qualifier("getPatientLogger") Logger logger,
+                             AppPatientProxy appPatientProxy,
+                             AppPatHistoryProxy appPatHistoryProxy) {
         this.logger = logger;
         this.appPatientProxy = appPatientProxy;
+        this.appPatHistoryProxy = appPatHistoryProxy;
     }
 
     @GetMapping("/patient/list")
@@ -70,6 +76,12 @@ public class PatientController {
             return "patient/list";
         }
         model.addAttribute("patientResource", patient);
+
+        //TODO handle paging notes
+        PagedModel<EntityModel<PatHistoryDTO>> patHistoryCollection =
+                appPatHistoryProxy.getAllPatHistory(0, 50);
+        model.addAttribute("patHistoryItem", patHistoryCollection.getContent());
+        model.addAttribute("patHistoryLink", patHistoryCollection.getLinks());
         return "patient/details";
     }
 

@@ -1,6 +1,6 @@
-package com.mediscreen.abernathy.client.patient.annotations;
+package com.mediscreen.abernathy.client.annotations;
 
-import com.mediscreen.abernathy.client.patient.validators.SexConstraintValidator;
+import com.mediscreen.abernathy.client.validators.SexConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

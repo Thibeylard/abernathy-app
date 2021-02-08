@@ -1,8 +1,8 @@
 package com.mediscreen.abernathy.client.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mediscreen.abernathy.client.patient.dtos.PatientDTO;
-import com.mediscreen.abernathy.client.patient.proxies.AppPatientProxy;
+import com.mediscreen.abernathy.client.dtos.PatientDTO;
+import com.mediscreen.abernathy.client.proxies.AppPatientProxy;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
