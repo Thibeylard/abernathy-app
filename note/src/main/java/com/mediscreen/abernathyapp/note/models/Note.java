@@ -1,21 +1,29 @@
 package com.mediscreen.abernathyapp.note.models;
 
-import org.springframework.data.annotation.Id;
+import org.hibernate.annotations.GenericGenerator;
 
-//@JsonDeserialize(using = PatientDeserializer.class)
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Note {
+
     @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String patientId;
     private String content;
 
-    private Note() {
+    public Note() {
     }
 
     public Note(String patientId, String content) {
         this.patientId = patientId;
         this.content = content;
     }
+
 
     public String getId() {
         return id;

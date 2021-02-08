@@ -1,10 +1,10 @@
 FROM openjdk:13-oracle
 
-ARG APP_WAR="./build/libs/patient-*.war"
+ARG APP_WAR="./build/libs/note-*.war"
 
-WORKDIR "/abernathyapp/patient/"
+WORKDIR "/abernathyapp/note/"
 
-COPY ${APP_WAR} "patient.war"
+COPY ${APP_WAR} "note.war"
 
-ENTRYPOINT ["java","-jar","patient.war"]
+ENTRYPOINT ["java","-jar","note.war"]
 
