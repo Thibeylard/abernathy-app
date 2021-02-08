@@ -36,6 +36,10 @@
     </tr>
 </table>
 
+<p style="color: red;font-style: italic" th:if="${patHistoryAdded}">La note a bien été ajoutée à la base de données</p>
+<p style="color: red;font-style: italic" th:if="${patHistoryUpdated}">La note a bien été mise à jour dans la base de
+    données</p>
+
 <div th:unless="${#lists.isEmpty(patHistoryItem)}">
     <p>
         Vous trouverez ci-dessous toutes les notes liées au patient

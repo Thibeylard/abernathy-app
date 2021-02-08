@@ -48,12 +48,21 @@ public class PatientController {
 
         model.addAttribute("allPatients", patientCollection.getContent());
 
+        // Add Flash attributes as Model attributes -----------------------------------------------------------
+        // TODO improve with switch or private method ?
         if (model.asMap().get("patientAdded") != null) {
             model.addAttribute("patientAdded", model.asMap().get("patientAdded"));
         }
         if (model.asMap().get("patientUpdated") != null) {
             model.addAttribute("patientUpdated", model.asMap().get("patientUpdated"));
         }
+        if (model.asMap().get("patientNotFound") != null) {
+            model.addAttribute("patientNotFound", model.asMap().get("patientNotFound"));
+        }
+        if (model.asMap().get("patHistoryNotFound") != null) {
+            model.addAttribute("patHistoryNotFound", model.asMap().get("patHistoryNotFound"));
+        }
+        // END Add Flash attributes as Model attributes --------------------------------------------------------
 
         PagedModel.PageMetadata metadata = patientCollection.getMetadata();
         if (metadata != null) {
@@ -69,13 +78,25 @@ public class PatientController {
     }
 
     @GetMapping("/patient/get")
-    public String getPatient(@RequestParam("id") String id, Model model) {
+    public String getPatient(@RequestParam("id") String id,
+                             Model model,
+                             RedirectAttributes redirectAttributes) {
         EntityModel<PatientDTO> patient = appPatientProxy.getPatient(id);
         if (patient == null) {
-            model.addAttribute("patientNotFound", true);
-            return "patient/list";
+            redirectAttributes.addFlashAttribute("patientNotFound", true);
+            return "redirect:/patient/list";
         }
         model.addAttribute("patientResource", patient);
+
+        // Add Flash attributes as Model attributes -----------------------------------------------------------
+        // TODO improve with switch or private method ?
+        if (model.asMap().get("patHistoryAdded") != null) {
+            model.addAttribute("patHistoryAdded", model.asMap().get("patHistoryAdded"));
+        }
+        if (model.asMap().get("patHistoryUpdated") != null) {
+            model.addAttribute("patientUpdated", model.asMap().get("patientUpdated"));
+        }
+        // END Add Flash attributes as Model attributes --------------------------------------------------------
 
         //TODO handle paging notes
         PagedModel<EntityModel<PatHistoryDTO>> patHistoryCollection =
