@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Patient Form</title>
+    <title>PatHistory Form</title>
 </head>
 <body>
 
@@ -11,13 +11,11 @@
     <form style="width: 100%" th:action="@{/patHistory/add}"
           th:method="post"
           th:object="${patHistoryToAdd}">
-        <label>
-            Patient Id
-            <input readonly th:field="*{patientId}" type="text"/>
-        </label><br/>
+
+        <hidden th:field="*{patientId}" type="text"/>
 
         <label>Content
-            <textarea th:field="*{content}"></textarea><br/>
+            <textarea cols="80" rows="40" th:field="*{content}"></textarea><br/>
         </label><br/>
         <div style="color:red" th:if="${#fields.hasErrors('content')}">
             <p th:each="error : ${#fields.errors('content')}" th:text="${error.toString()}"></p>

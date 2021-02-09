@@ -1,7 +1,7 @@
 package com.mediscreen.abernathy.client.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mediscreen.abernathy.client.proxies.AppPatHistoryProxy;
+import com.mediscreen.abernathy.client.proxies.AppProxy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class PatHistoryControllerTest {
     @Autowired
     ObjectMapper objectMapper;
     @MockBean
-    AppPatHistoryProxy appPatHistoryProxy;
+    AppProxy appProxy;
     @Autowired
     private MockMvc mockMvc;
 
