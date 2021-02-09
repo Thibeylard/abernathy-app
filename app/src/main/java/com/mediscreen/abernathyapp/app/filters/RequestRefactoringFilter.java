@@ -156,9 +156,10 @@ public class RequestRefactoringFilter extends ZuulFilter {
 
         //TODO add pretty error object model
 
-        if (id == null || id.isBlank()) {
+        // Due to spring data rest path variable /collectionPath/itemID, an id value starting by a "/" would be valid ! condition below aims to prevent that case.
+        if (id == null || id.isBlank() || id.charAt(0) == '/') {
             context.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
-            context.setResponseBody("Missing id parameter to get any " + serviceId.substring(0, 1).toUpperCase() + serviceId.substring(1));
+            context.setResponseBody("Missing or invalid id parameter to get any " + serviceId.substring(0, 1).toUpperCase() + serviceId.substring(1));
             context.setSendZuulResponse(false);
         } else {
             context.set(REQUEST_URI_KEY, "/" + serviceId + "/" + id);
