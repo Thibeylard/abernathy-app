@@ -95,16 +95,16 @@ public class RequestRefactoringFilter extends ZuulFilter {
         HttpServletRequest request = context.getRequest();
         String method = request.getMethod();
 
-        if (this.requestURI.contains(ADD.getBaseUri())
+        if (this.requestURI.equals("/" + serviceId + ADD.getBaseUri())
                 && method.equals(HttpMethod.POST.toString())) {
             additionRequestRefactoring();
-        } else if (this.requestURI.contains(UPDATE.getBaseUri())
+        } else if (this.requestURI.equals("/" + serviceId + UPDATE.getBaseUri())
                 && method.equals(HttpMethod.PUT.toString())) {
             updateRequestRefactoring();
-        } else if (this.requestURI.contains(GET_SINGLE.getBaseUri())
+        } else if (this.requestURI.equals("/" + serviceId + GET_SINGLE.getBaseUri())
                 && method.equals(HttpMethod.GET.toString())) {
             getRequestRefactoring();
-        } else if (this.requestURI.contains(GET_ALL.getBaseUri())
+        } else if (this.requestURI.equals("/" + serviceId + GET_ALL.getBaseUri())
                 && method.equals(HttpMethod.GET.toString())) {
             listRequestRefactoring();
         } else {

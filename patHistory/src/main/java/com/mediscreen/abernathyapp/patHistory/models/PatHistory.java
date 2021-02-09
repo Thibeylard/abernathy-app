@@ -1,10 +1,10 @@
 package com.mediscreen.abernathyapp.patHistory.models;
 
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.annotation.Id;
 
 public class PatHistory {
 
-    @MongoId
+    @Id
     private String id;
     private String patientId;
     private String content;
