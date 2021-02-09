@@ -95,6 +95,7 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
                 return null;
             }
             String responseData = CharStreams.toString(new InputStreamReader(in, StandardCharsets.UTF_8));
+            logger.debug("BEFORE PARSING : " + responseData);
             JsonNode tree = objectMapper.readTree(responseData);
 
             if (isCollectionResource(tree)) {
@@ -104,6 +105,9 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
             } else {
                 //TODO throw exception
             }
+
+            // Ensure that CharacterEncoding is UTF-8
+            context.getResponse().setCharacterEncoding(StandardCharsets.UTF_8.toString());
 
             context.setResponseBody(responseData);
         } catch (IOException e) {
