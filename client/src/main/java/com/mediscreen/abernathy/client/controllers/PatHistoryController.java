@@ -4,8 +4,8 @@ import com.mediscreen.abernathy.client.dtos.PatHistoryDTO;
 import com.mediscreen.abernathy.client.proxies.AppProxy;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+@Controller
 public class PatHistoryController {
 
 
@@ -24,9 +25,8 @@ public class PatHistoryController {
     private final AppProxy appProxy;
 
     @Autowired
-    public PatHistoryController(
-            @Qualifier("getPatHistoryLogger") Logger logger,
-            AppProxy appProxy) {
+    public PatHistoryController(Logger logger,
+                                AppProxy appProxy) {
         this.logger = logger;
         this.appProxy = appProxy;
     }
