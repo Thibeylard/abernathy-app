@@ -6,7 +6,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
 
-@RepositoryRestResource(path = "note", collectionResourceRel = "note")
+@RepositoryRestResource(path = "patHistory", collectionResourceRel = "patHistory")
 public interface PatHistoryRepository extends MongoRepository<PatHistory, String> {
 
     public List<PatHistory> findByPatientId(String patientId);

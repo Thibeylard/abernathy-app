@@ -45,7 +45,11 @@ services:
     build: "./patHistory/"
     ports:
       - 8083:8083
-    container_name: "pathistory"
+    container_name: "patHistory"
+    networks:
+      default:
+        aliases:
+          - patHistory
     depends_on:
       - configserver
       - mongo

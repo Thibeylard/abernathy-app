@@ -46,7 +46,7 @@ public class PatHistoryController {
     }
 
     @PostMapping(value = "/patHistory/update")
-    public String updatePatHistoryAction(@Valid @ModelAttribute("patientToUpdate") PatHistoryDTO patHistoryDTO,
+    public String updatePatHistoryAction(@Valid @ModelAttribute("patHistoryToUpdate") PatHistoryDTO patHistoryDTO,
                                          BindingResult result,
                                          Model model,
                                          RedirectAttributes redirectAttributes) {
@@ -77,7 +77,7 @@ public class PatHistoryController {
     }
 
     @PostMapping(value = "/patHistory/add")
-    public String addPatHistoryAction(@Valid @ModelAttribute("patientToAdd") PatHistoryDTO patHistoryDTO,
+    public String addPatHistoryAction(@Valid @ModelAttribute("patHistoryToAdd") PatHistoryDTO patHistoryDTO,
                                       BindingResult result,
                                       Model model,
                                       RedirectAttributes redirectAttributes) {

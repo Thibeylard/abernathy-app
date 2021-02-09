@@ -7,6 +7,7 @@
 </head>
 <body>
 
+<h2>DONNEES DU PATIENT </h2>
 <table>
     <thead>
     </thead>
@@ -36,9 +37,15 @@
     </tr>
 </table>
 
+<h2>NOTES SUR LE PATIENT </h2>
+
 <p style="color: red;font-style: italic" th:if="${patHistoryAdded}">La note a bien été ajoutée à la base de données</p>
 <p style="color: red;font-style: italic" th:if="${patHistoryUpdated}">La note a bien été mise à jour dans la base de
     données</p>
+
+<p th:if="${#lists.isEmpty(allPatients)}">
+    Aucune note n'est enregistrée pour ce patient. Cliquez sur Ajouter pour en créer une.
+</p>
 
 <div th:unless="${#lists.isEmpty(patHistoryItem)}">
     <p>
@@ -61,10 +68,11 @@
     </table>
 
 
-    <p>
-        <a th:href="../patHistory/add"> ----- Ajouter une nouvelle note ----- </a>
-    </p>
 </div>
+
+<p>
+    <a th:href="@{/patHistory/add(patientId=${patientResource.getContent().getId()})}"}> ----- Ajouter une nouvelle note ----- </a>
+</p>
 
 </body>
 </html>

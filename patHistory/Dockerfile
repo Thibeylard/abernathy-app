@@ -1,10 +1,10 @@
 FROM openjdk:13-oracle
 
-ARG APP_WAR="./build/libs/note-*.war"
+ARG APP_WAR="./build/libs/patHistory-*.war"
 
-WORKDIR "/abernathyapp/note/"
+WORKDIR "/abernathyapp/patHistory/"
 
-COPY ${APP_WAR} "note.war"
+COPY ${APP_WAR} "patHistory.war"
 
-ENTRYPOINT ["java","-jar","note.war"]
+ENTRYPOINT ["java","-jar","patHistory.war"]
 
