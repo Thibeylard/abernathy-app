@@ -5,7 +5,6 @@ import com.mediscreen.abernathy.client.dtos.PatientDTO;
 import com.mediscreen.abernathy.client.proxies.AppProxy;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Controller;
@@ -29,7 +28,7 @@ public class PatientController {
     // private final AppPatHistoryProxy appPatHistoryProxy;
 
     @Autowired
-    public PatientController(@Qualifier("getPatientLogger") Logger logger,
+    public PatientController(Logger logger,
                              AppProxy appProxy
     ) {
         this.logger = logger;
@@ -92,13 +91,13 @@ public class PatientController {
             model.addAttribute("patHistoryAdded", model.asMap().get("patHistoryAdded"));
         }
         if (model.asMap().get("patHistoryUpdated") != null) {
-            model.addAttribute("patientUpdated", model.asMap().get("patientUpdated"));
+            model.addAttribute("patHistoryUpdated", model.asMap().get("patHistoryUpdated"));
         }
         // END Add Flash attributes as Model attributes --------------------------------------------------------
 
         //TODO handle paging notes
         PagedModel<EntityModel<PatHistoryDTO>> patHistoryCollection =
-                appProxy.getAllPatHistory(0, 50, id);
+                appProxy.getPatientPatHistory(id);
         model.addAttribute("patHistoryItem", patHistoryCollection.getContent());
         model.addAttribute("patHistoryLink", patHistoryCollection.getLinks());
         return "patient/details";

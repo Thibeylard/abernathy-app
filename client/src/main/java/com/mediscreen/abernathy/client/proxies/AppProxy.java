@@ -52,9 +52,8 @@ public interface AppProxy {
     @GetMapping("/patHistory/list")
     PagedModel<EntityModel<PatHistoryDTO>> getAllPatHistory(
             @RequestParam(name = "page") Integer page,
-            @RequestParam(name = "size") Integer size,
+            @RequestParam(name = "size") Integer size
 //            @RequestParam(name="sort", required = false) String sort
-            @RequestParam(name = "patientId") String patientId
     );
 
     @GetMapping("/patHistory/get")
@@ -70,4 +69,9 @@ public interface AppProxy {
             @RequestParam("id") String id,
             @RequestParam("patientId") String patientId,
             @RequestParam("content") String content);
+
+    @GetMapping("/patHistory/ofPatient")
+    PagedModel<EntityModel<PatHistoryDTO>> getPatientPatHistory(
+            @RequestParam(name = "patientId") String patientId
+    );
 }

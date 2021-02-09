@@ -30,7 +30,7 @@ import java.util.Map;
 import static com.mediscreen.abernathyapp.app.constants.ApiExposedOperations.*;
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.*;
 
-//TODO generify this class to work with any microservice
+//TODO divide this class with common RequestFilter and specific Filter for services specific operations
 
 @Component
 public class RequestRefactoringFilter extends ZuulFilter {
@@ -107,6 +107,9 @@ public class RequestRefactoringFilter extends ZuulFilter {
         } else if (this.requestURI.equals("/" + serviceId + GET_ALL.getBaseUri())
                 && method.equals(HttpMethod.GET.toString())) {
             listRequestRefactoring();
+        } else if (serviceId.equals("patHistory") && this.requestURI.equals("/" + serviceId + GET_OF_PATIENT.getBaseUri())
+                && method.equals(HttpMethod.GET.toString())) {
+            ofPatientRequestRefactoring();
         } else {
             logger.debug("Unexpected endpoint call under /{}", requestURI);
             context.setResponseStatusCode(HttpStatus.NOT_FOUND.value());
@@ -166,6 +169,22 @@ public class RequestRefactoringFilter extends ZuulFilter {
         logger.debug("GET request to /{}/list is about to be refactored", serviceId);
         RequestContext context = RequestContext.getCurrentContext();
         context.set(REQUEST_URI_KEY, "/" + serviceId);
+    }
+
+    private void ofPatientRequestRefactoring() {
+        logger.debug("GET request to /{}/ofPatient is about to be refactored", serviceId);
+        RequestContext context = RequestContext.getCurrentContext();
+        String patientId = context.getRequest().getParameter("patientId");
+
+        //TODO add pretty error object model
+
+        if (patientId == null || patientId.isBlank()) {
+            context.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
+            context.setResponseBody("Missing patientId parameter to get any " + serviceId.substring(0, 1).toUpperCase() + serviceId.substring(1));
+            context.setSendZuulResponse(false);
+        } else {
+            context.set(REQUEST_URI_KEY, "/" + serviceId + "/search/withPatientId");
+        }
     }
 
     private void refactoringParametersAsJsonBody() {

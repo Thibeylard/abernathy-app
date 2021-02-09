@@ -8,6 +8,7 @@
 <body>
 
 <h2>DONNEES DU PATIENT </h2>
+
 <table>
     <thead>
     </thead>
@@ -37,13 +38,14 @@
     </tr>
 </table>
 
+
 <h2>NOTES SUR LE PATIENT </h2>
 
 <p style="color: red;font-style: italic" th:if="${patHistoryAdded}">La note a bien été ajoutée à la base de données</p>
 <p style="color: red;font-style: italic" th:if="${patHistoryUpdated}">La note a bien été mise à jour dans la base de
     données</p>
 
-<p th:if="${#lists.isEmpty(allPatients)}">
+<p th:if="${#lists.isEmpty(patHistoryItem)}">
     Aucune note n'est enregistrée pour ce patient. Cliquez sur Ajouter pour en créer une.
 </p>
 
@@ -59,19 +61,26 @@
         <th>Content</th>
         <th>ACTIONS</th>
         </thead>
+        <!-- TODO rename patHistoryItem to patHistoryCollection -->
         <tr th:each="patHistory : ${patHistoryItem}">
-            <td th:text="${patHistory.getContent()}"></td>
+            <td th:text="${patHistory.getContent().getContent()}"></td>
             <td>
-                <a th:href="@{/patHistory/update(id=${patHistory.getId()})}">EDIT</a>
+                <a th:href="@{/patHistory/update(id=${patHistory.getContent().getId()})}">EDIT</a>
             </td>
         </tr>
     </table>
 
-
 </div>
 
+
 <p>
-    <a th:href="@{/patHistory/add(patientId=${patientResource.getContent().getId()})}"}> ----- Ajouter une nouvelle note ----- </a>
+    <a th:href="@{/patHistory/add(patientId=${patientResource.getContent().getId()})}" }> ----- Ajouter une nouvelle
+        note ----- </a>
+</p>
+
+
+<p>
+    <a style="font-weight: bold;" th:href="@{/patient/list}" }> RETOUR</a>
 </p>
 
 </body>

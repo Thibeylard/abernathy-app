@@ -28,19 +28,13 @@
         <thead>
         <th>Family</th>
         <th>Given</th>
-        <th>Date of Birth</th>
         <th>Sex</th>
-        <th>Address</th>
-        <th>Phone</th>
         <th>ACTIONS</th>
         </thead>
         <tr th:each="patient : ${allPatients}">
             <td th:text="${patient.getContent().getFamily()}"></td>
             <td th:text="${patient.getContent().getGiven()}"></td>
-            <td th:text="${patient.getContent().getDob()}"></td>
             <td th:text="${patient.getContent().getSex()}"></td>
-            <td th:text="${patient.getContent().getAddress()}"></td>
-            <td th:text="${patient.getContent().getPhone()}"></td>
             <td>
                 <a th:href="@{/patient/get(id=${patient.getContent().getId()})}">DETAILS</a>
                 <a th:href="@{/patient/update(id=${patient.getContent().getId()})}">EDIT</a>
