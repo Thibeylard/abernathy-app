@@ -25,7 +25,7 @@ public class PatHistoryControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    // TODO implementing addingPatHistoryIsOk()
+    // TODO implementing tests()
     @Test
     public void addingPatHistoryIsOk() throws Exception {
 /*

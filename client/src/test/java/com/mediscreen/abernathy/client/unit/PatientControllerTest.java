@@ -1,6 +1,7 @@
 package com.mediscreen.abernathy.client.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mediscreen.abernathy.client.dtos.PatHistoryDTO;
 import com.mediscreen.abernathy.client.dtos.PatientDTO;
 import com.mediscreen.abernathy.client.proxies.AppProxy;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
@@ -128,7 +130,12 @@ public class PatientControllerTest {
                         "000-111-223"),
                 patientLinks));
 
+        CollectionModel<EntityModel<PatHistoryDTO>> collectionResource = CollectionModel.of(
+                Lists.emptyList(),
+                Link.of("/patHistory/ofPatient/link", "self"));
+
         when(appProxy.getPatient(any(String.class))).thenReturn(patients.get(0));
+        when(appProxy.getPatientPatHistory(any(String.class))).thenReturn(collectionResource);
 
         mockMvc.perform(get("/patient/get")
                 .param("id", "1"))
@@ -142,9 +149,9 @@ public class PatientControllerTest {
 
         mockMvc.perform(get("/patient/get")
                 .param("id", "3"))
-                .andExpect(view().name("patient/list"))
-                .andExpect(model().attributeExists("patientNotFound"))
-                .andExpect(model().attribute("patientNotFound", true));
+                .andExpect(redirectedUrl("/patient/list"))
+                .andExpect(flash().attributeExists("patientNotFound"))
+                .andExpect(flash().attribute("patientNotFound", true));
     }
 
     @Test

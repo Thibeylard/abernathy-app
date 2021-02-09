@@ -8,6 +8,8 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class AbernathyApplicationTests {
 
+	// TODO implementing tests()
+
 	@Test
 	void contextLoads() {
 	}

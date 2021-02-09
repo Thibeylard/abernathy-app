@@ -4,6 +4,7 @@ import com.mediscreen.abernathy.client.dtos.PatHistoryDTO;
 import com.mediscreen.abernathy.client.dtos.PatientDTO;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,7 +72,7 @@ public interface AppProxy {
             @RequestParam("content") String content);
 
     @GetMapping("/patHistory/ofPatient")
-    PagedModel<EntityModel<PatHistoryDTO>> getPatientPatHistory(
+    CollectionModel<EntityModel<PatHistoryDTO>> getPatientPatHistory(
             @RequestParam(name = "patientId") String patientId
     );
 }
