@@ -105,11 +105,13 @@ public class PatientController {
     }
 
     @GetMapping(value = "/patient/update")
-    public String updatePatientForm(@RequestParam("id") String id, Model model) {
+    public String updatePatientForm(@RequestParam("id") String id,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
         EntityModel<PatientDTO> patient = appProxy.getPatient(id);
         if (patient == null) {
-            model.addAttribute("patientNotFound", true);
-            return "patient/list";
+            redirectAttributes.addFlashAttribute("patientNotFound", true);
+            return "redirect:/patient/list";
         }
         model.addAttribute("patientToUpdateID", patient.getContent().getId());
         model.addAttribute("patientToUpdate", patient.getContent());
@@ -121,7 +123,7 @@ public class PatientController {
                                       BindingResult result,
                                       Model model,
                                       RedirectAttributes redirectAttributes) {
-        if (patientDTO.getId() == null) {
+        if (patientDTO.getId() == null || patientDTO.getId().isBlank()) {
             result.addError(new FieldError("patientToUpdate", "id", "ID is mandatory."));
         }
 

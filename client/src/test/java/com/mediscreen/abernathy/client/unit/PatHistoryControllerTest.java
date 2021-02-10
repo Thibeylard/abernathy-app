@@ -1,16 +1,30 @@
 package com.mediscreen.abernathy.client.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mediscreen.abernathy.client.dtos.PatHistoryDTO;
 import com.mediscreen.abernathy.client.proxies.AppProxy;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -25,277 +39,185 @@ public class PatHistoryControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    // TODO implementing tests()
     @Test
     public void addingPatHistoryIsOk() throws Exception {
-/*
-        mockMvc.perform(get("/patient/add"))
-                .andExpect(view().name("patient/add"));
+
+        mockMvc.perform(get("/patHistory/add"))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(get("/patHistory/add")
+                .param("patientId", "2"))
+                .andExpect(view().name("patHistory/add"))
+                .andExpect(model().attributeExists("patHistoryToAdd"));
 
         // Valid PatientDTO
-        PatientDTO patientToAdd = new PatientDTO(
-                "TestFamily3",
-                "TestGiven3",
-                "1894-09-10",
-                "F",
-                "3st Oakland St",
-                "030-111-224"
+        PatHistoryDTO patHistoryToAdd = new PatHistoryDTO(
+                "1",
+                "Note content"
         );
 
 
-        Link patientLinks = Link.of("{\"href\":\"/patient/3/uri\"}");
+        Link patientLinks = Link.of("{\"href\":\"/patHistory/1/uri\"}");
 
-        EntityModel<PatientDTO> patientAdded = EntityModel.of(
-                patientToAdd,
+        EntityModel<PatHistoryDTO> patHistoryAdded = EntityModel.of(
+                patHistoryToAdd,
                 patientLinks);
 
-        when(appPatHistoryProxy.addPatient(
-                patientToAdd.getFamily(),
-                patientToAdd.getGiven(),
-                patientToAdd.getDob(),
-                patientToAdd.getSex(),
-                patientToAdd.getAddress(),
-                patientToAdd.getPhone()
-        )).thenReturn(patientAdded);
+        when(appProxy.addPatHistory(
+                patHistoryToAdd.getPatientId(),
+                patHistoryToAdd.getContent()
+        )).thenReturn(patHistoryAdded);
 
 
-        mockMvc.perform(post("/patient/add")
+        mockMvc.perform(post("/patHistory/add")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
-                        new BasicNameValuePair("family", patientToAdd.getFamily()),
-                        new BasicNameValuePair("given", patientToAdd.getGiven()),
-                        new BasicNameValuePair("dob", patientToAdd.getDob()),
-                        new BasicNameValuePair("sex", patientToAdd.getSex()),
-                        new BasicNameValuePair("address", patientToAdd.getAddress()),
-                        new BasicNameValuePair("phone", patientToAdd.getPhone())
+                        new BasicNameValuePair("patientId", patHistoryToAdd.getPatientId()),
+                        new BasicNameValuePair("content", patHistoryToAdd.getContent())
                 )))))
-//                .andExpect(view().name("patient/list"))
-                .andExpect(redirectedUrl("/patient/list"))
-                .andExpect(flash().attributeExists("patientAdded"))
-                .andExpect(flash().attribute("patientAdded", true));
+                .andExpect(redirectedUrl("/patient/get?id=1"))
+                .andExpect(flash().attributeExists("patHistoryAdded"))
+                .andExpect(flash().attribute("patHistoryAdded", true));
 
-        // Invalid PatientDTO
-        patientToAdd = new PatientDTO(
-                "TestFamily3",
-                "TestGiven3",
-                "10/09/1994", // Date format is wrong, must be yyyy-MM-dd
-                "F",
-                "3st Oakland St",
-                "030-111-224"
+        // Invalid PatHistoryDTO
+        patHistoryToAdd = new PatHistoryDTO(
+                "1",
+                "" // empty content
         );
 
-        mockMvc.perform(post("/patient/add")
+
+        mockMvc.perform(post("/patHistory/add")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
-                        new BasicNameValuePair("family", patientToAdd.getFamily()),
-                        new BasicNameValuePair("given", patientToAdd.getGiven()),
-                        new BasicNameValuePair("dob", patientToAdd.getDob()),
-                        new BasicNameValuePair("sex", patientToAdd.getSex()),
-                        new BasicNameValuePair("address", patientToAdd.getAddress()),
-                        new BasicNameValuePair("phone", patientToAdd.getPhone())
+                        new BasicNameValuePair("patientId", patHistoryToAdd.getPatientId()),
+                        new BasicNameValuePair("content", patHistoryToAdd.getContent())
                 )))))
-                .andExpect(view().name("patient/add"))
+                .andExpect(view().name("patHistory/add"))
                 .andExpect(model().hasErrors());
 
-        // Invalid PatientDTO
-        patientToAdd = new PatientDTO(
-                "", // Blank family
-                "TestGiven3",
-                "1994-09-10",
-                "F",
-                "3st Oakland St",
-                "030-111-224"
+
+        // Invalid PatHistoryDTO
+        patHistoryToAdd = new PatHistoryDTO(
+                "", // empty patient Id
+                "Ceci est une note"
         );
 
-        mockMvc.perform(post("/patient/add")
+        mockMvc.perform(post("/patHistory/add")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
-                        new BasicNameValuePair("family", patientToAdd.getFamily()),
-                        new BasicNameValuePair("given", patientToAdd.getGiven()),
-                        new BasicNameValuePair("dob", patientToAdd.getDob()),
-                        new BasicNameValuePair("sex", patientToAdd.getSex()),
-                        new BasicNameValuePair("address", patientToAdd.getAddress()),
-                        new BasicNameValuePair("phone", patientToAdd.getPhone())
+                        new BasicNameValuePair("patientId", patHistoryToAdd.getPatientId()),
+                        new BasicNameValuePair("content", patHistoryToAdd.getContent())
                 )))))
-                .andExpect(view().name("patient/add"))
+                .andExpect(view().name("patHistory/add"))
                 .andExpect(model().hasErrors());
-
-        // Invalid PatientDTO
-        patientToAdd = new PatientDTO(
-                "TestFamily3",
-                "TestGiven3",
-                "1994-09-10",
-                "F",
-                "3st Oakland St",
-                "06 74 58 47 45" // Invalid phone format
-        );
-
-        mockMvc.perform(post("/patient/add")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
-                        new BasicNameValuePair("family", patientToAdd.getFamily()),
-                        new BasicNameValuePair("given", patientToAdd.getGiven()),
-                        new BasicNameValuePair("dob", patientToAdd.getDob()),
-                        new BasicNameValuePair("sex", patientToAdd.getSex()),
-                        new BasicNameValuePair("address", patientToAdd.getAddress()),
-                        new BasicNameValuePair("phone", patientToAdd.getPhone())
-                )))))
-                .andExpect(view().name("patient/add"))
-                .andExpect(model().hasErrors());*/
     }
 
-    // TODO implementing updatingPatHistoryIsOk()
     @Test
     public void updatingPatHistoryIsOk() throws Exception {
-/*
+
+        mockMvc.perform(get("/patHistory/update"))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(get("/patHistory/update")
+                .param("id", "5"))
+                .andExpect(redirectedUrl("/patient/list"))
+                .andExpect(flash().attributeExists("patHistoryNotFound"))
+                .andExpect(flash().attribute("patHistoryNotFound", true));
+
         // Valid PatientDTO
-        PatientDTO patientDtoToUpdate = new PatientDTO(
+        PatHistoryDTO patHistoryToUpdate = new PatHistoryDTO(
+                "2",
                 "3",
-                "TestFamily3",
-                "TestGiven3",
-                "1894-09-10",
-                "F",
-                "3st Oakland St",
-                "030-111-224"
+                "Note content"
         );
 
-        Link patientLinks = Link.of("{\"href\":\"/patient/3/uri\"}");
 
-        EntityModel<PatientDTO> patientItemToUpdate = EntityModel.of(
-                patientDtoToUpdate,
+        Link patientLinks = Link.of("{\"href\":\"/patHistory/2/uri\"}");
+
+        EntityModel<PatHistoryDTO> patHistoryUpdated = EntityModel.of(
+                patHistoryToUpdate,
                 patientLinks);
 
-        doReturn(patientItemToUpdate).when(appPatHistoryProxy).getPatient(any(String.class));
+        when(appProxy.updatePatHistory(
+                patHistoryToUpdate.getId(),
+                patHistoryToUpdate.getPatientId(),
+                patHistoryToUpdate.getContent()
+        )).thenReturn(patHistoryUpdated);
 
-        mockMvc.perform(get("/patient/update")
-                .param("id", "3"))
-                .andExpect(view().name("patient/update"))
-                .andExpect(model().attributeExists("patientToUpdate"))
-                .andExpect(model().attribute("patientToUpdate", is(patientDtoToUpdate)));
+        when(appProxy.getPatHistory(
+                patHistoryToUpdate.getId()
+        )).thenReturn(patHistoryUpdated);
 
-        when(appPatHistoryProxy.updatePatient(
-                patientDtoToUpdate.getId(),
-                patientDtoToUpdate.getFamily(),
-                patientDtoToUpdate.getGiven(),
-                patientDtoToUpdate.getDob(),
-                patientDtoToUpdate.getSex(),
-                patientDtoToUpdate.getAddress(),
-                patientDtoToUpdate.getPhone()
-        )).thenReturn(patientItemToUpdate);
+        mockMvc.perform(get("/patHistory/update")
+                .param("id", "2"))
+                .andExpect(view().name("patHistory/update"))
+                .andExpect(model().attributeExists("patHistoryToUpdate"));
 
-        mockMvc.perform(post("/patient/update")
+
+        mockMvc.perform(post("/patHistory/update")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
-                        new BasicNameValuePair("id", patientDtoToUpdate.getId()),
-                        new BasicNameValuePair("family", patientDtoToUpdate.getFamily()),
-                        new BasicNameValuePair("given", patientDtoToUpdate.getGiven()),
-                        new BasicNameValuePair("dob", patientDtoToUpdate.getDob()),
-                        new BasicNameValuePair("sex", patientDtoToUpdate.getSex()),
-                        new BasicNameValuePair("address", patientDtoToUpdate.getAddress()),
-                        new BasicNameValuePair("phone", patientDtoToUpdate.getPhone())
+                        new BasicNameValuePair("id", patHistoryToUpdate.getId()),
+                        new BasicNameValuePair("patientId", patHistoryToUpdate.getPatientId()),
+                        new BasicNameValuePair("content", patHistoryToUpdate.getContent())
                 )))))
-                .andExpect(redirectedUrl("/patient/list"))
-                .andExpect(flash().attributeExists("patientUpdated"))
-                .andExpect(flash().attribute("patientUpdated", true));
+                .andExpect(redirectedUrl("/patient/get?id=3"))
+                .andExpect(flash().attributeExists("patHistoryUpdated"))
+                .andExpect(flash().attribute("patHistoryUpdated", true));
 
-        // Invalid PatientDTO
-        patientDtoToUpdate = new PatientDTO(
-                "3",
-                "TestFamily3",
-                "TestGiven3",
-                "10/09/1994", // Date format is wrong, must be yyyy-MM-dd
-                "F",
-                "3st Oakland St",
-                "030-111-224"
+        // Invalid PatHistoryDTO
+        patHistoryToUpdate = new PatHistoryDTO(
+                "2",
+                "1",
+                "" // empty content
         );
 
-        mockMvc.perform(post("/patient/update")
+
+        mockMvc.perform(post("/patHistory/update")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
-                        new BasicNameValuePair("id", patientDtoToUpdate.getId()),
-                        new BasicNameValuePair("family", patientDtoToUpdate.getFamily()),
-                        new BasicNameValuePair("given", patientDtoToUpdate.getGiven()),
-                        new BasicNameValuePair("dob", patientDtoToUpdate.getDob()),
-                        new BasicNameValuePair("sex", patientDtoToUpdate.getSex()),
-                        new BasicNameValuePair("address", patientDtoToUpdate.getAddress()),
-                        new BasicNameValuePair("phone", patientDtoToUpdate.getPhone())
+                        new BasicNameValuePair("id", patHistoryToUpdate.getId()),
+                        new BasicNameValuePair("patientId", patHistoryToUpdate.getPatientId()),
+                        new BasicNameValuePair("content", patHistoryToUpdate.getContent())
                 )))))
-                .andExpect(view().name("patient/update"))
+                .andExpect(view().name("patHistory/update"))
                 .andExpect(model().hasErrors());
 
-        // Invalid PatientDTO
-        patientDtoToUpdate = new PatientDTO(
-                "3",
-                "", // Blank family
-                "TestGiven3",
-                "1994-09-10",
-                "F",
-                "3st Oakland St",
-                "030-111-224"
+
+        // Invalid PatHistoryDTO
+        patHistoryToUpdate = new PatHistoryDTO(
+                "2",
+                "", // empty patientId
+                "Ceci est une note"
         );
 
-        mockMvc.perform(post("/patient/update")
+
+        mockMvc.perform(post("/patHistory/update")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
-                        new BasicNameValuePair("id", patientDtoToUpdate.getId()),
-                        new BasicNameValuePair("family", patientDtoToUpdate.getFamily()),
-                        new BasicNameValuePair("given", patientDtoToUpdate.getGiven()),
-                        new BasicNameValuePair("dob", patientDtoToUpdate.getDob()),
-                        new BasicNameValuePair("sex", patientDtoToUpdate.getSex()),
-                        new BasicNameValuePair("address", patientDtoToUpdate.getAddress()),
-                        new BasicNameValuePair("phone", patientDtoToUpdate.getPhone())
+                        new BasicNameValuePair("id", patHistoryToUpdate.getId()),
+                        new BasicNameValuePair("patientId", patHistoryToUpdate.getPatientId()),
+                        new BasicNameValuePair("content", patHistoryToUpdate.getContent())
                 )))))
-                .andExpect(view().name("patient/update"))
+                .andExpect(view().name("patHistory/update"))
                 .andExpect(model().hasErrors());
 
-        // Invalid PatientDTO
-        patientDtoToUpdate = new PatientDTO(
+        // Invalid PatHistoryDTO
+        patHistoryToUpdate = new PatHistoryDTO(
+                "", // empty id
                 "3",
-                "TestFamily3",
-                "TestGiven3",
-                "1994-09-10",
-                "F",
-                "3st Oakland St",
-                "06 74 58 47 45" // Invalid phone format
+                "Ceci est une note"
         );
 
-        mockMvc.perform(post("/patient/update")
+
+        mockMvc.perform(post("/patHistory/update")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
-                        new BasicNameValuePair("id", patientDtoToUpdate.getId()),
-                        new BasicNameValuePair("family", patientDtoToUpdate.getFamily()),
-                        new BasicNameValuePair("given", patientDtoToUpdate.getGiven()),
-                        new BasicNameValuePair("dob", patientDtoToUpdate.getDob()),
-                        new BasicNameValuePair("sex", patientDtoToUpdate.getSex()),
-                        new BasicNameValuePair("address", patientDtoToUpdate.getAddress()),
-                        new BasicNameValuePair("phone", patientDtoToUpdate.getPhone())
+                        new BasicNameValuePair("id", patHistoryToUpdate.getId()),
+                        new BasicNameValuePair("patientId", patHistoryToUpdate.getPatientId()),
+                        new BasicNameValuePair("content", patHistoryToUpdate.getContent())
                 )))))
-                .andExpect(view().name("patient/update"))
+                .andExpect(view().name("patHistory/update"))
                 .andExpect(model().hasErrors());
-
-        // Invalid PatientDTO
-        patientDtoToUpdate = new PatientDTO(
-                // No ID
-                "TestFamily3",
-                "TestGiven3",
-                "1994-09-10",
-                "F",
-                "3st Oakland St",
-                "06 74 58 47 45"
-        );
-
-        mockMvc.perform(post("/patient/update")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
-                        new BasicNameValuePair("id", patientDtoToUpdate.getId()),
-                        new BasicNameValuePair("family", patientDtoToUpdate.getFamily()),
-                        new BasicNameValuePair("given", patientDtoToUpdate.getGiven()),
-                        new BasicNameValuePair("dob", patientDtoToUpdate.getDob()),
-                        new BasicNameValuePair("sex", patientDtoToUpdate.getSex()),
-                        new BasicNameValuePair("address", patientDtoToUpdate.getAddress()),
-                        new BasicNameValuePair("phone", patientDtoToUpdate.getPhone())
-                )))))
-                .andExpect(view().name("patient/update"))
-                .andExpect(model().hasErrors());*/
     }
 }

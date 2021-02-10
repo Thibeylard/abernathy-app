@@ -39,7 +39,7 @@ public class PatHistoryController {
         EntityModel<PatHistoryDTO> patHistory = appProxy.getPatHistory(id);
         if (patHistory == null) {
             redirectAttributes.addFlashAttribute("patHistoryNotFound", true);
-            return "redirect:patient/list";
+            return "redirect:/patient/list";
         }
         model.addAttribute("patHistoryToUpdate", patHistory.getContent());
         return "patHistory/update";
@@ -50,20 +50,20 @@ public class PatHistoryController {
                                          BindingResult result,
                                          Model model,
                                          RedirectAttributes redirectAttributes) {
-        if (patHistoryDTO.getId() == null) {
+        if (patHistoryDTO.getId() == null || patHistoryDTO.getId().isBlank()) {
             result.addError(new FieldError("patHistoryToUpdate", "id", "ID is mandatory."));
         }
 
         if (result.hasErrors()) {
             model.addAttribute("patHistoryToUpdate", patHistoryDTO);
-            return "patient/update";
+            return "patHistory/update";
         } else {
             appProxy.updatePatHistory(
                     patHistoryDTO.getId(),
                     patHistoryDTO.getPatientId(),
                     patHistoryDTO.getContent()
             );
-            redirectAttributes.addFlashAttribute("paHistoryUpdated", true);
+            redirectAttributes.addFlashAttribute("patHistoryUpdated", true);
         }
 
         return "redirect:/patient/get?id=" + patHistoryDTO.getPatientId();
@@ -83,7 +83,7 @@ public class PatHistoryController {
                                       RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("patHistoryToAdd", patHistoryDTO);
-            return "patient/add";
+            return "patHistory/add";
         } else {
             appProxy.addPatHistory(
                     patHistoryDTO.getPatientId(),

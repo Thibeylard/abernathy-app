@@ -275,6 +275,12 @@ public class PatientControllerTest {
     @Test
     public void updatingPatientIsOk() throws Exception {
 
+        mockMvc.perform(get("/patient/update")
+                .param("id", "6"))
+                .andExpect(redirectedUrl("/patient/list"))
+                .andExpect(flash().attributeExists("patientNotFound"))
+                .andExpect(flash().attribute("patientNotFound", true));
+
         // Valid PatientDTO
         PatientDTO patientDtoToUpdate = new PatientDTO(
                 "3",
