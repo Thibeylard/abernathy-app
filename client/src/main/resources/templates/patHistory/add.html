@@ -12,7 +12,7 @@
           th:method="post"
           th:object="${patHistoryToAdd}">
 
-        <hidden th:field="*{patientId}" type="text"/>
+        <input th:field="*{patientId}" type="hidden"/>
 
         <label>Content
             <textarea cols="80" rows="40" th:field="*{content}"></textarea><br/>

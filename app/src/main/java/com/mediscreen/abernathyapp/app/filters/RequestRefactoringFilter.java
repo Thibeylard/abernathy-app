@@ -145,7 +145,7 @@ public class RequestRefactoringFilter extends ZuulFilter {
     }
 
     private boolean requestIsGetOnPatHistoryOfPatientUri() {
-        return this.requestURI.equals("/patHistory" + GET_ALL.getBaseUri()) &&
+        return this.requestURI.equals("/patHistory" + GET_OF_PATIENT.getBaseUri()) &&
                 RequestContext.getCurrentContext().getRequest().getMethod().equals(HttpMethod.GET.toString());
     }
 

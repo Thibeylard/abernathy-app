@@ -11,10 +11,11 @@
     <form style="width: 100%" th:action="@{/patHistory/update}"
           th:method="post"
           th:object="${patHistoryToUpdate}">
-        <label>
-            Patient Id
-            <input readonly th:field="*{patientId}" type="text"/>
-        </label><br/>
+
+
+        <input th:field="*{id}" type="hidden">
+        
+        <input th:field="*{patientId}" type="hidden"/>
 
         <label>Content
             <textarea cols="80" rows="40" th:field="*{content}"></textarea><br/>
@@ -23,7 +24,6 @@
             <p th:each="error : ${#fields.errors('content')}" th:text="${error.toString()}"></p>
         </div>
 
-        <input th:field="*{id}" type="hidden">
         <a th:href="@{/patient/get(id=*{patientId})}"><input type="button" value="Cancel"/></a>
         <input type="submit" value="Update Note"/></input>
     </form>
