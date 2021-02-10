@@ -80,7 +80,7 @@ public class RequestRefactoringFilter extends ZuulFilter {
         RequestContext context = RequestContext.getCurrentContext();
         this.requestURI = context.getRequest().getRequestURI();
         this.serviceId = context.get(SERVICE_ID_KEY).toString();
-        return serviceId != null && requestURI != null;
+        return isSpringRestService() && requestURI != null;
     }
 
     /**
@@ -92,33 +92,65 @@ public class RequestRefactoringFilter extends ZuulFilter {
     @Override
     public Object run() throws ZuulException {
         RequestContext context = RequestContext.getCurrentContext();
+        context.set("isSpringRestService", true);
         HttpServletRequest request = context.getRequest();
-        String method = request.getMethod();
 
-        if (this.requestURI.equals("/" + serviceId + ADD.getBaseUri())
-                && method.equals(HttpMethod.POST.toString())) {
+        if (requestIsPostOnAddUri()) {
             additionRequestRefactoring();
-        } else if (this.requestURI.equals("/" + serviceId + UPDATE.getBaseUri())
-                && method.equals(HttpMethod.PUT.toString())) {
+        } else if (requestIsPutOnUpdateUri()) {
             updateRequestRefactoring();
-        } else if (this.requestURI.equals("/" + serviceId + GET_SINGLE.getBaseUri())
-                && method.equals(HttpMethod.GET.toString())) {
+        } else if (requestIsGetOnGetUri()) {
             getRequestRefactoring();
-        } else if (this.requestURI.equals("/" + serviceId + GET_ALL.getBaseUri())
-                && method.equals(HttpMethod.GET.toString())) {
+        } else if (requestIsGetOnListUri()) {
             listRequestRefactoring();
-        } else if (serviceId.equals("patHistory") && this.requestURI.equals("/" + serviceId + GET_OF_PATIENT.getBaseUri())
-                && method.equals(HttpMethod.GET.toString())) {
+        } else if (requestIsGetOnPatHistoryOfPatientUri()) {
             ofPatientRequestRefactoring();
         } else {
             logger.debug("Unexpected endpoint call under /{}", requestURI);
             context.setResponseStatusCode(HttpStatus.NOT_FOUND.value());
-            context.setResponseBody(context.getRequest().getMethod() + " request on " + requestURI + " is not a valid endpoint.");
+            context.setResponseBody(request.getMethod() + " request on " + requestURI + " is not a valid endpoint.");
             context.setSendZuulResponse(false);
         }
 
         return null;
     }
+
+    // Boolean methods to identify request characteristics
+    // ---------------------------------------------------------------------------------------------------------
+
+    private boolean isSpringRestService() {
+        return this.serviceId != null &&
+                (this.serviceId.equals("patient") ||
+                        this.serviceId.equals("patHistory"));
+    }
+
+    private boolean requestIsPostOnAddUri() {
+        return this.requestURI.equals("/" + serviceId + ADD.getBaseUri()) &&
+                RequestContext.getCurrentContext().getRequest().getMethod().equals(HttpMethod.POST.toString());
+    }
+
+    private boolean requestIsPutOnUpdateUri() {
+        return this.requestURI.equals("/" + serviceId + UPDATE.getBaseUri()) &&
+                RequestContext.getCurrentContext().getRequest().getMethod().equals(HttpMethod.PUT.toString());
+    }
+
+    private boolean requestIsGetOnGetUri() {
+        return this.requestURI.equals("/" + serviceId + GET_SINGLE.getBaseUri()) &&
+                RequestContext.getCurrentContext().getRequest().getMethod().equals(HttpMethod.GET.toString());
+    }
+
+    private boolean requestIsGetOnListUri() {
+        return this.requestURI.equals("/" + serviceId + GET_ALL.getBaseUri()) &&
+                RequestContext.getCurrentContext().getRequest().getMethod().equals(HttpMethod.GET.toString());
+    }
+
+    private boolean requestIsGetOnPatHistoryOfPatientUri() {
+        return this.requestURI.equals("/patHistory" + GET_ALL.getBaseUri()) &&
+                RequestContext.getCurrentContext().getRequest().getMethod().equals(HttpMethod.GET.toString());
+    }
+
+    // Refactoring methods
+    // ---------------------------------------------------------------------------------------------------------
 
     private void additionRequestRefactoring() {
         RequestContext context = RequestContext.getCurrentContext();

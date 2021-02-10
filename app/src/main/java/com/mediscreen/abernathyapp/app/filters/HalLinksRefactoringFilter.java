@@ -75,6 +75,7 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
         this.serviceID = context.get(SERVICE_ID_KEY).toString();
         int statusCode = context.getResponseStatusCode();
         return serviceID != null
+                && context.get("isSpringRestService") != null
                 && (statusCode == 200 || statusCode == 201);
     }
 
@@ -119,6 +120,31 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
         return null;
     }
 
+
+    private void buildResourceURIs() {
+        RibbonApacheHttpResponse ribbonResponse = (RibbonApacheHttpResponse) RequestContext.getCurrentContext().get("ribbonResponse");
+
+        String[] resourcePathParts = ribbonResponse.getRequestedURI().toString().split("\\?");
+        this.selfUriToReplace = resourcePathParts[0];
+        String hostPortToReplace = selfUriToReplace.split("/" + this.serviceID)[0];
+        if (resourcePathParts.length > 1) {
+            this.parameters = "?" + resourcePathParts[1];
+        }
+
+        HashMap<String, String> zuulHeaders = (HashMap<String, String>) RequestContext.getCurrentContext().get("zuulRequestHeaders");
+        StringBuilder itemUriBuilder = new StringBuilder();
+        itemUriBuilder.append(zuulHeaders.get("x-forwarded-proto")).append("://"); // ex: http://
+        itemUriBuilder.append(zuulHeaders.get("x-forwarded-host")); // ex: localhost:8080
+        itemUriBuilder.append("/").append(serviceID); // ex: /patient
+
+        this.selfUri = RequestContext.getCurrentContext().getRequest().getRequestURL().toString();
+        this.itemUriToReplace = hostPortToReplace + "/" + this.serviceID;
+        this.itemUri = itemUriBuilder.toString() + GET_SINGLE.getBaseUri();
+    }
+
+    /* BOOLEAN METHODS TO IDENTIFY RESPONSE CHARACTERISTICS */
+    // ---------------------------------------------------------------------------------------------------------
+
     private boolean isCollectionResource(JsonNode tree) {
         return tree.get("_embedded") != null
                 && tree.get("page") != null
@@ -136,7 +162,7 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
                 && tree.get("_links") != null;
     }
 
-    /* PARSING HAL JSON ITEMS */
+    /* PARSING AND REFACTORING HAL JSON ITEMS */
     // ------------------------------------------------------------------------------------------------------------------------
 
     private String collectionResourceParsing(ObjectNode refactoredResponse, String responseData) throws JsonProcessingException {
@@ -168,33 +194,8 @@ public class HalLinksRefactoringFilter extends ZuulFilter {
         return responseData.replace(this.itemUriToReplace + "/", this.itemUri + "?id=");
     }
 
-    /* NODE REFACTORING */
-    // ------------------------------------------------------------------------------------------------------------------------
-
     private JsonNode refactoringEmbeddedNode(JsonNode embeddedJson) throws JsonProcessingException {
         String embeddedRefactored = itemResourceParsing(embeddedJson.toString());
         return objectMapper.readTree(embeddedRefactored);
-    }
-
-    private void buildResourceURIs() {
-        RibbonApacheHttpResponse ribbonResponse = (RibbonApacheHttpResponse) RequestContext.getCurrentContext().get("ribbonResponse");
-
-        // Remove all service URI then add back service name to have clean URI, avoiding complex parsing of path or URL parameters
-        String[] resourcePathParts = ribbonResponse.getRequestedURI().toString().split("\\?");
-        this.selfUriToReplace = resourcePathParts[0];
-        String hostPortToReplace = selfUriToReplace.split("/" + this.serviceID)[0];
-        if (resourcePathParts.length > 1) {
-            this.parameters = "?" + resourcePathParts[1];
-        }
-
-        HashMap<String, String> zuulHeaders = (HashMap<String, String>) RequestContext.getCurrentContext().get("zuulRequestHeaders");
-        StringBuilder itemUriBuilder = new StringBuilder();
-        itemUriBuilder.append(zuulHeaders.get("x-forwarded-proto")).append("://"); // ex: http://
-        itemUriBuilder.append(zuulHeaders.get("x-forwarded-host")); // ex: localhost:8080
-        itemUriBuilder.append("/").append(serviceID); // ex: /patient
-
-        this.selfUri = RequestContext.getCurrentContext().getRequest().getRequestURL().toString();
-        this.itemUriToReplace = hostPortToReplace + "/" + this.serviceID;
-        this.itemUri = itemUriBuilder.toString() + GET_SINGLE.getBaseUri();
     }
 }
