@@ -57,11 +57,11 @@ public class PatientValidator implements Validator {
                     "phone.empty",
                     "phone field is mandatory");
 
-        } else if (!patient.getPhone().matches("((\\d{3}-){2}\\d{3})")) {
+        } else if (!patient.getPhone().matches("((\\d{3}-){2}\\d{4})")) {
             errors.rejectValue(
                     "phone",
                     "phone.wrongFormat",
-                    "phone field must respect XXX-XXX-XXX format where X is a number between 0 and 9");
+                    "phone field must respect XXX-XXX-XXXX format where X is a number between 0 and 9");
         }
 
     }

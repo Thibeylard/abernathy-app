@@ -167,7 +167,7 @@ public class PatientControllerTest {
                 "1894-09-10",
                 "F",
                 "3st Oakland St",
-                "030-111-224"
+                "030-111-2245"
         );
 
 
@@ -209,7 +209,7 @@ public class PatientControllerTest {
                 "10/09/1994", // Date format is wrong, must be yyyy-MM-dd
                 "F",
                 "3st Oakland St",
-                "030-111-224"
+                "030-111-2254"
         );
 
         mockMvc.perform(post("/patient/add")
@@ -232,7 +232,7 @@ public class PatientControllerTest {
                 "1994-09-10",
                 "F",
                 "3st Oakland St",
-                "030-111-224"
+                "030-111-2245"
         );
 
         mockMvc.perform(post("/patient/add")
@@ -289,7 +289,7 @@ public class PatientControllerTest {
                 "1894-09-10",
                 "F",
                 "3st Oakland St",
-                "030-111-224"
+                "030-111-2524"
         );
 
         Link patientLinks = Link.of("{\"href\":\"/patient/3/uri\"}");
@@ -339,7 +339,7 @@ public class PatientControllerTest {
                 "10/09/1994", // Date format is wrong, must be yyyy-MM-dd
                 "F",
                 "3st Oakland St",
-                "030-111-224"
+                "030-111-2245"
         );
 
         mockMvc.perform(post("/patient/update")
@@ -364,7 +364,7 @@ public class PatientControllerTest {
                 "1994-09-10",
                 "F",
                 "3st Oakland St",
-                "030-111-224"
+                "030-111-2246"
         );
 
         mockMvc.perform(post("/patient/update")
@@ -414,7 +414,7 @@ public class PatientControllerTest {
                 "1994-09-10",
                 "F",
                 "3st Oakland St",
-                "06 74 58 47 45"
+                "030-111-2246"
         );
 
         mockMvc.perform(post("/patient/update")

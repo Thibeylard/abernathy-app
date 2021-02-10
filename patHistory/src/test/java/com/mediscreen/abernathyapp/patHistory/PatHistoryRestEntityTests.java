@@ -25,8 +25,6 @@ public class PatHistoryRestEntityTests {
 
     @Autowired
     private MockMvc mockMvc;
-
-
     private Writer writer;
     private JsonGenerator jsonGenerator;
 

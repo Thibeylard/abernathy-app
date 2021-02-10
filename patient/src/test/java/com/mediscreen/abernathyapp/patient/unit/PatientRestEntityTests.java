@@ -26,10 +26,6 @@ public class PatientRestEntityTests {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private Writer writer;
     private JsonGenerator jsonGenerator;
 
@@ -41,19 +37,16 @@ public class PatientRestEntityTests {
 
     @Test
     public void validPatient() throws Exception {
-        Writer writer = new StringWriter();
-        JsonGenerator generator = new JsonFactory().createGenerator(writer);
-
         // Valid patient
-        generator.writeStartObject();
-        generator.writeStringField("family", "FamilyValue");
-        generator.writeStringField("given", "GivenValue");
-        generator.writeStringField("dob", "1987-12-30");
-        generator.writeStringField("sex", "M");
-        generator.writeStringField("address", "AddressValue");
-        generator.writeStringField("phone", "000-000-000");
-        generator.writeEndObject();
-        generator.close();
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("family", "FamilyValue");
+        jsonGenerator.writeStringField("given", "GivenValue");
+        jsonGenerator.writeStringField("dob", "1987-12-30");
+        jsonGenerator.writeStringField("sex", "M");
+        jsonGenerator.writeStringField("address", "AddressValue");
+        jsonGenerator.writeStringField("phone", "000-000-0000");
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
 
         mockMvc.perform(post("/patient")
                 .contentType(ContentType.APPLICATION_JSON.toString())
@@ -63,19 +56,16 @@ public class PatientRestEntityTests {
 
     @Test
     public void nullPatient() throws Exception {
-        Writer writer = new StringWriter();
-        JsonGenerator generator = new JsonFactory().createGenerator(writer);
-
-        // Valid patient
-        generator.writeStartObject();
-        generator.writeStringField("family", null);
-        generator.writeStringField("given", null);
-        generator.writeStringField("dob", null);
-        generator.writeStringField("sex", null);
-        generator.writeStringField("address", null);
-        generator.writeStringField("phone", null);
-        generator.writeEndObject();
-        generator.close();
+        // Invalid patient
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("family", null);
+        jsonGenerator.writeStringField("given", null);
+        jsonGenerator.writeStringField("dob", null);
+        jsonGenerator.writeStringField("sex", null);
+        jsonGenerator.writeStringField("address", null);
+        jsonGenerator.writeStringField("phone", null);
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
 
         mockMvc.perform(post("/patient")
                 .contentType(ContentType.APPLICATION_JSON.toString())
@@ -85,19 +75,16 @@ public class PatientRestEntityTests {
 
     @Test
     public void invalidFamilyPatient() throws Exception {
-        Writer writer = new StringWriter();
-        JsonGenerator generator = new JsonFactory().createGenerator(writer);
-
-        // Valid patient
-        generator.writeStartObject();
-        generator.writeStringField("family", "");
-        generator.writeStringField("given", "GivenValue");
-        generator.writeStringField("dob", "1987-12-30");
-        generator.writeStringField("sex", "M");
-        generator.writeStringField("address", "AddressValue");
-        generator.writeStringField("phone", "000-000-000");
-        generator.writeEndObject();
-        generator.close();
+        // Invalid patient
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("family", "");
+        jsonGenerator.writeStringField("given", "GivenValue");
+        jsonGenerator.writeStringField("dob", "1987-12-30");
+        jsonGenerator.writeStringField("sex", "M");
+        jsonGenerator.writeStringField("address", "AddressValue");
+        jsonGenerator.writeStringField("phone", "000-000-0000");
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
 
         mockMvc.perform(post("/patient")
                 .contentType(ContentType.APPLICATION_JSON.toString())
@@ -107,19 +94,16 @@ public class PatientRestEntityTests {
 
     @Test
     public void invalidGivenPatient() throws Exception {
-        Writer writer = new StringWriter();
-        JsonGenerator generator = new JsonFactory().createGenerator(writer);
-
-        // Valid patient
-        generator.writeStartObject();
-        generator.writeStringField("family", "FamilyValue");
-        generator.writeStringField("given", "");
-        generator.writeStringField("dob", "1987-12-30");
-        generator.writeStringField("sex", "M");
-        generator.writeStringField("address", "AddressValue");
-        generator.writeStringField("phone", "000-000-000");
-        generator.writeEndObject();
-        generator.close();
+        // Invalid patient
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("family", "FamilyValue");
+        jsonGenerator.writeStringField("given", "");
+        jsonGenerator.writeStringField("dob", "1987-12-30");
+        jsonGenerator.writeStringField("sex", "M");
+        jsonGenerator.writeStringField("address", "AddressValue");
+        jsonGenerator.writeStringField("phone", "000-000-0000");
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
 
         mockMvc.perform(post("/patient")
                 .contentType(ContentType.APPLICATION_JSON.toString())
@@ -129,19 +113,16 @@ public class PatientRestEntityTests {
 
     @Test
     public void invalidDatePatient() throws Exception {
-        Writer writer = new StringWriter();
-        JsonGenerator generator = new JsonFactory().createGenerator(writer);
-
-        // Valid patient
-        generator.writeStartObject();
-        generator.writeStringField("family", "FamilyValue");
-        generator.writeStringField("given", "GivenValue");
-        generator.writeStringField("dob", "");
-        generator.writeStringField("sex", "M");
-        generator.writeStringField("address", "AddressValue");
-        generator.writeStringField("phone", "000-000-000");
-        generator.writeEndObject();
-        generator.close();
+        // Invalid patient
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("family", "FamilyValue");
+        jsonGenerator.writeStringField("given", "GivenValue");
+        jsonGenerator.writeStringField("dob", "");
+        jsonGenerator.writeStringField("sex", "M");
+        jsonGenerator.writeStringField("address", "AddressValue");
+        jsonGenerator.writeStringField("phone", "000-000-0000");
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
 
         mockMvc.perform(post("/patient")
                 .contentType(ContentType.APPLICATION_JSON.toString())
@@ -151,19 +132,16 @@ public class PatientRestEntityTests {
 
     @Test
     public void invalidSexPatient() throws Exception {
-        Writer writer = new StringWriter();
-        JsonGenerator generator = new JsonFactory().createGenerator(writer);
-
-        // Valid patient
-        generator.writeStartObject();
-        generator.writeStringField("family", "FamilyValue");
-        generator.writeStringField("given", "GivenValue");
-        generator.writeStringField("dob", "1987-12-30");
-        generator.writeStringField("sex", "Female");
-        generator.writeStringField("address", "AddressValue");
-        generator.writeStringField("phone", "000-000-000");
-        generator.writeEndObject();
-        generator.close();
+        // Invalid patient
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("family", "FamilyValue");
+        jsonGenerator.writeStringField("given", "GivenValue");
+        jsonGenerator.writeStringField("dob", "1987-12-30");
+        jsonGenerator.writeStringField("sex", "Female");
+        jsonGenerator.writeStringField("address", "AddressValue");
+        jsonGenerator.writeStringField("phone", "000-000-0000");
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
 
         mockMvc.perform(post("/patient")
                 .contentType(ContentType.APPLICATION_JSON.toString())
@@ -173,19 +151,16 @@ public class PatientRestEntityTests {
 
     @Test
     public void invalidAddressPatient() throws Exception {
-        Writer writer = new StringWriter();
-        JsonGenerator generator = new JsonFactory().createGenerator(writer);
-
-        // Valid patient
-        generator.writeStartObject();
-        generator.writeStringField("family", "FamilyValue");
-        generator.writeStringField("given", "GivenValue");
-        generator.writeStringField("dob", "1987-12-30");
-        generator.writeStringField("sex", "M");
-        generator.writeStringField("address", "");
-        generator.writeStringField("phone", "000-000-000");
-        generator.writeEndObject();
-        generator.close();
+        // Invalid patient
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("family", "FamilyValue");
+        jsonGenerator.writeStringField("given", "GivenValue");
+        jsonGenerator.writeStringField("dob", "1987-12-30");
+        jsonGenerator.writeStringField("sex", "M");
+        jsonGenerator.writeStringField("address", "");
+        jsonGenerator.writeStringField("phone", "000-000-0000");
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
 
         mockMvc.perform(post("/patient")
                 .contentType(ContentType.APPLICATION_JSON.toString())
@@ -195,19 +170,16 @@ public class PatientRestEntityTests {
 
     @Test
     public void invalidPhonePatient() throws Exception {
-        Writer writer = new StringWriter();
-        JsonGenerator generator = new JsonFactory().createGenerator(writer);
-
-        // Valid patient
-        generator.writeStartObject();
-        generator.writeStringField("family", "FamilyValue");
-        generator.writeStringField("given", "GivenValue");
-        generator.writeStringField("dob", "1987-12-30");
-        generator.writeStringField("sex", "M");
-        generator.writeStringField("address", "AddressValue");
-        generator.writeStringField("phone", "00-000-000");
-        generator.writeEndObject();
-        generator.close();
+        // Invalid patient
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("family", "FamilyValue");
+        jsonGenerator.writeStringField("given", "GivenValue");
+        jsonGenerator.writeStringField("dob", "1987-12-30");
+        jsonGenerator.writeStringField("sex", "M");
+        jsonGenerator.writeStringField("address", "AddressValue");
+        jsonGenerator.writeStringField("phone", "00-000-000");
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
 
         String json = writer.toString();
 
