@@ -21,8 +21,8 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public Logger getNoteLogger() {
-        return LoggerFactory.getLogger("note-logger");
+    public Logger getPatHistoryLogger() {
+        return LoggerFactory.getLogger("patHistory");
     }
 
     // Spring Sleuth tracing configuration

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
@@ -44,15 +43,15 @@ public class PatHistoryServiceTest {
         List<PatHistory> patHistoryList = new ArrayList<>();
         patHistoryList.add(new PatHistory(
                 "1",
-                "Bonjour, ceci est un texte avec MOT1 et aussi avec MOT2."
+                "Bonjour, ceci est un texte avec mot1 et aussi avec MOT2."
         ));
         patHistoryList.add(new PatHistory(
                 "1",
-                "Bonjour, ceci est un texte avec MOT2 et aussi avec MOT5."
-        ));
+                "Bonjour, ceci est un texte avec MOT2 et MOT2 aussi avec MOT5."
+        )); // Two terms in the same patHistory are counted as two counts either way
         patHistoryList.add(new PatHistory(
                 "1",
-                "Bonjour, ceci est un texte avec MOT5, et aussi avec MOT6!"
+                "Bonjour, ceci est un texte avec Mot5, et aussi avec MoT6!"
         ));
         patHistoryList.add(new PatHistory(
                 "1",
@@ -60,21 +59,23 @@ public class PatHistoryServiceTest {
         ));
         patHistoryList.add(new PatHistory(
                 "1",
-                "Bonjour, ceci est un texte avec MOT3 et aussi avec MOT5."
+                "Bonjour, ceci est un texte avec mOT3 et aussi avec MOT5."
         ));
 
         // MOT1 = 2
-        // MOT2 = 2
+        // MOT2 = 3
         // MOT3 = 1
         // MOT4 = 0
         // MOT5 = 4
         // MOT6 = 1
-        // TOTAL = 10
+        // TOTAL = 11
+
+        long termCount = 11;
 
         when(patHistoryRepository.findByPatientId(any(String.class)))
                 .thenReturn(patHistoryList);
 
         assertThat(patHistoryService.terminologySearch("1", terminology))
-            .isEqualTo(10);
+                .isEqualTo(termCount);
     }
 }
