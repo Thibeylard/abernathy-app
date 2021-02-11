@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,10 @@ public class PatHistoryServiceImpl implements PatHistoryService {
     @Override
     public long terminologySearch(String patientId, Set<String> terminology) {
         List<PatHistory> patHistoryList = this.patHistoryRepository.findByPatientId(patientId);
+
+        if (patHistoryList == null || patHistoryList.isEmpty()) {
+            throw new NoSuchElementException("There are not PatHistory with this patientId");
+        }
         StringBuilder patternBuilder = new StringBuilder();
         Iterator<String> it = terminology.iterator();
 

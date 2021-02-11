@@ -3,22 +3,23 @@ package com.mediscreen.abernathyapp.patHistory;
 import com.mediscreen.abernathyapp.patHistory.models.PatHistory;
 import com.mediscreen.abernathyapp.patHistory.repositories.PatHistoryRepository;
 import com.mediscreen.abernathyapp.patHistory.services.PatHistoryService;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles("test")
 public class PatHistoryServiceTest {
@@ -77,5 +78,26 @@ public class PatHistoryServiceTest {
 
         assertThat(patHistoryService.terminologySearch("1", terminology))
                 .isEqualTo(termCount);
+    }
+
+    @Test
+    public void throwExceptionIfNoPatientId() {
+        Set<String> terminology = Set.of(
+                "MOT1",
+                "MOT2",
+                "MOT3",
+                "MOT4",
+                "MOT5",
+                "MOT6");
+
+        when(patHistoryRepository.findByPatientId(any(String.class)))
+                .thenReturn(null);
+
+        assertThrows(NoSuchElementException.class, () -> patHistoryService.terminologySearch("1", terminology));
+
+        when(patHistoryRepository.findByPatientId(any(String.class)))
+                .thenReturn(Lists.emptyList());
+
+        assertThrows(NoSuchElementException.class, () -> patHistoryService.terminologySearch("1", terminology));
     }
 }
