@@ -11,5 +11,5 @@ import java.util.List;
 public interface PatHistoryRepository extends MongoRepository<PatHistory, String> {
 
     @RestResource(path = "withPatientId", rel = "withPatientId")
-    public List<PatHistory> findByPatientId(String patientId);
+    List<PatHistory> findByPatientId(String patientId);
 }

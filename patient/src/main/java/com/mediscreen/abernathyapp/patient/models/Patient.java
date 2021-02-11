@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDate;
-import java.util.Optional;
 
 //@JsonDeserialize(using = PatientDeserializer.class)
 @Entity
@@ -35,9 +34,9 @@ public class Patient {
         this.phone = phone;
     }
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    public Optional<String> getId() {
-        return Optional.ofNullable(this.id);
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public String getId() {
+        return this.id;
     }
 
     public void setId(String id) {
