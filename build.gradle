@@ -14,7 +14,8 @@ def remoteConfig = appModules.findAll() { project -> project.name != 'configserv
 
 def microServices = appModules.findAll() {  project -> (
         project.name == "patient"
-        || project.name == "patHistory") }
+        || project.name == "patHistory"
+        || project.name == "assess") }
 
 /** All modules of Mediscreen application **/
 configure(appModules) {
@@ -89,7 +90,6 @@ configure(microServices) {
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
         implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
-        implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 
         // spring boot
         compile 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
