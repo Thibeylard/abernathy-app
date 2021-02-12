@@ -8,61 +8,60 @@ import com.mediscreen.abernathyapp.assess.proxies.PatHistoryProxy;
 import com.mediscreen.abernathyapp.assess.proxies.PatientProxy;
 import com.mediscreen.abernathyapp.assess.services.AgeCalculatorService;
 import com.mediscreen.abernathyapp.assess.services.AssessService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
-@AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles("test")
 public class AssessServiceTest {
 
-    int age;
-    String sex;
-    long termCount;
-    DiabeteStatus expectedStatus;
+
     @Autowired
     private AssessService assessService;
     @MockBean
-    private PatHistoryProxy patHistoryProxy;
+    private PatHistoryProxy patHistoryProxyMock;
     @MockBean
-    private PatientProxy patientProxy;
+    private PatientProxy patientProxyMock;
     @MockBean
-    private AgeCalculatorService ageCalculatorService;
+    private AgeCalculatorService ageCalculatorMock;
 
-    @AfterEach
-    private void runDiabeteStatusTest() {
+    @ParameterizedTest(name = "{index} {displayName} receive expected assessment")
+    @EnumSource(PatientCase.class)
+    public void Given_Patient_When_assessPatientDiabeteStatus_Then_returnAccordingStatus(PatientCase patient) {
         PatientAssessmentDTO patientAssessmentDTO = new PatientAssessmentDTO(
                 "family",
                 "given",
-                this.age);
+                patient.age);
 
         DiabeteAssessmentDTO diabeteAssessmentDTO = new DiabeteAssessmentDTO(
                 patientAssessmentDTO,
-                expectedStatus);
+                patient.expectedStatus);
 
         PatientHealthInfosDTO patientHealthInfosDTO = new PatientHealthInfosDTO(
                 "1",
                 "family",
                 "given",
                 LocalDate.EPOCH,
-                sex);
+                patient.sex);
 
-        doReturn(ResponseEntity.ok(patientHealthInfosDTO)).when(patientProxy).getPatient(anyString());
-        doReturn(ResponseEntity.ok(termCount)).when(patHistoryProxy).getAssessment(anyString(), anySet());
-        when(ageCalculatorService.getAge(any(LocalDate.class))).thenReturn(age);
+        doReturn(ResponseEntity.ok(patientHealthInfosDTO)).when(patientProxyMock).getPatient(anyString());
+        doReturn(ResponseEntity.ok(patient.termCount)).when(patHistoryProxyMock).getAssessment(anyString(), anySet());
+        when(ageCalculatorMock.getAge(any(LocalDate.class))).thenReturn(patient.age);
 
         assertThat(assessService.assessPatientDiabeteStatus("1"))
                 .usingRecursiveComparison()
@@ -70,104 +69,43 @@ public class AssessServiceTest {
     }
 
     @Test
-    public void Given_patientWithZeroTerm_When_getDiabeteStatus_Then_isNone() {
-        this.age = 42;
-        this.sex = "M";
-        this.termCount = 0L;
-        this.expectedStatus = DiabeteStatus.NONE;
+    public void Given_anyProxyReturnBadRequest_When_assessPatientDiabeteStatus_Then_ThrowNoSuchElementException() {
+        doReturn(ResponseEntity.badRequest().body(null)).when(patientProxyMock).getPatient(anyString());
+        assertThrows(NoSuchElementException.class, () -> assessService.assessPatientDiabeteStatus("1"));
+
+        PatientHealthInfosDTO patientHealthInfosDTO = new PatientHealthInfosDTO(
+                "1",
+                "family",
+                "given",
+                LocalDate.EPOCH,
+                "F");
+
+        doReturn(ResponseEntity.ok(patientHealthInfosDTO)).when(patientProxyMock).getPatient(anyString());
+        doReturn(ResponseEntity.badRequest().body(null)).when(patHistoryProxyMock).getAssessment(anyString(), anySet());
+        assertThrows(NoSuchElementException.class, () -> assessService.assessPatientDiabeteStatus("1"));
     }
 
-    @Test
-    public void Given_patientWithOneTerm_When_getDiabeteStatus_Then_isNone() {
+    private enum PatientCase {
+        PATIENT_OLDER_NONE(42, "M", 0L, DiabeteStatus.NONE),
+        PATIENT_OLDER_BORDERLINE(35, "F", 2L, DiabeteStatus.BORDERLINE),
+        PATIENT_MALE_IN_DANGER(26, "M", 3L, DiabeteStatus.IN_DANGER),
+        PATIENT_FEMALE_IN_DANGER(26, "F", 4L, DiabeteStatus.IN_DANGER),
+        PATIENT_OLDER_IN_DANGER(35, "F", 6L, DiabeteStatus.IN_DANGER),
+        PATIENT_MALE_EARLY_ONSET(24, "M", 5L, DiabeteStatus.EARLY_ONSET),
+        PATIENT_FEMALE_EARLY_ONSET(24, "F", 7L, DiabeteStatus.EARLY_ONSET),
+        PATIENT_OLDER_EARLY_ONSET(38, "M", 8L, DiabeteStatus.EARLY_ONSET);
 
-        // EDGE CASE OF PATIENT WITH 1 TERMINOLOGY COUNT
-        this.age = 42;
-        this.sex = "M";
-        this.termCount = 1L;
-        this.expectedStatus = DiabeteStatus.NONE;
+        int age;
+        String sex;
+        long termCount;
+        DiabeteStatus expectedStatus;
+
+        PatientCase(int age, String sex, long termCount, DiabeteStatus expectedStatus) {
+            this.age = age;
+            this.sex = sex;
+            this.termCount = termCount;
+            this.expectedStatus = expectedStatus;
+        }
     }
-
-    @Test
-    public void Given_patientAbove30WithTwoTerms_When_getDiabeteStatus_Then_isBorderline() {
-
-        this.age = 31;
-        this.sex = "F";
-        this.termCount = 2L;
-        this.expectedStatus = DiabeteStatus.BORDERLINE;
-    }
-
-    @Test
-    public void Given_patientAt30WithTwoTerms_When_getDiabeteStatus_Then_isBorderline() {
-
-        // EDGE CASE OF PATIENT WITH EXACTLY 30.
-        this.age = 30;
-        this.sex = "M";
-        this.termCount = 2L;
-        this.expectedStatus = DiabeteStatus.BORDERLINE;
-    }
-
-    @Test
-    public void Given_malePatientUnder30WithThreeTerms_When_getDiabeteStatus_Then_isInDanger() {
-
-        this.age = 25;
-        this.sex = "M";
-        this.termCount = 3L;
-        this.expectedStatus = DiabeteStatus.IN_DANGER;
-    }
-
-    @Test
-    public void Given_femalePatientUnder30WithFourTerms_When_getDiabeteStatus_Then_isInDanger() {
-
-        this.age = 22;
-        this.sex = "F";
-        this.termCount = 4L;
-        this.expectedStatus = DiabeteStatus.IN_DANGER;
-    }
-
-    @Test
-    public void Given_patientAbove30WithSixTerms_When_getDiabeteStatus_Then_isInDanger() {
-
-        this.age = 53;
-        this.sex = "M";
-        this.termCount = 6L;
-        this.expectedStatus = DiabeteStatus.IN_DANGER;
-    }
-
-    @Test
-    public void Given_malePatientUnder30WithFiveTerms_When_getDiabeteStatus_Then_isEarlyOnset() {
-
-        this.age = 27;
-        this.sex = "M";
-        this.termCount = 5L;
-        this.expectedStatus = DiabeteStatus.EARLY_ONSET;
-    }
-
-    @Test
-    public void Given_femalePatientUnder30WithSevenTerms_When_getDiabeteStatus_Then_isEarlyOnset() {
-
-        this.age = 23;
-        this.sex = "F";
-        this.termCount = 7L;
-        this.expectedStatus = DiabeteStatus.EARLY_ONSET;
-    }
-
-    @Test
-    public void Given_patientAbove30WithHeightTerms_When_getDiabeteStatus_Then_isEarlyOnset() {
-
-        this.age = 36;
-        this.sex = "F";
-        this.termCount = 8L;
-        this.expectedStatus = DiabeteStatus.EARLY_ONSET;
-    }
-
-    @Test
-    public void Given_patientAbove30WithTebTerms_When_getDiabeteStatus_Then_isEarlyOnset() {
-
-        this.age = 39;
-        this.sex = "M";
-        this.termCount = 10L;
-        this.expectedStatus = DiabeteStatus.EARLY_ONSET;
-    }
-
 
 }
