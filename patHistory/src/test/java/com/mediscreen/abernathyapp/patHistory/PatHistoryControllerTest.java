@@ -38,7 +38,7 @@ public class PatHistoryControllerTest {
     @Test
     public void validRequest() throws Exception {
 
-        long count = 5;
+        int count = 5;
         when(patHistoryService.terminologySearch(anyString(), anySet())).thenReturn(count);
 
         MvcResult result = mockMvc.perform(get("/patHistory/assess")

@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RibbonClient(name = "patient")
 public interface PatientProxy {
 
-    @GetMapping("/patient/{id}")
-    ResponseEntity<?> getPatient(@PathVariable("patientId") String patientId);
+    @GetMapping("/patient/{id}?projection=healthInfos")
+    ResponseEntity<?> getPatient(@PathVariable("id") String id);
 
-    @GetMapping("/patient/search/findByFamilyAndGiven")
+    @GetMapping("/patient/search/findByFamilyAndGiven?projection=healthInfos")
     ResponseEntity<?> getPatient(@RequestParam("family") String family,
                                  @RequestParam("given") String given);
 }

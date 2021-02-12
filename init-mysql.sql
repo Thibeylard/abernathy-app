@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS patient (
   dob DATE NOT NULL,
   sex CHAR (1) NOT NULL,
   address VARCHAR(50) NOT NULL,
-  phone VARCHAR(11) NOT NULL
+  phone VARCHAR(12) NOT NULL
 );

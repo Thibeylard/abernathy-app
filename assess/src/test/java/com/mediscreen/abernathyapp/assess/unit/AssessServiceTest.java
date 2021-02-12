@@ -86,21 +86,21 @@ public class AssessServiceTest {
     }
 
     private enum PatientCase {
-        PATIENT_OLDER_NONE(42, "M", 0L, DiabeteStatus.NONE),
-        PATIENT_OLDER_BORDERLINE(35, "F", 2L, DiabeteStatus.BORDERLINE),
-        PATIENT_MALE_IN_DANGER(26, "M", 3L, DiabeteStatus.IN_DANGER),
-        PATIENT_FEMALE_IN_DANGER(26, "F", 4L, DiabeteStatus.IN_DANGER),
-        PATIENT_OLDER_IN_DANGER(35, "F", 6L, DiabeteStatus.IN_DANGER),
-        PATIENT_MALE_EARLY_ONSET(24, "M", 5L, DiabeteStatus.EARLY_ONSET),
-        PATIENT_FEMALE_EARLY_ONSET(24, "F", 7L, DiabeteStatus.EARLY_ONSET),
-        PATIENT_OLDER_EARLY_ONSET(38, "M", 8L, DiabeteStatus.EARLY_ONSET);
+        PATIENT_OLDER_NONE(42, "M", 0, DiabeteStatus.NONE),
+        PATIENT_OLDER_BORDERLINE(35, "F", 2, DiabeteStatus.BORDERLINE),
+        PATIENT_MALE_IN_DANGER(26, "M", 3, DiabeteStatus.IN_DANGER),
+        PATIENT_FEMALE_IN_DANGER(26, "F", 4, DiabeteStatus.IN_DANGER),
+        PATIENT_OLDER_IN_DANGER(35, "F", 6, DiabeteStatus.IN_DANGER),
+        PATIENT_MALE_EARLY_ONSET(24, "M", 5, DiabeteStatus.EARLY_ONSET),
+        PATIENT_FEMALE_EARLY_ONSET(24, "F", 7, DiabeteStatus.EARLY_ONSET),
+        PATIENT_OLDER_EARLY_ONSET(38, "M", 8, DiabeteStatus.EARLY_ONSET);
 
         int age;
         String sex;
-        long termCount;
+        int termCount;
         DiabeteStatus expectedStatus;
 
-        PatientCase(int age, String sex, long termCount, DiabeteStatus expectedStatus) {
+        PatientCase(int age, String sex, int termCount, DiabeteStatus expectedStatus) {
             this.age = age;
             this.sex = sex;
             this.termCount = termCount;

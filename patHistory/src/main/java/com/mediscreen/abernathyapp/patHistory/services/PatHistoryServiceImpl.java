@@ -28,7 +28,7 @@ public class PatHistoryServiceImpl implements PatHistoryService {
     }
 
     @Override
-    public long terminologySearch(String patientId, Set<String> terminology) {
+    public int terminologySearch(String patientId, Set<String> terminology) {
         List<PatHistory> patHistoryList = this.patHistoryRepository.findByPatientId(patientId);
 
         if (patHistoryList == null || patHistoryList.isEmpty()) {
@@ -52,10 +52,11 @@ public class PatHistoryServiceImpl implements PatHistoryService {
 
         Pattern pattern = Pattern.compile(stringPattern, Pattern.CASE_INSENSITIVE);
 
-        return patHistoryList.stream()
+        long count = patHistoryList.stream()
                 .map(PatHistory::getContent)
                 .mapToLong(content -> pattern.matcher(content).results().count()
                 )
                 .sum();
+        return (int) count;
     }
 }

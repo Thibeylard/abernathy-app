@@ -55,6 +55,16 @@ services:
       - mongo
     command:
       "--spring.profiles.active=docker --server.port=8083"
+  #------------------------------------------------- Assess Microservice
+  assess:
+    build: "./assess/"
+    ports:
+      - 8084:8084
+    container_name: "assess"
+    depends_on:
+      - configserver
+    command:
+      "--spring.profiles.active=docker --server.port=8084"
   #------------------------------------------------- Eureka EMS Server
   eureka:
     build: "eureka/"

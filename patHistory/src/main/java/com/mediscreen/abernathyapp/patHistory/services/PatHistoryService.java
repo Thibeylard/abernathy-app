@@ -7,6 +7,6 @@ import java.util.Set;
 @Service
 public interface PatHistoryService {
 
-    long terminologySearch(String patientId, Set<String> terminology);
+    int terminologySearch(String patientId, Set<String> terminology);
 
 }

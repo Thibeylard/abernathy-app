@@ -82,7 +82,7 @@ public class AssessServiceImpl implements AssessService {
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
 
             int patientAge = ageCalculator.getAge(patientInfos.getDob());
-            long terminologyCount = (long) responseEntity.getBody();
+            int terminologyCount = (Integer) responseEntity.getBody();
             DiabeteStatus diabeteStatus = determineDiabeteStatus(patientInfos.getSex(), patientAge, terminologyCount);
 
             return new DiabeteAssessmentDTO(
@@ -94,7 +94,7 @@ public class AssessServiceImpl implements AssessService {
         }
     }
 
-    private DiabeteStatus determineDiabeteStatus(String sex, int age, long terminologyCount) {
+    private DiabeteStatus determineDiabeteStatus(String sex, int age, int terminologyCount) {
         if (hasDiabeteStatusEarlyOnSet(sex, age, terminologyCount)) {
             return DiabeteStatus.EARLY_ONSET;
         } else if (hasDiabeteStatusInDanger(sex, age, terminologyCount)) {
@@ -113,24 +113,24 @@ public class AssessServiceImpl implements AssessService {
     // -------------------------------------------------------------- DiabeteStatus conditions
     // ------------------------------------------------------------------------------------
 
-    private boolean hasDiabeteStatusEarlyOnSet(String sex, int age, long terminologyCount) {
+    private boolean hasDiabeteStatusEarlyOnSet(String sex, int age, int terminologyCount) {
         return (sex.equals("M") && age < 30 && terminologyCount >= 5) ||
                 (sex.equals("F") && age < 30 && terminologyCount >= 7) ||
                 (age > 30 && terminologyCount >= 8);
     }
 
 
-    private boolean hasDiabeteStatusInDanger(String sex, int age, long terminologyCount) {
+    private boolean hasDiabeteStatusInDanger(String sex, int age, int terminologyCount) {
         return (sex.equals("M") && age < 30 && terminologyCount >= 3) ||
                 (sex.equals("F") && age < 30 && terminologyCount == 4) ||
                 (age > 30 && terminologyCount >= 6);
     }
 
-    private boolean hasDiabeteStatusBorderline(int age, long terminologyCount) {
+    private boolean hasDiabeteStatusBorderline(int age, int terminologyCount) {
         return age >= 30 && terminologyCount == 2;
     }
 
-    private boolean hasDiabeteStatusNone(long terminologyCount) {
+    private boolean hasDiabeteStatusNone(int terminologyCount) {
         return terminologyCount <= 1;
     }
 

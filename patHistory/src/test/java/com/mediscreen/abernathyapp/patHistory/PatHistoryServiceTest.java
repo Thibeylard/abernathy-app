@@ -71,7 +71,7 @@ public class PatHistoryServiceTest {
         // MOT6 = 1
         // TOTAL = 11
 
-        long termCount = 11;
+        int termCount = 11;
 
         when(patHistoryRepository.findByPatientId(any(String.class)))
                 .thenReturn(patHistoryList);
