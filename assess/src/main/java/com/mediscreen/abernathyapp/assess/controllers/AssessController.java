@@ -27,14 +27,13 @@ public class AssessController {
         try {
             return ResponseEntity.ok(assessService.assessPatientDiabeteStatus(patId));
         } catch (NoSuchElementException e) {
-            ResponseEntity.badRequest().body(new BadRequestErrorDTO(
+            return ResponseEntity.badRequest().body(new BadRequestErrorDTO(
                     HttpStatus.BAD_REQUEST,
                     Instant.now(),
                     "patId",
                     "This patient ID does not refer to any existent patient."
             ));
         }
-        return null;
     }
 
     @GetMapping("/assess/familyGiven")
@@ -44,13 +43,12 @@ public class AssessController {
         try {
             return ResponseEntity.ok(assessService.assessPatientDiabeteStatus(familyName, givenName));
         } catch (NoSuchElementException e) {
-            ResponseEntity.badRequest().body(new BadRequestErrorDTO(
+            return ResponseEntity.badRequest().body(new BadRequestErrorDTO(
                     HttpStatus.BAD_REQUEST,
                     Instant.now(),
                     "family, given",
                     "This family given couple does not refer to any existent patient."
             ));
         }
-        return null;
     }
 }

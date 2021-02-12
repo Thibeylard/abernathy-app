@@ -7,8 +7,19 @@ public class DiabeteAssessmentDTO {
     PatientAssessmentDTO patient;
     String assessment;
 
+    public DiabeteAssessmentDTO() {
+    }
+
     public DiabeteAssessmentDTO(PatientAssessmentDTO patient, DiabeteStatus diabeteStatus) {
         this.patient = patient;
         this.assessment = diabeteStatus.toString();
+    }
+
+    public PatientAssessmentDTO getPatient() {
+        return patient;
+    }
+
+    public String getAssessment() {
+        return assessment;
     }
 }

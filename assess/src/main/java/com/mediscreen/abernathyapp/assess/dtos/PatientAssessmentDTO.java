@@ -27,4 +27,5 @@ public class PatientAssessmentDTO {
     public int getAge() {
         return age;
     }
+
 }
