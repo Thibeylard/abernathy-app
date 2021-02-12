@@ -37,7 +37,7 @@ public class AssessController {
         return null;
     }
 
-    @GetMapping("/assess/id")
+    @GetMapping("/assess/familyGiven")
     public ResponseEntity<?> assessPatientByFamilyAndGiven(
             @RequestParam("familyName") String familyName,
             @RequestParam("givenName") String givenName) {

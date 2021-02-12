@@ -13,10 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,11 +25,17 @@ public class AssessServiceImpl implements AssessService {
     private final PatHistoryProxy patHistoryProxy;
     private final ObjectMapper mapper;
     private final Logger logger;
+    private final AgeCalculatorService ageCalculator;
 
     @Autowired
-    public AssessServiceImpl(PatientProxy patientProxy, PatHistoryProxy patHistoryProxy, ObjectMapper mapper, Logger logger) {
+    public AssessServiceImpl(PatientProxy patientProxy,
+                             PatHistoryProxy patHistoryProxy,
+                             AgeCalculatorService ageCalculator,
+                             ObjectMapper mapper,
+                             Logger logger) {
         this.patientProxy = patientProxy;
         this.patHistoryProxy = patHistoryProxy;
+        this.ageCalculator = ageCalculator;
         this.mapper = mapper;
         this.logger = logger;
     }
@@ -77,8 +81,8 @@ public class AssessServiceImpl implements AssessService {
         // Http Status is OK, patHistory response contains terminologyCount
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
 
-            int patientAge = calculatePatientAge(patientInfos.getDob());
-            long terminologyCount = Long.parseLong((String) Objects.requireNonNull(responseEntity.getBody()));
+            int patientAge = ageCalculator.getAge(patientInfos.getDob());
+            long terminologyCount = (long) responseEntity.getBody();
             DiabeteStatus diabeteStatus = determineDiabeteStatus(patientInfos.getSex(), patientAge, terminologyCount);
 
             return new DiabeteAssessmentDTO(
@@ -92,7 +96,7 @@ public class AssessServiceImpl implements AssessService {
 
     private DiabeteStatus determineDiabeteStatus(String sex, int age, long terminologyCount) {
         if (hasDiabeteStatusEarlyOnSet(sex, age, terminologyCount)) {
-            return DiabeteStatus.EARLY_ON_SET;
+            return DiabeteStatus.EARLY_ONSET;
         } else if (hasDiabeteStatusInDanger(sex, age, terminologyCount)) {
             return DiabeteStatus.IN_DANGER;
         } else if (hasDiabeteStatusBorderline(age, terminologyCount)) {
@@ -123,33 +127,11 @@ public class AssessServiceImpl implements AssessService {
     }
 
     private boolean hasDiabeteStatusBorderline(int age, long terminologyCount) {
-        return age > 30 && terminologyCount == 2;
+        return age >= 30 && terminologyCount == 2;
     }
 
     private boolean hasDiabeteStatusNone(long terminologyCount) {
-        return terminologyCount == 0;
+        return terminologyCount <= 1;
     }
 
-
-    // Calculate patient age based on his date of birth
-    // ------------------------------------------------------------------------------------
-    private int calculatePatientAge(LocalDate patientDob) {
-        int yearOfBirth = patientDob.getYear();
-        int monthOfBirth = patientDob.getMonthValue();
-        int dayOfBirth = patientDob.getDayOfMonth();
-
-        int nowYear = LocalDate.now().getYear();
-        int nowMonth = LocalDate.now().getMonthValue();
-        int nowDay = LocalDate.now().getDayOfMonth();
-
-        int age = nowYear - yearOfBirth;
-
-        if (nowMonth > monthOfBirth) {
-            age -= 1;
-        } else if (nowMonth == monthOfBirth && nowDay > dayOfBirth) {
-            age -= 1;
-        }
-
-        return age;
-    }
 }
