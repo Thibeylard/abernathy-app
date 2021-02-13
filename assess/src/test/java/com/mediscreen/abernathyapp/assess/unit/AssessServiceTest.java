@@ -63,7 +63,7 @@ public class AssessServiceTest {
 
         doReturn(ResponseEntity.ok(patientHealthInfosDTO)).when(patientProxyMock).getPatient(anyString());
         doReturn(ResponseEntity.ok(new PatHistoryTermsCountDTO("1", Set.of("ignoredTerm1","ignoredTerm2"),patient.termCount))).when(patHistoryProxyMock).getAssessment(anyString(), anySet());
-        when(ageCalculatorMock.getAge(any(LocalDate.class))).thenReturn(patient.age);
+        when(ageCalculatorMock.getAge(any(LocalDate.class), any(LocalDate.class))).thenReturn(patient.age);
 
         assertThat(assessService.assessPatientDiabeteStatus("1"))
                 .usingRecursiveComparison()

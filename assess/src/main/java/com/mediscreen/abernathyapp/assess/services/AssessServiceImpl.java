@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -82,7 +83,7 @@ public class AssessServiceImpl implements AssessService {
         // Http Status is OK, patHistory response contains terminologyCount
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
 
-            int patientAge = ageCalculator.getAge(patientInfos.getDob());
+            int patientAge = ageCalculator.getAge(patientInfos.getDob(), LocalDate.now());
             PatHistoryTermsCountDTO countDTO = (PatHistoryTermsCountDTO) responseEntity.getBody();
             assert countDTO != null; // always true if request is Ok
             DiabeteStatus diabeteStatus = determineDiabeteStatus(patientInfos.getSex(), patientAge, countDTO.getTermCount());
