@@ -2,6 +2,7 @@ package com.mediscreen.abernathyapp.assess.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.abernathyapp.assess.dtos.DiabeteAssessmentDTO;
+import com.mediscreen.abernathyapp.assess.dtos.PatHistoryTermsCountDTO;
 import com.mediscreen.abernathyapp.assess.dtos.PatientAssessmentDTO;
 import com.mediscreen.abernathyapp.assess.dtos.PatientHealthInfosDTO;
 import com.mediscreen.abernathyapp.assess.models.DiabeteStatus;
@@ -82,8 +83,9 @@ public class AssessServiceImpl implements AssessService {
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
 
             int patientAge = ageCalculator.getAge(patientInfos.getDob());
-            int terminologyCount = (Integer) responseEntity.getBody();
-            DiabeteStatus diabeteStatus = determineDiabeteStatus(patientInfos.getSex(), patientAge, terminologyCount);
+            PatHistoryTermsCountDTO countDTO = (PatHistoryTermsCountDTO) responseEntity.getBody();
+            assert countDTO != null; // always true if request is Ok
+            DiabeteStatus diabeteStatus = determineDiabeteStatus(patientInfos.getSex(), patientAge, countDTO.getTermCount());
 
             return new DiabeteAssessmentDTO(
                     new PatientAssessmentDTO(patientInfos.getFamily(), patientInfos.getGiven(), patientAge),

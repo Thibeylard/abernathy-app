@@ -1,6 +1,7 @@
 package com.mediscreen.abernathyapp.assess.unit;
 
 import com.mediscreen.abernathyapp.assess.dtos.DiabeteAssessmentDTO;
+import com.mediscreen.abernathyapp.assess.dtos.PatHistoryTermsCountDTO;
 import com.mediscreen.abernathyapp.assess.dtos.PatientAssessmentDTO;
 import com.mediscreen.abernathyapp.assess.dtos.PatientHealthInfosDTO;
 import com.mediscreen.abernathyapp.assess.models.DiabeteStatus;
@@ -19,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,7 +62,7 @@ public class AssessServiceTest {
                 patient.sex);
 
         doReturn(ResponseEntity.ok(patientHealthInfosDTO)).when(patientProxyMock).getPatient(anyString());
-        doReturn(ResponseEntity.ok(patient.termCount)).when(patHistoryProxyMock).getAssessment(anyString(), anySet());
+        doReturn(ResponseEntity.ok(new PatHistoryTermsCountDTO("1", Set.of("ignoredTerm1","ignoredTerm2"),patient.termCount))).when(patHistoryProxyMock).getAssessment(anyString(), anySet());
         when(ageCalculatorMock.getAge(any(LocalDate.class))).thenReturn(patient.age);
 
         assertThat(assessService.assessPatientDiabeteStatus("1"))

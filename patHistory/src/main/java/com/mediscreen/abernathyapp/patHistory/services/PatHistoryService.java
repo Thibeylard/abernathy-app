@@ -1,5 +1,6 @@
 package com.mediscreen.abernathyapp.patHistory.services;
 
+import com.mediscreen.abernathyapp.patHistory.dtos.PatHistoryTermsCountDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -7,6 +8,6 @@ import java.util.Set;
 @Service
 public interface PatHistoryService {
 
-    int terminologySearch(String patientId, Set<String> terminology);
+    PatHistoryTermsCountDTO terminologySearch(String patientId, Set<String> terminology);
 
 }

@@ -12,7 +12,7 @@ import java.util.Set;
 @RibbonClient(name = "patHistory")
 public interface PatHistoryProxy {
 
-    @GetMapping("/patHistory/assess")
+    @GetMapping("/patHistory/countTerms")
     ResponseEntity<?> getAssessment(@RequestParam("patientId") String patientId,
                                     @RequestParam("terminology") Set<String> terminology);
 }

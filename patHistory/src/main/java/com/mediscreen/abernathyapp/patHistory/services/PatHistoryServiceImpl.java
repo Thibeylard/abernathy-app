@@ -1,5 +1,6 @@
 package com.mediscreen.abernathyapp.patHistory.services;
 
+import com.mediscreen.abernathyapp.patHistory.dtos.PatHistoryTermsCountDTO;
 import com.mediscreen.abernathyapp.patHistory.models.PatHistory;
 import com.mediscreen.abernathyapp.patHistory.repositories.PatHistoryRepository;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public class PatHistoryServiceImpl implements PatHistoryService {
     }
 
     @Override
-    public int terminologySearch(String patientId, Set<String> terminology) {
+    public PatHistoryTermsCountDTO terminologySearch(String patientId, Set<String> terminology) {
         List<PatHistory> patHistoryList = this.patHistoryRepository.findByPatientId(patientId);
 
         if (patHistoryList == null || patHistoryList.isEmpty()) {
@@ -57,6 +58,6 @@ public class PatHistoryServiceImpl implements PatHistoryService {
                 .mapToLong(content -> pattern.matcher(content).results().count()
                 )
                 .sum();
-        return (int) count;
+        return new PatHistoryTermsCountDTO(patientId, terminology, (int) count);
     }
 }

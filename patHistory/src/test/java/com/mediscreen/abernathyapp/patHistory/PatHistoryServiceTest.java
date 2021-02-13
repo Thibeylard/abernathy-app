@@ -76,7 +76,7 @@ public class PatHistoryServiceTest {
         when(patHistoryRepository.findByPatientId(any(String.class)))
                 .thenReturn(patHistoryList);
 
-        assertThat(patHistoryService.terminologySearch("1", terminology))
+        assertThat(patHistoryService.terminologySearch("1", terminology).getTermCount())
                 .isEqualTo(termCount);
     }
 

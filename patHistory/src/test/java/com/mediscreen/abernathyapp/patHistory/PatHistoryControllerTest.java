@@ -2,6 +2,7 @@ package com.mediscreen.abernathyapp.patHistory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.abernathyapp.patHistory.dtos.BadRequestErrorDTO;
+import com.mediscreen.abernathyapp.patHistory.dtos.PatHistoryTermsCountDTO;
 import com.mediscreen.abernathyapp.patHistory.services.PatHistoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anySet;
@@ -38,10 +40,14 @@ public class PatHistoryControllerTest {
     @Test
     public void validRequest() throws Exception {
 
-        int count = 5;
-        when(patHistoryService.terminologySearch(anyString(), anySet())).thenReturn(count);
+        PatHistoryTermsCountDTO patHistoryTermsCountDTO = new PatHistoryTermsCountDTO(
+                "1",
+                Set.of("MOT1","MOT2","MOT3","MOT4","MOT5"),
+                5
+        );
+        when(patHistoryService.terminologySearch(anyString(), anySet())).thenReturn(patHistoryTermsCountDTO);
 
-        MvcResult result = mockMvc.perform(get("/patHistory/assess")
+        MvcResult result = mockMvc.perform(get("/patHistory/countTerms")
                 .param("patientId", "1")
                 .param("terminology", "MOT1")
                 .param("terminology", "MOT2")
@@ -51,8 +57,10 @@ public class PatHistoryControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
+        System.out.println(mapper.writeValueAsString(patHistoryTermsCountDTO));
+
         assertThat(result.getResponse().getContentAsString())
-                .isEqualTo(mapper.writeValueAsString(count));
+                .isEqualTo(mapper.writeValueAsString(patHistoryTermsCountDTO));
     }
 
     @Test
@@ -62,7 +70,7 @@ public class PatHistoryControllerTest {
         when(patHistoryService.terminologySearch(anyString(), anySet()))
                 .thenThrow(e);
 
-        MvcResult result = mockMvc.perform(get("/patHistory/assess")
+        MvcResult result = mockMvc.perform(get("/patHistory/countTerms")
                 .param("patientId", "1")
                 .param("terminology", "MOT1")
                 .param("terminology", "MOT2")
@@ -90,7 +98,7 @@ public class PatHistoryControllerTest {
     @Test
     public void invalidTerminology() throws Exception {
 
-        MvcResult result = mockMvc.perform(get("/patHistory/assess")
+        MvcResult result = mockMvc.perform(get("/patHistory/countTerms")
                 .param("patientId", "1")
                 .param("terminology", ""))
                 .andExpect(status().isBadRequest())

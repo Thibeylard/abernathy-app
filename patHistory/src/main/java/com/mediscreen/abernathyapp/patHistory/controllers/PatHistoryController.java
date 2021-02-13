@@ -23,8 +23,8 @@ public class PatHistoryController {
         this.patHistoryService = patHistoryService;
     }
 
-    @GetMapping("/patHistory/assess")
-    public ResponseEntity<?> assessOnPatHistoryCollection(
+    @GetMapping("/patHistory/countTerms")
+    public ResponseEntity<?> countTermsInPatHistory(
             @RequestParam("patientId") String patientId,
             @RequestParam("terminology") Set<String> terminology) {
         if (terminology.isEmpty()) {
