@@ -32,6 +32,7 @@ configure(appModules) {
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'java'
     apply plugin: 'war'
+    apply plugin: 'jacoco'
 
     group = 'com.mediscreen'
     version = '0.0.1-SNAPSHOT'
@@ -95,4 +96,32 @@ configure(microServices) {
         compile 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
 
     }
+
+    jacoco {
+        toolVersion = "0.8.4"
+    }
+
+    jacocoTestReport {
+        sourceSets sourceSets.main
+        /* EXECUTION DATA CONFIGURATION IS NEEDED : ELSE, ONLY test.exec FILE IS SCANNED FOR REPORT */ 
+        reports {
+            xml.enabled true
+            csv.enabled false
+            html.destination file("${buildDir}/jacocoHtml")
+        }
+    }
+    test {
+        exclude '/**/integration/**'
+        include '/**/unit/**'
+    }
+
+    task itest (type:Test) {
+        testClassesDirs = project.sourceSets.test.output.classesDirs
+        classpath = project.sourceSets.test.runtimeClasspath
+        exclude '/**/unit/**'
+        include '/**/integration/**'
+    }
+
+    test.finalizedBy jacocoTestReport
+    itest.finalizedBy jacocoTestReport
 }
