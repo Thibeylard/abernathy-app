@@ -1,5 +1,7 @@
 package com.mediscreen.abernathyapp.assess.unit;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.abernathyapp.assess.dtos.DiabeteAssessmentDTO;
 import com.mediscreen.abernathyapp.assess.dtos.PatHistoryTermsCountDTO;
 import com.mediscreen.abernathyapp.assess.dtos.PatientAssessmentDTO;
@@ -15,6 +17,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -41,10 +44,12 @@ public class AssessServiceTest {
     private PatientProxy patientProxyMock;
     @MockBean
     private AgeCalculatorService ageCalculatorMock;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @ParameterizedTest(name = "{index} {displayName} receive expected assessment")
     @EnumSource(PatientCase.class)
-    public void Given_Patient_When_assessPatientDiabeteStatus_Then_returnAccordingStatus(PatientCase patient) {
+    public void Given_Patient_When_assessPatientDiabeteStatus_Then_returnAccordingStatus(PatientCase patient) throws JsonProcessingException {
         PatientAssessmentDTO patientAssessmentDTO = new PatientAssessmentDTO(
                 "family",
                 "given",
@@ -61,8 +66,13 @@ public class AssessServiceTest {
                 LocalDate.EPOCH,
                 patient.sex);
 
-        doReturn(ResponseEntity.ok(patientHealthInfosDTO)).when(patientProxyMock).getPatient(anyString());
-        doReturn(ResponseEntity.ok(new PatHistoryTermsCountDTO("1", Set.of("ignoredTerm1","ignoredTerm2"),patient.termCount))).when(patHistoryProxyMock).getAssessment(anyString(), anySet());
+        doReturn(EntityModel.of(patientHealthInfosDTO)).when(patientProxyMock).getPatient(anyString());
+        doReturn(ResponseEntity.ok(
+                objectMapper.writeValueAsString(new PatHistoryTermsCountDTO(
+                        "1",
+                        Set.of("ignoredTerm1", "ignoredTerm2"),
+                        patient.termCount))))
+                .when(patHistoryProxyMock).getAssessment(anyString(), anySet());
         when(ageCalculatorMock.getAge(any(LocalDate.class), any(LocalDate.class))).thenReturn(patient.age);
 
         assertThat(assessService.assessPatientDiabeteStatus("1"))
@@ -72,7 +82,7 @@ public class AssessServiceTest {
 
     @Test
     public void Given_anyProxyReturnBadRequest_When_assessPatientDiabeteStatus_Then_ThrowNoSuchElementException() {
-        doReturn(ResponseEntity.badRequest().body(null)).when(patientProxyMock).getPatient(anyString());
+        doReturn(null).when(patientProxyMock).getPatient(anyString());
         assertThrows(NoSuchElementException.class, () -> assessService.assessPatientDiabeteStatus("1"));
 
         PatientHealthInfosDTO patientHealthInfosDTO = new PatientHealthInfosDTO(
@@ -82,7 +92,7 @@ public class AssessServiceTest {
                 LocalDate.EPOCH,
                 "F");
 
-        doReturn(ResponseEntity.ok(patientHealthInfosDTO)).when(patientProxyMock).getPatient(anyString());
+        doReturn(EntityModel.of(patientHealthInfosDTO)).when(patientProxyMock).getPatient(anyString());
         doReturn(ResponseEntity.badRequest().body(null)).when(patHistoryProxyMock).getAssessment(anyString(), anySet());
         assertThrows(NoSuchElementException.class, () -> assessService.assessPatientDiabeteStatus("1"));
     }

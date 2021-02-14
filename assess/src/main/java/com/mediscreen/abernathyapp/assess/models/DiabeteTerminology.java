@@ -17,6 +17,7 @@ public enum DiabeteTerminology {
     private String fr;
 
     DiabeteTerminology(String fr) {
+        this.fr = fr;
     }
 
     public String fr() {

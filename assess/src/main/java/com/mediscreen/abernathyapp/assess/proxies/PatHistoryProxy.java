@@ -13,6 +13,6 @@ import java.util.Set;
 public interface PatHistoryProxy {
 
     @GetMapping("/patHistory/countTerms")
-    ResponseEntity<?> getAssessment(@RequestParam("patientId") String patientId,
-                                    @RequestParam("terminology") Set<String> terminology);
+    ResponseEntity<String> getAssessment(@RequestParam("patientId") String patientId,
+                                         @RequestParam("terminology") Set<String> terminology);
 }

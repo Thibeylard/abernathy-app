@@ -1,7 +1,7 @@
 package com.mediscreen.abernathyapp.patHistory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mediscreen.abernathyapp.patHistory.dtos.BadRequestErrorDTO;
+import com.mediscreen.abernathyapp.patHistory.dtos.ErrorDTO;
 import com.mediscreen.abernathyapp.patHistory.dtos.PatHistoryTermsCountDTO;
 import com.mediscreen.abernathyapp.patHistory.services.PatHistoryService;
 import org.junit.jupiter.api.Test;
@@ -82,15 +82,13 @@ public class PatHistoryControllerTest {
 
         String jsonBody = result.getResponse().getContentAsString();
 
-        BadRequestErrorDTO badRequestErrorDTO =
-                mapper.convertValue(mapper.readTree(jsonBody), BadRequestErrorDTO.class);
+        ErrorDTO errorDTO =
+                mapper.convertValue(mapper.readTree(jsonBody), ErrorDTO.class);
 
-        assertThat(badRequestErrorDTO.getStatus())
+        assertThat(errorDTO.getStatus())
                 .isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(badRequestErrorDTO.getFaultyParameter())
-                .isEqualTo("patientId");
-        assertThat(badRequestErrorDTO.getMessage())
-                .isEqualTo(e.getMessage());
+        assertThat(errorDTO.getMessages())
+                .contains(e.getMessage());
 
         System.out.println(result.getResponse().getContentAsString());
     }
@@ -106,15 +104,13 @@ public class PatHistoryControllerTest {
 
         String jsonBody = result.getResponse().getContentAsString();
 
-        BadRequestErrorDTO badRequestErrorDTO =
-                mapper.convertValue(mapper.readTree(jsonBody), BadRequestErrorDTO.class);
+        ErrorDTO errorDTO =
+                mapper.convertValue(mapper.readTree(jsonBody), ErrorDTO.class);
 
-        assertThat(badRequestErrorDTO.getStatus())
+        assertThat(errorDTO.getStatus())
                 .isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(badRequestErrorDTO.getFaultyParameter())
-                .isEqualTo("terminology");
-        assertThat(badRequestErrorDTO.getMessage())
-                .isNotBlank();
+        assertThat(errorDTO.getMessages())
+                .isNotEmpty();
 
         System.out.println(result.getResponse().getContentAsString());
     }

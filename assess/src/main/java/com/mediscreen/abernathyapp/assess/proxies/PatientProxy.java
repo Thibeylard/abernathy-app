@@ -1,8 +1,9 @@
 package com.mediscreen.abernathyapp.assess.proxies;
 
+import com.mediscreen.abernathyapp.assess.dtos.PatientHealthInfosDTO;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface PatientProxy {
 
     @GetMapping("/patient/{id}?projection=healthInfos")
-    ResponseEntity<?> getPatient(@PathVariable("id") String id);
+    EntityModel<PatientHealthInfosDTO> getPatient(@PathVariable("id") String id);
 
     @GetMapping("/patient/search/findByFamilyAndGiven?projection=healthInfos")
-    ResponseEntity<?> getPatient(@RequestParam("family") String family,
-                                 @RequestParam("given") String given);
+    EntityModel<PatientHealthInfosDTO> getPatient(@RequestParam("family") String family,
+                                                  @RequestParam("given") String given);
 }

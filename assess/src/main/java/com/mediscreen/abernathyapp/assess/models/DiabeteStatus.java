@@ -5,7 +5,8 @@ public enum DiabeteStatus {
     NONE("None"),
     BORDERLINE("Borderline"),
     IN_DANGER("In danger"),
-    EARLY_ONSET("Early onset");
+    EARLY_ONSET("Early onset"),
+    UNDEFINED("Non défini");
 
     private final String message;
 

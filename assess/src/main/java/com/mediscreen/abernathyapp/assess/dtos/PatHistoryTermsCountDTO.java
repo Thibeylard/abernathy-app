@@ -28,4 +28,16 @@ public class PatHistoryTermsCountDTO {
     public int getTermCount() {
         return termCount;
     }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
+
+    public void setTerminology(Set<String> terminology) {
+        this.terminology = terminology;
+    }
+
+    public void setTermCount(int termCount) {
+        this.termCount = termCount;
+    }
 }
