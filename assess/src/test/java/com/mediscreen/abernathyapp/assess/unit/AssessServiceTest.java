@@ -105,7 +105,8 @@ public class AssessServiceTest {
         PATIENT_OLDER_IN_DANGER(35, "F", 6, DiabeteStatus.IN_DANGER),
         PATIENT_MALE_EARLY_ONSET(24, "M", 5, DiabeteStatus.EARLY_ONSET),
         PATIENT_FEMALE_EARLY_ONSET(24, "F", 7, DiabeteStatus.EARLY_ONSET),
-        PATIENT_OLDER_EARLY_ONSET(38, "M", 8, DiabeteStatus.EARLY_ONSET);
+        PATIENT_OLDER_EARLY_ONSET(38, "M", 8, DiabeteStatus.EARLY_ONSET),
+        PATIENT_UNDEFINED(24, "M", 1, DiabeteStatus.UNDEFINED); // currently missed case
 
         int age;
         String sex;

@@ -1,4 +1,4 @@
-package com.mediscreen.abernathyapp.patHistory;
+package com.mediscreen.abernathyapp.patHistory.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.abernathyapp.patHistory.dtos.ErrorDTO;

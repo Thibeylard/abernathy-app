@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -104,48 +105,11 @@ public class AssessServiceImpl implements AssessService {
     }
 
     private DiabeteStatus determineDiabeteStatus(String sex, int age, int terminologyCount) {
-        if (hasDiabeteStatusEarlyOnSet(sex, age, terminologyCount)) {
-            return DiabeteStatus.EARLY_ONSET;
-        } else if (hasDiabeteStatusInDanger(sex, age, terminologyCount)) {
-            return DiabeteStatus.IN_DANGER;
-        } else if (hasDiabeteStatusBorderline(age, terminologyCount)) {
-            return DiabeteStatus.BORDERLINE;
-        } else if (hasDiabeteStatusNone(terminologyCount)) {
-            return DiabeteStatus.NONE;
-        } else {
-            logger.debug("A case is missed by the conditions.");
-            return DiabeteStatus.UNDEFINED;
-        }
-    }
-
-
-    // -------------------------------------------------------------- DiabeteStatus conditions
-    // ------------------------------------------------------------------------------------
-
-    // Missed cases
-    // age < 30 and terminologyCount <= 2
-    // age < 30 sex = F and terminologyCount == 3
-    // TODO Ask client for which status to attribute
-
-    private boolean hasDiabeteStatusEarlyOnSet(String sex, int age, int terminologyCount) {
-        return (sex.equals("M") && age < 30 && terminologyCount >= 5) ||
-                (sex.equals("F") && age < 30 && terminologyCount >= 7) ||
-                (age > 30 && terminologyCount >= 8);
-    }
-
-
-    private boolean hasDiabeteStatusInDanger(String sex, int age, int terminologyCount) {
-        return (sex.equals("M") && age < 30 && terminologyCount >= 3) ||
-                (sex.equals("F") && age < 30 && terminologyCount >= 4) ||
-                (age > 30 && terminologyCount >= 6);
-    }
-
-    private boolean hasDiabeteStatusBorderline(int age, int terminologyCount) {
-        return age >= 30 && terminologyCount >= 2;
-    }
-
-    private boolean hasDiabeteStatusNone(int terminologyCount) {
-        return terminologyCount <= 1;
+        return Arrays.stream(DiabeteStatus.values())
+                .sorted(Comparator.comparingInt(DiabeteStatus::getEvaluationOrder))
+                .filter(d -> d.hasDiabeteStatus(sex, age, terminologyCount))
+                .findFirst()
+                .orElseThrow();
     }
 
 }

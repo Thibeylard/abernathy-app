@@ -1,4 +1,4 @@
-package com.mediscreen.abernathyapp.patHistory;
+package com.mediscreen.abernathyapp.patHistory.unit;
 
 import com.mediscreen.abernathyapp.patHistory.models.PatHistory;
 import com.mediscreen.abernathyapp.patHistory.repositories.PatHistoryRepository;
@@ -48,7 +48,7 @@ public class PatHistoryServiceTest {
         ));
         patHistoryList.add(new PatHistory(
                 "1",
-                "Bonjour, ceci est un texte avec MOT2 et MOT2 aussi avec MOT5."
+                "Bonjour, ceci est un texte MOT2 avec MOT2 et MOT2 aussi avec MOT5."
         )); // Two terms in the same patHistory are counted as two counts either way
         patHistoryList.add(new PatHistory(
                 "1",
@@ -63,15 +63,15 @@ public class PatHistoryServiceTest {
                 "Bonjour, ceci est un texte avec mOT3 et aussi avec MOT5."
         ));
 
-        // MOT1 = 2
-        // MOT2 = 3
-        // MOT3 = 1
-        // MOT4 = 0
-        // MOT5 = 4
-        // MOT6 = 1
-        // TOTAL = 11
+        // MOT1 = 2 (1 counted)
+        // MOT2 = 4 (1 counted)
+        // MOT3 = 1 (1 counted)
+        // MOT4 = 0 (0)
+        // MOT5 = 4 (1 counted)
+        // MOT6 = 1 (1 counted)
+        // TOTAL = 12 (5 counted)
 
-        int termCount = 11;
+        int termCount = 5;
 
         when(patHistoryRepository.findByPatientId(any(String.class)))
                 .thenReturn(patHistoryList);
