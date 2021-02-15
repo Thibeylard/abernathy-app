@@ -60,6 +60,12 @@ public class PatientController {
         if (model.asMap().get("patHistoryNotFound") != null) {
             model.addAttribute("patHistoryNotFound", model.asMap().get("patHistoryNotFound"));
         }
+        if (model.asMap().get("patientAssessment") != null) {
+            model.addAttribute("patientAssessment", model.asMap().get("patientAssessment"));
+        }
+        if (model.asMap().get("assessmentFailed") != null) {
+            model.addAttribute("assessmentFailed", model.asMap().get("assessmentFailed"));
+        }
         // END Add Flash attributes as Model attributes --------------------------------------------------------
 
         PagedModel.PageMetadata metadata = patientCollection.getMetadata();

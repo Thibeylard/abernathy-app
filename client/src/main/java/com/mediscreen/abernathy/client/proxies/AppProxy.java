@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -75,4 +76,11 @@ public interface AppProxy {
     CollectionModel<EntityModel<PatHistoryDTO>> getPatientPatHistory(
             @RequestParam(name = "patientId") String patientId
     );
+
+    @GetMapping("/assess/assess/id")
+    ResponseEntity<String> getDiabeteAssessmentByPatId(@RequestParam("patId") String patId);
+
+    @GetMapping("/assess/assess/familyGiven")
+    ResponseEntity<String> getDiabeteAssessmentByName(@RequestParam("familyName") String familyName,
+                                                      @RequestParam("givenName") String givenName);
 }
