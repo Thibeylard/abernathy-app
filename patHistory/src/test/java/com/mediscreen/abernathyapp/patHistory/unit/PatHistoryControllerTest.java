@@ -82,8 +82,7 @@ public class PatHistoryControllerTest {
 
         String jsonBody = result.getResponse().getContentAsString();
 
-        ErrorDTO errorDTO =
-                mapper.convertValue(mapper.readTree(jsonBody), ErrorDTO.class);
+        ErrorDTO errorDTO = mapper.readValue(jsonBody, ErrorDTO.class);
 
         assertThat(errorDTO.getStatus())
                 .isEqualTo(HttpStatus.BAD_REQUEST);
@@ -104,8 +103,7 @@ public class PatHistoryControllerTest {
 
         String jsonBody = result.getResponse().getContentAsString();
 
-        ErrorDTO errorDTO =
-                mapper.convertValue(mapper.readTree(jsonBody), ErrorDTO.class);
+        ErrorDTO errorDTO = mapper.readValue(jsonBody, ErrorDTO.class);
 
         assertThat(errorDTO.getStatus())
                 .isEqualTo(HttpStatus.BAD_REQUEST);
