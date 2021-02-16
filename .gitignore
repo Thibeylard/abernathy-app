@@ -11,8 +11,6 @@
 /app/build/
 /gradlew
 /gradlew.bat
-/mongo-volume/
 /common/common.iml
-/mysql-volume/
 /patHistory/build/
 /assess/build/
