@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Form</title>
+</head>
+<body>
+
+<div class="row">
+    <form style="width: 100%" th:action="@{/patient/update}"
+          th:method="put"
+          th:object="${patientToUpdate}">
+
+        <label>
+            Family
+            <input th:field="*{family}" th:value="*{family}" type="text"/>
+        </label><br/>
+        <div style="color:red" th:if="${#fields.hasErrors('family')}">
+            <p th:each="error : ${#fields.errors('family')}" th:text="${error.toString()}"></p>
+        </div>
+
+        <label>Given
+            <input th:field="*{given}" th:value="*{given}" type="text"/><br/>
+        </label><br/>
+        <div style="color:red" th:if="${#fields.hasErrors('given')}">
+            <p th:each="error : ${#fields.errors('given')}" th:text="${error.toString()}"></p>
+        </div>
+
+        <label>Date of Birth
+            <input th:field="*{dob}" type="text"/><br/>
+        </label><br/>
+        <div style="color:red" th:if="${#fields.hasErrors('dob')}">
+            <p th:each="error : ${#fields.errors('dob')}" th:text="${error.toString()}"></p>
+        </div>
+
+        <label>Sex
+            <input th:field="*{sex}" type="text"/><br/>
+        </label><br/>
+        <div style="color:red" th:if="${#fields.hasErrors('sex')}">
+            <p th:each="error : ${#fields.errors('sex')}" th:text="${error.toString()}"></p>
+        </div>
+
+        <label>Address
+            <input th:field="*{address}" type="text"/><br/>
+        </label><br/>
+        <div style="color:red" th:if="${#fields.hasErrors('address')}">
+            <p th:each="error : ${#fields.errors('address')}" th:text="${error.toString()}"></p>
+        </div>
+
+        <label>Phone
+            <input th:field="*{phone}" type="text"/><br/>
+        </label><br/>
+        <div style="color:red" th:if="${#fields.hasErrors('phone')}">
+            <p th:each="error : ${#fields.errors('phone')}" th:text="${error.toString()}"></p>
+        </div>
+
+        <input th:field="*{id}" type="hidden">
+        <a th:href="@{/patient/list}"><input type="button" value="Cancel"/></a>
+        <input type="submit" value="Update Patient"/>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+<h1>Liste des patients</h1>
+
+
+<p th:if="${#lists.isEmpty(allPatients)}">
+    Aucun patient dans la base de données. Cliquez sur Ajouter pour créer un nouveau patient.
+</p>
+
+<p style="color: green;font-style: italic" th:if="${patientAdded}">Le patient a bien été ajouté à la base de données</p>
+<p style="color: green;font-style: italic" th:if="${patientUpdated}">Le patient a bien été mis à jour dans la base de
+    données</p>
+
+<p style="color: red;font-style: italic" th:if="${patientNotFound}">Le patient demandé n'existe pas.</p>
+
+<p style="color: red;font-weight: bold" th:if="${patientAssessment}" th:text="${patientAssessment}"></p>
+<p style="color: red;font-style: italic" th:if="${assessmentFailed}">Désolé, une erreur est survenue. Le statut du
+    patient n'a pas pu être établi.</p>
+
+<div th:unless="${#lists.isEmpty(allPatients)}">
+    <p>
+        Vous trouverez ci-dessous la liste de vos patients.
+        Cliquez sur le bouton "Editer" pour modifier ses informations.
+        Vous pouvez également en créer de nouveaux.
+    </p>
+
+    <table>
+        <thead>
+        <th>Family</th>
+        <th>Given</th>
+        <th>Sex</th>
+        <th>ACTIONS</th>
+        </thead>
+        <tr th:each="patient : ${allPatients}">
+            <td th:text="${patient.getContent().getFamily()}"></td>
+            <td th:text="${patient.getContent().getGiven()}"></td>
+            <td th:text="${patient.getContent().getSex()}"></td>
+            <td>
+                <a th:href="@{/patient/get(id=${patient.getContent().getId()})}">DETAILS</a>
+                <a th:href="@{/patient/update(id=${patient.getContent().getId()})}">EDIT</a>
+                <a th:href="@{/assess/id(patId=${patient.getContent().getId()})}">ASSESS</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<p>
+    <a th:href="@{/patient/add}"> ----- Ajouter un nouveau patient ----- </a>
+</p>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>PatHistory Form</title>
+</head>
+<body>
+
+<div class="row">
+    <form style="width: 100%" th:action="@{/patHistory/add}"
+          th:method="post"
+          th:object="${patHistoryToAdd}">
+
+        <input th:field="*{patientId}" type="hidden"/>
+
+        <label>Content
+            <textarea cols="80" rows="40" th:field="*{content}"></textarea><br/>
+        </label><br/>
+        <div style="color:red" th:if="${#fields.hasErrors('content')}">
+            <p th:each="error : ${#fields.errors('content')}" th:text="${error.toString()}"></p>
+        </div>
+
+        <a th:href="@{/patient/get(id=*{patientId})}"><input type="button" value="Cancel"/></a>
+        <input type="submit" value="Add Note"/></input>
+    </form>
+</div>
+
+</body>
+</html>

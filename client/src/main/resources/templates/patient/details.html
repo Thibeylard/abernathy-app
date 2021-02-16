@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Form</title>
+</head>
+<body>
+
+<h2>DONNEES DU PATIENT </h2>
+
+<table>
+    <thead>
+    </thead>
+    <tr>
+        <td>Family</td>
+        <td th:text="${patientResource.getContent().getFamily()}"></td>
+    </tr>
+    <tr>
+        <td>Given</td>
+        <td th:text="${patientResource.getContent().getGiven()}"></td>
+    </tr>
+    <tr>
+        <td>Date of Birth</td>
+        <td th:text="${patientResource.getContent().getDob()}"></td>
+    </tr>
+    <tr>
+        <td>Sex</td>
+        <td th:text="${patientResource.getContent().getSex()}"></td>
+    </tr>
+    <tr>
+        <td>Address</td>
+        <td th:text="${patientResource.getContent().getAddress()}"></td>
+    </tr>
+    <tr>
+        <td>Phone</td>
+        <td th:text="${patientResource.getContent().getPhone()}"></td>
+    </tr>
+</table>
+
+
+<h2>NOTES SUR LE PATIENT </h2>
+
+<p style="color: red;font-style: italic" th:if="${patHistoryAdded}">La note a bien été ajoutée à la base de données</p>
+<p style="color: red;font-style: italic" th:if="${patHistoryUpdated}">La note a bien été mise à jour dans la base de
+    données</p>
+
+<p th:if="${#lists.isEmpty(patHistoryItem)}">
+    Aucune note n'est enregistrée pour ce patient. Cliquez sur Ajouter pour en créer une.
+</p>
+
+<div th:unless="${#lists.isEmpty(patHistoryItem)}">
+    <p>
+        Vous trouverez ci-dessous toutes les notes liées au patient
+        Cliquez sur le bouton "Editer" pour modifier ses informations.
+        Vous pouvez également en créer une nouvelle
+    </p>
+
+    <table>
+        <thead>
+        <th>Content</th>
+        <th>ACTIONS</th>
+        </thead>
+        <!-- TODO rename patHistoryItem to patHistoryCollection -->
+        <tr th:each="patHistory : ${patHistoryItem}">
+            <td th:text="${patHistory.getContent().getContent()}"></td>
+            <td>
+                <a th:href="@{/patHistory/update(id=${patHistory.getContent().getId()})}">EDIT</a>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+
+<p>
+    <a th:href="@{/patHistory/add(patientId=${patientResource.getContent().getId()})}" }> ----- Ajouter une nouvelle
+        note ----- </a>
+</p>
+
+
+<p>
+    <a style="font-weight: bold;" th:href="@{/patient/list}" }> RETOUR</a>
+</p>
+
+</body>
+</html>

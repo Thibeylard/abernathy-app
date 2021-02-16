@@ -1,0 +1,131 @@
+version: "3.8"
+services:
+  #------------------------------------------------- Config Server
+  configserver:
+    build: "./configserver/"
+    ports:
+      - 9101:9101
+    container_name: "configserver"
+    command:
+      "--spring.profiles.active=docker"
+  #------------------------------------------------- Abernathy Client
+  client:
+    build: "./client/"
+    ports:
+      - 9131:9131
+    container_name: "client"
+    depends_on:
+      - configserver
+      - app
+    command:
+      "--spring.profiles.active=docker"
+  #------------------------------------------------- Abernathy App
+  app:
+    build: "./app/"
+    ports:
+      - 9121:9121
+    container_name: "app"
+    depends_on:
+      - configserver
+    command:
+      "--spring.profiles.active=docker"
+  #------------------------------------------------- Patient Microservice
+  patient:
+    build: "./patient/"
+    ports:
+      - 8082:8082
+    container_name: "patient"
+    depends_on:
+      - configserver
+      - mysqldb
+    command:
+      "--spring.profiles.active=docker --server.port=8082"
+  #------------------------------------------------- PatHistory Microservice
+  pathistory:
+    build: "./patHistory/"
+    ports:
+      - 8083:8083
+    container_name: "patHistory"
+    networks:
+      default:
+        aliases:
+          - patHistory
+    depends_on:
+      - configserver
+      - mongo
+    command:
+      "--spring.profiles.active=docker --server.port=8083"
+  #------------------------------------------------- Assess Microservice
+  assess:
+    build: "./assess/"
+    ports:
+      - 8084:8084
+    container_name: "assess"
+    depends_on:
+      - configserver
+    command:
+      "--spring.profiles.active=docker --server.port=8084"
+  #------------------------------------------------- Eureka EMS Server
+  eureka:
+    build: "eureka/"
+    ports:
+      - 9111:9111
+    container_name: "eureka"
+    depends_on:
+      - configserver
+    command:
+      "--spring.profiles.active=docker"
+  #------------------------------------------------- Zipkin
+  zipkin:
+    image: openzipkin/zipkin-slim
+    container_name: "zipkin"
+    ports:
+      - 9411:9411
+  #------------------------------------------------- MongoDB database
+  mongo:
+    image: mongo
+    restart: always
+    container_name: "mongo"
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "toor"
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./mongo-volume:/data/db
+
+  #------------------------------------------------- MongoDB GUI
+  mongo-express:
+    image: mongo-express
+    restart: always
+    container_name: "mongo-express"
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: "root"
+      ME_CONFIG_MONGODB_ADMINPASSWORD: "toor"
+
+
+  #------------------------------------------------- MySQL database
+  mysqldb:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    container_name: "mysqldb"
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlPass
+      MYSQL_DATABASE: abernathy
+    volumes:
+      - ./mysql-volume:/var/lib/mysql
+      - ./init-mysql.sql:/docker-entrypoint-initdb.d/init-mysql.sql:ro
+
+  #------------------------------------------------- Adminer MYSQL GUI
+  adminer:
+    image: adminer
+    container_name: "adminer"
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - mysqldb:db

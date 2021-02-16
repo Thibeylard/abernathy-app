@@ -7,5 +7,5 @@
  * in the user guide at https://docs.gradle.org/4.8.1/userguide/multi_project_builds.html
  */
 
-rootProject.name = 'Mediscreen'
-include 'client', 'config-server', 'eureka-server', 'zuul-server', 'patient-ms'
+rootProject.name = 'AbernathyApp'
+include 'configserver', 'eureka', 'app', 'patient', 'client', 'patHistory', 'assess'
