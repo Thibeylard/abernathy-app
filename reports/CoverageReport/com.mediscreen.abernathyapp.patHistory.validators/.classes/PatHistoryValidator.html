@@ -1,0 +1,115 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PatHistoryValidator</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.mediscreen.abernathyapp.patHistory.validators</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PatHistoryValidator (com.mediscreen.abernathyapp.patHistory.validators)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PatHistoryValidator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/ 8)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.mediscreen.abernathyapp.patHistory.validators;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.mediscreen.abernathyapp.patHistory.models.PatHistory;
+<i>4</i>&nbsp;import org.springframework.validation.Errors;
+<i>5</i>&nbsp;import org.springframework.validation.Validator;
+<i>6</i>&nbsp;
+<b class="fc"><i>7</i>&nbsp;public class PatHistoryValidator implements Validator {</b>
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;    @Override
+<i>10</i>&nbsp;    public boolean supports(Class&lt;?&gt; clazz) {
+<b class="fc"><i>11</i>&nbsp;        return PatHistory.class.equals(clazz);</b>
+<i>12</i>&nbsp;    }
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    @Override
+<i>15</i>&nbsp;    public void validate(Object target, Errors errors) {
+<b class="fc"><i>16</i>&nbsp;        PatHistory patHistory = (PatHistory) target;</b>
+<i>17</i>&nbsp;
+<b class="fc"><i>18</i>&nbsp;        if (patHistory.getPatientId() == null || patHistory.getPatientId().isBlank()) {</b>
+<b class="fc"><i>19</i>&nbsp;            errors.rejectValue(</b>
+<i>20</i>&nbsp;                    &quot;patientId&quot;,
+<i>21</i>&nbsp;                    &quot;patientId.empty&quot;,
+<i>22</i>&nbsp;                    &quot;patientId field is mandatory&quot;);
+<i>23</i>&nbsp;        }
+<i>24</i>&nbsp;
+<b class="fc"><i>25</i>&nbsp;        if (patHistory.getContent() == null || patHistory.getContent().isBlank()) {</b>
+<b class="fc"><i>26</i>&nbsp;            errors.rejectValue(</b>
+<i>27</i>&nbsp;                    &quot;content&quot;,
+<i>28</i>&nbsp;                    &quot;content.empty&quot;,
+<i>29</i>&nbsp;                    &quot;content field is mandatory&quot;);
+<i>30</i>&nbsp;        }
+<b class="fc"><i>31</i>&nbsp;    }</b>
+<i>32</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-02-16 16:18</div>
+</div>
+</body>
+</html>

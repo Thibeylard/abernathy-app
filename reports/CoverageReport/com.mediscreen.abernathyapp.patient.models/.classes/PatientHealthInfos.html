@@ -1,0 +1,66 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PatientHealthInfos</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.mediscreen.abernathyapp.patient.models</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PatientHealthInfos (com.mediscreen.abernathyapp.patient.models)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">PatientHealthInfos</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.mediscreen.abernathyapp.patient.models;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.springframework.data.rest.core.config.Projection;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.time.LocalDate;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;@Projection(types = Patient.class, name = &quot;healthInfos&quot;)
+<i>8</i>&nbsp;public interface PatientHealthInfos {
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;    public String getId();
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;    public String getFamily();
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    public String getGiven();
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    public LocalDate getDob();
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    public String getSex();
+<i>19</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-02-16 16:18</div>
+</div>
+</body>
+</html>

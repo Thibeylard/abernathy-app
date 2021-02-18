@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - PatHistoryControllerTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>PatHistoryControllerTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.mediscreen.abernathyapp.patHistory.unit.html">com.mediscreen.abernathyapp.patHistory.unit</a> &gt; PatHistoryControllerTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">3</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.520s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">invalidPatientId()</td>
+<td class="success">0.443s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">invalidTerminology()</td>
+<td class="success">0.036s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">validRequest()</td>
+<td class="success">0.041s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2021-02-18 14:31:50.630  INFO [patHistory,,,] 24859 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.mediscreen.abernathyapp.patHistory.unit.PatHistoryControllerTest], using SpringBootContextLoader
+2021-02-18 14:31:50.632  INFO [patHistory,,,] 24859 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [com.mediscreen.abernathyapp.patHistory.unit.PatHistoryControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2021-02-18 14:31:50.633  INFO [patHistory,,,] 24859 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.mediscreen.abernathyapp.patHistory.unit.PatHistoryControllerTest]: PatHistoryControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2021-02-18 14:31:50.647  INFO [patHistory,,,] 24859 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.mediscreen.abernathyapp.patHistory.PatHistoryApplication for test class com.mediscreen.abernathyapp.patHistory.unit.PatHistoryControllerTest
+2021-02-18 14:31:50.650  INFO [patHistory,,,] 24859 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2021-02-18 14:31:50.651  INFO [patHistory,,,] 24859 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@35df8292, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@5e13f600, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@41f82361, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@11f5ced6, org.springframework.test.context.support.DirtiesContextTestExecutionListener@58770568, org.springframework.test.context.transaction.TransactionalTestExecutionListener@19954b90, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@19f690e8, org.springframework.test.context.event.EventPublishingTestExecutionListener@264a6e7e, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@4676739a, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@758c790f, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@5850d686, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@2d1c6a6c, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@580336f6]
+2021-02-18 14:31:50.785  INFO [patHistory,,,] 24859 --- [    Test worker] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.retry.annotation.RetryConfiguration' of type [org.springframework.retry.annotation.RetryConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.2.6.RELEASE)
+
+2021-02-18 14:31:50.919  INFO [patHistory,,,] 24859 --- [    Test worker] c.m.a.p.unit.PatHistoryControllerTest    : The following profiles are active: test
+2021-02-18 14:31:51.640  INFO [patHistory,,,] 24859 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-18 14:31:51.653  INFO [patHistory,,,] 24859 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 13ms. Found 1 MongoDB repository interfaces.
+2021-02-18 14:31:51.980  INFO [patHistory,,,] 24859 --- [    Test worker] o.s.cloud.context.scope.GenericScope     : BeanFactory id=d2ecb890-636f-346d-bd66-d5547f559a00
+2021-02-18 14:31:53.476  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : note: noprealloc may hurt performance in many applications
+2021-02-18 14:31:53.483  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.482+0100 I CONTROL  [initandlisten] MongoDB starting : pid=24918 port=46571 dbpath=/tmp/embedmongo-db-1fcfc5c5-f616-417a-b711-4aa65195e5eb 64-bit host=thibaut-dell
+2021-02-18 14:31:53.483  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.482+0100 I CONTROL  [initandlisten] db version v3.5.5
+2021-02-18 14:31:53.484  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.482+0100 I CONTROL  [initandlisten] git version: 98515c812b6fa893613f063dae568ff8319cbfbd
+2021-02-18 14:31:53.484  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.482+0100 I CONTROL  [initandlisten] allocator: tcmalloc
+2021-02-18 14:31:53.484  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.482+0100 I CONTROL  [initandlisten] modules: none
+2021-02-18 14:31:53.484  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.482+0100 I CONTROL  [initandlisten] build environment:
+2021-02-18 14:31:53.484  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.482+0100 I CONTROL  [initandlisten]     distarch: x86_64
+2021-02-18 14:31:53.485  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.482+0100 I CONTROL  [initandlisten]     target_arch: x86_64
+2021-02-18 14:31:53.485  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.482+0100 I CONTROL  [initandlisten] options: { net: { bindIp: &quot;127.0.0.1&quot;, http: { enabled: false }, port: 46571 }, security: { authorization: &quot;disabled&quot; }, storage: { dbPath: &quot;/tmp/embedmongo-db-1fcfc5c5-f616-417a-b711-4aa65195e5eb&quot;, journal: { enabled: false }, mmapv1: { preallocDataFiles: false, smallFiles: true }, syncPeriodSecs: 0.0 } }
+2021-02-18 14:31:53.524  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.524+0100 I STORAGE  [initandlisten] 
+2021-02-18 14:31:53.525  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.525+0100 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-02-18 14:31:53.525  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.525+0100 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2021-02-18 14:31:53.526  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.526+0100 I STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=1423M,session_max=20000,eviction=(threads_min=4,threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),checkpoint=(wait=0,log_size=2GB),statistics_log=(wait=0),verbose=(recovery_progress),,log=(enabled=false),
+2021-02-18 14:31:53.578  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.578+0100 W STORAGE  [initandlisten] Detected configuration for non-active storage engine mmapv1 when current storage engine is wiredTiger
+2021-02-18 14:31:53.579  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.579+0100 I CONTROL  [initandlisten] 
+2021-02-18 14:31:53.579  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.579+0100 I CONTROL  [initandlisten] ** NOTE: This is a development version (3.5.5) of MongoDB.
+2021-02-18 14:31:53.579  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.579+0100 I CONTROL  [initandlisten] **       Not recommended for production.
+2021-02-18 14:31:53.580  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.580+0100 I CONTROL  [initandlisten] 
+2021-02-18 14:31:53.595  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.595+0100 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/tmp/embedmongo-db-1fcfc5c5-f616-417a-b711-4aa65195e5eb/diagnostic.data'
+2021-02-18 14:31:53.617  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.617+0100 I INDEX    [initandlisten] build index on: admin.system.version properties: { v: 2, key: { version: 1 }, name: &quot;incompatible_with_version_32&quot;, ns: &quot;admin.system.version&quot; }
+2021-02-18 14:31:53.618  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.617+0100 I INDEX    [initandlisten] 	 building index using bulk method; build may temporarily use up to 500 megabytes of RAM
+2021-02-18 14:31:53.619  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.619+0100 I INDEX    [initandlisten] build index done.  scanned 0 total records. 0 secs
+2021-02-18 14:31:53.620  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.620+0100 I COMMAND  [initandlisten] setting featureCompatibilityVersion to 3.4
+2021-02-18 14:31:53.621  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.621+0100 I NETWORK  [thread1] waiting for connections on port 46571
+2021-02-18 14:31:53.622  INFO [patHistory,,,] 24859 --- [    Test worker] d.f.embed.mongo.MongodExecutable         : start de.flapdoodle.embed.mongo.config.MongodConfigBuilder$ImmutableMongodConfig@59bb16e0
+2021-02-18 14:31:53.633  INFO [patHistory,,,] 24859 --- [    Test worker] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:46571], mode=MULTIPLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+2021-02-18 14:31:53.634  INFO [patHistory,,,] 24859 --- [    Test worker] org.mongodb.driver.cluster               : Adding discovered server localhost:46571 to client view of cluster
+2021-02-18 14:31:53.637  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.636+0100 I NETWORK  [thread1] connection accepted from 127.0.0.1:60504 #1 (1 connection now open)
+2021-02-18 14:31:53.639  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.639+0100 I NETWORK  [conn1] received client metadata from 127.0.0.1:60504 conn1: { driver: { name: &quot;mongo-java-driver|legacy&quot;, version: &quot;3.11.2&quot; }, os: { type: &quot;Linux&quot;, name: &quot;Linux&quot;, architecture: &quot;amd64&quot;, version: &quot;5.4.0-62-generic&quot; }, platform: &quot;Java/Oracle Corporation/13.0.1+9&quot; }
+2021-02-18 14:31:53.657  INFO [patHistory,,,] 24859 --- [localhost:46571] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:1}] to localhost:46571
+2021-02-18 14:31:53.660  INFO [patHistory,,,] 24859 --- [localhost:46571] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:46571, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[3, 5, 5]}, minWireVersion=0, maxWireVersion=5, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=null, roundTripTimeNanos=2545609}
+2021-02-18 14:31:53.667  INFO [patHistory,,,] 24859 --- [localhost:46571] org.mongodb.driver.cluster               : Discovered cluster type of STANDALONE
+2021-02-18 14:31:53.846  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.846+0100 I NETWORK  [thread1] connection accepted from 127.0.0.1:60506 #2 (2 connections now open)
+2021-02-18 14:31:53.853  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.853+0100 I NETWORK  [conn2] received client metadata from 127.0.0.1:60506 conn2: { driver: { name: &quot;mongo-java-driver|legacy&quot;, version: &quot;3.11.2&quot; }, os: { type: &quot;Linux&quot;, name: &quot;Linux&quot;, architecture: &quot;amd64&quot;, version: &quot;5.4.0-62-generic&quot; }, platform: &quot;Java/Oracle Corporation/13.0.1+9&quot; }
+2021-02-18 14:31:53.863  INFO [patHistory,,,] 24859 --- [    Test worker] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:4, serverValue:2}] to localhost:46571
+2021-02-18 14:31:53.887  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.886+0100 I INDEX    [conn2] build index on: test.patHistory properties: { v: 2, key: { _fts: &quot;text&quot;, _ftsx: 1 }, name: &quot;PatHistory_TextIndex&quot;, ns: &quot;test.patHistory&quot;, weights: { content: 1 }, default_language: &quot;english&quot;, language_override: &quot;language&quot;, textIndexVersion: 3 }
+2021-02-18 14:31:53.887  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.887+0100 I INDEX    [conn2] 	 building index using bulk method; build may temporarily use up to 500 megabytes of RAM
+2021-02-18 14:31:53.889  INFO [patHistory,,,] 24859 --- [      Thread-14] o.s.b.a.mongo.embedded.EmbeddedMongo     : 2021-02-18T14:31:53.889+0100 I INDEX    [conn2] build index done.  scanned 0 total records. 0 secs
+2021-02-18 14:31:54.803  WARN [patHistory,,,] 24859 --- [    Test worker] o.s.c.n.a.ArchaiusAutoConfiguration      : Netflix ConfigurationManager has already been installed, unable to re-install
+2021-02-18 14:31:55.114  INFO [patHistory,,,] 24859 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-18 14:31:56.729  WARN [patHistory,,,] 24859 --- [    Test worker] o.s.c.s.zipkin2.ZipkinAutoConfiguration  : Check result of the [RestTemplateSender{http://localhost:9411/api/v2/spans}] contains an error [CheckResult{ok=false, error=org.springframework.web.client.ResourceAccessException: I/O error on POST request for &quot;http://localhost:9411/api/v2/spans&quot;: Connexion refusée; nested exception is java.net.ConnectException: Connexion refusée}]
+2021-02-18 14:31:56.858  INFO [patHistory,,,] 24859 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2021-02-18 14:31:56.859  INFO [patHistory,,,] 24859 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2021-02-18 14:31:56.897  INFO [patHistory,,,] 24859 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2021-02-18 14:31:56.969  INFO [patHistory,,,] 24859 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 109 ms
+2021-02-18 14:31:57.064  INFO [patHistory,,,] 24859 --- [    Test worker] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses Jersey
+2021-02-18 14:31:57.142  WARN [patHistory,,,] 24859 --- [    Test worker] ockingLoadBalancerClientRibbonWarnLogger : You already have RibbonLoadBalancerClient on your classpath. It will be used by default. As Spring Cloud Ribbon is in maintenance mode. We recommend switching to BlockingLoadBalancerClient instead. In order to use it, set the value of `spring.cloud.loadbalancer.ribbon.enabled` to `false` or remove spring-cloud-starter-netflix-ribbon from your project.
+2021-02-18 14:31:57.696  INFO [patHistory,,,] 24859 --- [    Test worker] c.m.a.p.unit.PatHistoryControllerTest    : Started PatHistoryControllerTest in 7.04 seconds (JVM running for 34.641)
+{&quot;status&quot;:&quot;BAD_REQUEST&quot;,&quot;instant&quot;:1613655117.809082000,&quot;messages&quot;:[&quot;error message&quot;]}
+{&quot;patientId&quot;:&quot;1&quot;,&quot;terminology&quot;:[&quot;MOT5&quot;,&quot;MOT4&quot;,&quot;MOT3&quot;,&quot;MOT2&quot;,&quot;MOT1&quot;],&quot;termCount&quot;:5}
+{&quot;status&quot;:&quot;BAD_REQUEST&quot;,&quot;instant&quot;:1613655118.217332000,&quot;messages&quot;:[&quot;Terminology cannot be empty.&quot;]}
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 6.5.1</a> at 18 févr. 2021 à 14:32:06</p>
+</div>
+</div>
+</body>
+</html>

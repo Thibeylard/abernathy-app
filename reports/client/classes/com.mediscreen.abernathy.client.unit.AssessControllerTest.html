@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - AssessControllerTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>AssessControllerTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.mediscreen.abernathy.client.unit.html">com.mediscreen.abernathy.client.unit</a> &gt; AssessControllerTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">2</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.338s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">assessByIdIsOk()</td>
+<td class="success">0.266s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">assessByNameIsOk()</td>
+<td class="success">0.072s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2021-02-18 14:30:23.896  INFO [client,,,] 24687 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.mediscreen.abernathy.client.unit.AssessControllerTest], using SpringBootContextLoader
+2021-02-18 14:30:23.898  INFO [client,,,] 24687 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [com.mediscreen.abernathy.client.unit.AssessControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2021-02-18 14:30:23.899  INFO [client,,,] 24687 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.mediscreen.abernathy.client.unit.AssessControllerTest]: AssessControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2021-02-18 14:30:23.912  INFO [client,,,] 24687 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.mediscreen.abernathy.client.ClientApplication for test class com.mediscreen.abernathy.client.unit.AssessControllerTest
+2021-02-18 14:30:23.917  INFO [client,,,] 24687 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2021-02-18 14:30:23.920  INFO [client,,,] 24687 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@44ea9f49, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@42c10e79, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@3dd0bafa, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@77a87c27, org.springframework.test.context.support.DirtiesContextTestExecutionListener@67a8b54c, org.springframework.test.context.event.EventPublishingTestExecutionListener@2dd0cd06, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@15efb52c, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@2192aaf2, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@3b26959, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@28213cd4, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@408fba29]
+2021-02-18 14:30:23.947  WARN [client,712c51eb26e24dd4,712c51eb26e24dd4,true] 24687 --- [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'patId' is not present]
+2021-02-18 14:30:24.215  WARN [client,973cbdcedf60e221,973cbdcedf60e221,true] 24687 --- [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'familyName' is not present]
+2021-02-18 14:30:24.227  WARN [client,262dcbfc7fb2b666,262dcbfc7fb2b666,true] 24687 --- [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'givenName' is not present]
+2021-02-18 14:30:24.233  WARN [client,861f5e1d924128e0,861f5e1d924128e0,true] 24687 --- [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'familyName' is not present]
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 6.5.1</a> at 18 févr. 2021 à 14:30:25</p>
+</div>
+</div>
+</body>
+</html>

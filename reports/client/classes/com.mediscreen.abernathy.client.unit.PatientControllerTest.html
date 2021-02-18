@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - PatientControllerTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>PatientControllerTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.mediscreen.abernathy.client.unit.html">com.mediscreen.abernathy.client.unit</a> &gt; PatientControllerTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">4</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">2.095s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">addingPatientIsOk()</td>
+<td class="success">1.628s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">gettingPatientIsOk()</td>
+<td class="success">0.156s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">gettingPatientListIsOk()</td>
+<td class="success">0.091s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updatingPatientIsOk()</td>
+<td class="success">0.220s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2021-02-18 14:30:14.743  INFO [client,,,] 24687 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.mediscreen.abernathy.client.unit.PatientControllerTest], using SpringBootContextLoader
+2021-02-18 14:30:14.746  INFO [client,,,] 24687 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [com.mediscreen.abernathy.client.unit.PatientControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2021-02-18 14:30:14.747  INFO [client,,,] 24687 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.mediscreen.abernathy.client.unit.PatientControllerTest]: PatientControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2021-02-18 14:30:14.768  INFO [client,,,] 24687 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.mediscreen.abernathy.client.ClientApplication for test class com.mediscreen.abernathy.client.unit.PatientControllerTest
+2021-02-18 14:30:14.774  INFO [client,,,] 24687 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2021-02-18 14:30:14.776  INFO [client,,,] 24687 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@6c2500c7, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@7bee1e81, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@6ce7e8b9, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@52cb0e27, org.springframework.test.context.support.DirtiesContextTestExecutionListener@162c1f81, org.springframework.test.context.event.EventPublishingTestExecutionListener@1dbd01d3, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@4ecc80fd, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@447c1535, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@325aca2c, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@471ce62d, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@6d7d5d5b]
+2021-02-18 14:30:14.945  INFO [client,,,] 24687 --- [    Test worker] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.retry.annotation.RetryConfiguration' of type [org.springframework.retry.annotation.RetryConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.2.6.RELEASE)
+
+2021-02-18 14:30:15.049  INFO [client,,,] 24687 --- [    Test worker] c.m.a.client.unit.PatientControllerTest  : The following profiles are active: test
+2021-02-18 14:30:16.258  INFO [client,,,] 24687 --- [    Test worker] o.s.cloud.context.scope.GenericScope     : BeanFactory id=119d4b13-b591-383b-8250-54fdee33b629
+2021-02-18 14:30:17.895  WARN [client,,,] 24687 --- [    Test worker] o.s.c.n.a.ArchaiusAutoConfiguration      : Netflix ConfigurationManager has already been installed, unable to re-install
+2021-02-18 14:30:18.523  INFO [client,,,] 24687 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-18 14:30:20.205  WARN [client,,,] 24687 --- [    Test worker] o.s.c.s.zipkin2.ZipkinAutoConfiguration  : Check result of the [RestTemplateSender{http://localhost:9411/api/v2/spans}] contains an error [CheckResult{ok=false, error=org.springframework.web.client.ResourceAccessException: I/O error on POST request for &quot;http://localhost:9411/api/v2/spans&quot;: Connexion refusée; nested exception is java.net.ConnectException: Connexion refusée}]
+2021-02-18 14:30:20.365  INFO [client,,,] 24687 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2021-02-18 14:30:20.377  INFO [client,,,] 24687 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2021-02-18 14:30:20.448  INFO [client,,,] 24687 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2021-02-18 14:30:20.528  INFO [client,,,] 24687 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 151 ms
+2021-02-18 14:30:20.620  INFO [client,,,] 24687 --- [    Test worker] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses Jersey
+2021-02-18 14:30:20.712  WARN [client,,,] 24687 --- [    Test worker] ockingLoadBalancerClientRibbonWarnLogger : You already have RibbonLoadBalancerClient on your classpath. It will be used by default. As Spring Cloud Ribbon is in maintenance mode. We recommend switching to BlockingLoadBalancerClient instead. In order to use it, set the value of `spring.cloud.loadbalancer.ribbon.enabled` to `false` or remove spring-cloud-starter-netflix-ribbon from your project.
+2021-02-18 14:30:21.388  INFO [client,,,] 24687 --- [    Test worker] c.m.a.client.unit.PatientControllerTest  : Started PatientControllerTest in 6.606 seconds (JVM running for 29.155)
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 6.5.1</a> at 18 févr. 2021 à 14:30:25</p>
+</div>
+</div>
+</body>
+</html>

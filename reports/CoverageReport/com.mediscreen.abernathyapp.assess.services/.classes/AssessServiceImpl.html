@@ -1,0 +1,198 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: AssessServiceImpl</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.mediscreen.abernathyapp.assess.services</a> ]
+</div>
+
+<h1>Coverage Summary for Class: AssessServiceImpl (com.mediscreen.abernathyapp.assess.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AssessServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83,3%
+  </span>
+  <span class="absValue">
+    (5/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    71,1%
+  </span>
+  <span class="absValue">
+    (32/ 45)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.mediscreen.abernathyapp.assess.services;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.fasterxml.jackson.core.JsonProcessingException;
+<i>4</i>&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+<i>5</i>&nbsp;import com.mediscreen.abernathyapp.assess.dtos.DiabeteAssessmentDTO;
+<i>6</i>&nbsp;import com.mediscreen.abernathyapp.assess.dtos.PatHistoryTermsCountDTO;
+<i>7</i>&nbsp;import com.mediscreen.abernathyapp.assess.dtos.PatientAssessmentDTO;
+<i>8</i>&nbsp;import com.mediscreen.abernathyapp.assess.dtos.PatientHealthInfosDTO;
+<i>9</i>&nbsp;import com.mediscreen.abernathyapp.assess.models.DiabeteStatus;
+<i>10</i>&nbsp;import com.mediscreen.abernathyapp.assess.models.DiabeteTerminology;
+<i>11</i>&nbsp;import com.mediscreen.abernathyapp.assess.proxies.PatHistoryProxy;
+<i>12</i>&nbsp;import com.mediscreen.abernathyapp.assess.proxies.PatientProxy;
+<i>13</i>&nbsp;import org.slf4j.Logger;
+<i>14</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>15</i>&nbsp;import org.springframework.hateoas.EntityModel;
+<i>16</i>&nbsp;import org.springframework.http.HttpStatus;
+<i>17</i>&nbsp;import org.springframework.http.ResponseEntity;
+<i>18</i>&nbsp;import org.springframework.stereotype.Service;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;import java.time.LocalDate;
+<i>21</i>&nbsp;import java.util.Arrays;
+<i>22</i>&nbsp;import java.util.Comparator;
+<i>23</i>&nbsp;import java.util.NoSuchElementException;
+<i>24</i>&nbsp;import java.util.stream.Collectors;
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;@Service</b>
+<i>27</i>&nbsp;public class AssessServiceImpl implements AssessService {
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    private final PatientProxy patientProxy;
+<i>30</i>&nbsp;    private final PatHistoryProxy patHistoryProxy;
+<i>31</i>&nbsp;    private final ObjectMapper mapper;
+<i>32</i>&nbsp;    private final Logger logger;
+<i>33</i>&nbsp;    private final AgeCalculatorService ageCalculator;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    @Autowired
+<i>36</i>&nbsp;    public AssessServiceImpl(PatientProxy patientProxy,
+<i>37</i>&nbsp;                             PatHistoryProxy patHistoryProxy,
+<i>38</i>&nbsp;                             AgeCalculatorService ageCalculator,
+<i>39</i>&nbsp;                             ObjectMapper mapper,
+<b class="fc"><i>40</i>&nbsp;                             Logger logger) {</b>
+<b class="fc"><i>41</i>&nbsp;        this.patientProxy = patientProxy;</b>
+<b class="fc"><i>42</i>&nbsp;        this.patHistoryProxy = patHistoryProxy;</b>
+<b class="fc"><i>43</i>&nbsp;        this.ageCalculator = ageCalculator;</b>
+<b class="fc"><i>44</i>&nbsp;        this.mapper = mapper;</b>
+<b class="fc"><i>45</i>&nbsp;        this.logger = logger;</b>
+<b class="fc"><i>46</i>&nbsp;    }</b>
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    @Override
+<i>49</i>&nbsp;    public DiabeteAssessmentDTO assessPatientDiabeteStatus(String patientId) {
+<i>50</i>&nbsp;        try {
+<b class="fc"><i>51</i>&nbsp;            EntityModel&lt;PatientHealthInfosDTO&gt; entityModel = patientProxy.getPatient(patientId);</b>
+<b class="fc"><i>52</i>&nbsp;            assert entityModel != null;</b>
+<b class="fc"><i>53</i>&nbsp;            PatientHealthInfosDTO patientHealthInfosDTO = entityModel.getContent();</b>
+<b class="fc"><i>54</i>&nbsp;            assert patientHealthInfosDTO != null;</b>
+<b class="fc"><i>55</i>&nbsp;            return assessPatientDiabeteStatus(patientHealthInfosDTO);</b>
+<b class="fc"><i>56</i>&nbsp;        } catch (AssertionError e) {</b>
+<b class="fc"><i>57</i>&nbsp;            throw new NoSuchElementException();</b>
+<b class="nc"><i>58</i>&nbsp;        } catch (JsonProcessingException e) {</b>
+<b class="nc"><i>59</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>60</i>&nbsp;            throw new InternalError();</b>
+<i>61</i>&nbsp;        }
+<i>62</i>&nbsp;    }
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    @Override
+<i>65</i>&nbsp;    public DiabeteAssessmentDTO assessPatientDiabeteStatus(String family, String given) {
+<i>66</i>&nbsp;        try {
+<b class="nc"><i>67</i>&nbsp;            EntityModel&lt;PatientHealthInfosDTO&gt; entityModel = patientProxy.getPatient(family, given);</b>
+<b class="nc"><i>68</i>&nbsp;            assert entityModel != null;</b>
+<b class="nc"><i>69</i>&nbsp;            PatientHealthInfosDTO patientHealthInfosDTO = entityModel.getContent();</b>
+<b class="nc"><i>70</i>&nbsp;            assert patientHealthInfosDTO != null;</b>
+<b class="nc"><i>71</i>&nbsp;            return assessPatientDiabeteStatus(patientHealthInfosDTO);</b>
+<b class="nc"><i>72</i>&nbsp;        } catch (AssertionError e) {</b>
+<b class="nc"><i>73</i>&nbsp;            throw new NoSuchElementException();</b>
+<b class="nc"><i>74</i>&nbsp;        } catch (JsonProcessingException e) {</b>
+<b class="nc"><i>75</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>76</i>&nbsp;            throw new InternalError();</b>
+<i>77</i>&nbsp;        }
+<i>78</i>&nbsp;    }
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;    // -------------------------------------------------------------- Convenience private methods
+<i>81</i>&nbsp;    // ------------------------------------------------------------------------------------
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;    private DiabeteAssessmentDTO assessPatientDiabeteStatus(PatientHealthInfosDTO patientInfos) throws JsonProcessingException {
+<i>84</i>&nbsp;
+<b class="fc"><i>85</i>&nbsp;        ResponseEntity&lt;?&gt; responseEntity = patHistoryProxy.getAssessment(patientInfos.getId(),</b>
+<b class="fc"><i>86</i>&nbsp;                Arrays.stream(DiabeteTerminology.values())</b>
+<b class="fc"><i>87</i>&nbsp;                        .map(DiabeteTerminology::fr)</b>
+<b class="fc"><i>88</i>&nbsp;                        .collect(Collectors.toSet()));</b>
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;        // Http Status is OK, patHistory response contains PatHistoryTermsCountDTO
+<b class="fc"><i>91</i>&nbsp;        if (responseEntity.getStatusCode() == HttpStatus.OK) {</b>
+<i>92</i>&nbsp;
+<b class="fc"><i>93</i>&nbsp;            int patientAge = ageCalculator.getAge(patientInfos.getDob(), LocalDate.now());</b>
+<b class="fc"><i>94</i>&nbsp;            PatHistoryTermsCountDTO countDTO = mapper.readValue(responseEntity.getBody().toString(), PatHistoryTermsCountDTO.class);</b>
+<b class="fc"><i>95</i>&nbsp;            assert countDTO != null; // always true if request is Ok</b>
+<b class="fc"><i>96</i>&nbsp;            DiabeteStatus diabeteStatus = determineDiabeteStatus(patientInfos.getSex(), patientAge, countDTO.getTermCount());</b>
+<i>97</i>&nbsp;
+<b class="fc"><i>98</i>&nbsp;            return new DiabeteAssessmentDTO(</b>
+<b class="fc"><i>99</i>&nbsp;                    new PatientAssessmentDTO(patientInfos.getFamily(), patientInfos.getGiven(), patientAge),</b>
+<i>100</i>&nbsp;                    diabeteStatus);
+<i>101</i>&nbsp;        } else {
+<i>102</i>&nbsp;            // Http Status is not Ok, there are no patHistory with given patientId
+<b class="fc"><i>103</i>&nbsp;            throw new NoSuchElementException();</b>
+<i>104</i>&nbsp;        }
+<i>105</i>&nbsp;    }
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;    private DiabeteStatus determineDiabeteStatus(String sex, int age, int terminologyCount) {
+<b class="fc"><i>108</i>&nbsp;        return Arrays.stream(DiabeteStatus.values())</b>
+<b class="fc"><i>109</i>&nbsp;                .sorted(Comparator.comparingInt(DiabeteStatus::getEvaluationOrder))</b>
+<b class="fc"><i>110</i>&nbsp;                .filter(d -&gt; d.hasDiabeteStatus(sex, age, terminologyCount))</b>
+<b class="fc"><i>111</i>&nbsp;                .findFirst()</b>
+<b class="fc"><i>112</i>&nbsp;                .orElseThrow();</b>
+<i>113</i>&nbsp;    }
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-02-16 16:18</div>
+</div>
+</body>
+</html>
