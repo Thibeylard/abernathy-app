@@ -32,3 +32,6 @@ On peut citer parmi les plus importantes :
 * Un peaufinage de la gestion des exceptions
 * Une amélioration du filtre de reformatage des réponses Hal+Json
 * Plus de tests d'intégration par exemple à l'aide de la librairie TestContainers
+
+### Rapports de tests
+Pour consulter les rapports de tests, merci de vous rendre au commit précédent : Ils ont été retiré de la branche principale pour ne pas fausser les statistiques de langages.
